@@ -150,3 +150,5 @@ cython_debug/
 
 # Special python files
 run.py
+
+tests/figs
