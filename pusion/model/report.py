@@ -23,8 +23,9 @@ class Report:
                 instance_names.append(instance)
             else:
                 instance_names.append(type(instance).__name__)
+        instance_names_ = list(instance_names)
         for i, instance_name in enumerate(instance_names):
-            if instance_names.count(instance_name) > 1:
+            if instance_names_.count(instance_name) > 1:
                 instance_names[i] = "{:<35}".format(instance_name + " [" + str(i) + "]")
             else:
                 instance_names[i] = "{:<35}".format(instance_name)
