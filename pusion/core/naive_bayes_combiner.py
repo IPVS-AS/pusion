@@ -4,6 +4,10 @@ from pusion.util.constants import *
 
 
 class NaiveBayesCombiner(TrainableCombiner):
+    """
+    NaiveBayesCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT)
     ]
@@ -73,6 +77,10 @@ class NaiveBayesCombiner(TrainableCombiner):
 
 # TODO align confusion matrices
 class CRNaiveBayesCombiner(NaiveBayesCombiner):  # TODO extend, extract (DT cr & DS cr...)?
+    """
+    CRNaiveBayesCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT)
     ]

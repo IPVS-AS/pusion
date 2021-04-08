@@ -2,6 +2,10 @@ from pusion.core.decision_templates_combiner import *
 
 
 class DempsterShaferCombiner(TrainableCombiner):
+    """
+    DempsterShaferCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -92,6 +96,9 @@ class DempsterShaferCombiner(TrainableCombiner):
 
 # TODO eval.
 class CRDempsterShaferCombiner(DempsterShaferCombiner):  # TODO extend, extract (DT cr & DS cr)?
+    """
+    CRDempsterShaferCombiner
+    """
 
     SHORT_NAME = 'DS (CR)'
 

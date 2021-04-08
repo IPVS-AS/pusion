@@ -1,8 +1,6 @@
 pusion.evaluation package
 =========================
 
-Submodules
-----------
 
 pusion.evaluation.evaluation\_metrics module
 --------------------------------------------

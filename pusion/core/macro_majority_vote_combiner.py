@@ -6,6 +6,10 @@ from pusion.util.constants import *
 
 
 class MacroMajorityVoteCombiner(UtilityBasedCombiner):
+    """
+    MacroMajorityVoteCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.REDUNDANT),

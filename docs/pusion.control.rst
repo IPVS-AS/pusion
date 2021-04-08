@@ -1,8 +1,6 @@
 pusion.control package
 ======================
 
-Submodules
-----------
 
 pusion.control.decision\_processor module
 -----------------------------------------

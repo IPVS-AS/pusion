@@ -5,6 +5,10 @@ from pusion.util.constants import *
 
 
 class MicroMajorityVoteCombiner(UtilityBasedCombiner):
+    """
+    MicroMajorityVoteCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.REDUNDANT),
@@ -36,6 +40,10 @@ class MicroMajorityVoteCombiner(UtilityBasedCombiner):
 
 
 class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):  # TODO extend..., extract method
+    """
+    CRMicroMajorityVoteCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),

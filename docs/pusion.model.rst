@@ -1,8 +1,6 @@
 pusion.model package
 ====================
 
-Submodules
-----------
 
 pusion.model.configuration module
 ---------------------------------

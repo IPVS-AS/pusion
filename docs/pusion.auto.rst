@@ -1,8 +1,6 @@
 pusion.auto package
 ===================
 
-Submodules
-----------
 
 pusion.auto.auto\_combiner module
 ---------------------------------

@@ -4,6 +4,10 @@ from pusion.util.constants import *
 
 
 class DecisionTemplatesCombiner(TrainableCombiner):
+    """
+    DecisionTemplatesCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -85,6 +89,10 @@ class DecisionTemplatesCombiner(TrainableCombiner):
 
 
 class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
+    """
+    CRDecisionTemplatesCombiner
+    """
+
     _SUPPORTED_PAC = []  # TODO analyse in cases of CR with continuous values.
 
     SHORT_NAME = 'DT (CR)'

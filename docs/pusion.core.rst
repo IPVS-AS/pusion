@@ -1,8 +1,6 @@
 pusion.core package
 ===================
 
-Submodules
-----------
 
 pusion.core.behaviour\_knowledge\_space\_combiner module
 --------------------------------------------------------

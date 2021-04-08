@@ -1,8 +1,6 @@
 pusion.input\_output package
 ============================
 
-Submodules
-----------
 
 pusion.input\_output.file\_input\_output module
 -----------------------------------------------

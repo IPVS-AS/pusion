@@ -4,6 +4,10 @@ from pusion.util.constants import *
 
 
 class BordaCountCombiner(UtilityBasedCombiner):
+    """
+    BordaCountCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT)
     ]
@@ -46,6 +50,10 @@ class BordaCountCombiner(UtilityBasedCombiner):
 
 
 class CRBordaCountCombiner(BordaCountCombiner):
+    """
+    CRBordaCountCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT)
     ]

@@ -6,6 +6,10 @@ from pusion.util.constants import *
 
 
 class SimpleAverageCombiner(UtilityBasedCombiner):
+    """
+    SimpleAverageCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -36,6 +40,10 @@ class SimpleAverageCombiner(UtilityBasedCombiner):
 
 
 class CRSimpleAverageCombiner(SimpleAverageCombiner):  # TODO extend...
+    """
+    CRSimpleAverageCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),

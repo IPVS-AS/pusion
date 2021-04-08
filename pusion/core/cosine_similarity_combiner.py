@@ -8,6 +8,10 @@ from pusion.util.constants import *
 
 
 class CosineSimilarityCombiner(UtilityBasedCombiner):
+    """
+    CosineSimilarityCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
@@ -51,6 +55,10 @@ class CosineSimilarityCombiner(UtilityBasedCombiner):
 
 
 class CRCosineSimilarity(CosineSimilarityCombiner):
+    """
+    CRCosineSimilarity
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),

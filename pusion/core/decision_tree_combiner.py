@@ -6,6 +6,10 @@ from pusion.util.constants import *
 
 
 class DecisionTreeCombiner(TrainableCombiner):
+    """
+    DecisionTreeCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -40,6 +44,10 @@ class DecisionTreeCombiner(TrainableCombiner):
 
 
 class CRDecisionTreeCombiner(DecisionTreeCombiner):
+    """
+    CRDecisionTreeCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),

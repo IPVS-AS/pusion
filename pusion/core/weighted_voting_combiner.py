@@ -5,6 +5,10 @@ from pusion.util.constants import *
 
 
 class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
+    """
+    WeightedVotingCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.REDUNDANT),
@@ -63,9 +67,11 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         pass
 
 
-# TODO Evaluationsmöglichkeit 1: Accuracy pro Classifier
-# TODO Evaluationsmöglichkeit 2: Accuracy pro Classifier und Klasse
 class CRWeightedVotingCombiner(WeightedVotingCombiner):
+    """
+    CRWeightedVotingCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT)
@@ -93,6 +99,7 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         for i in range(len(decision_outputs)):
             y_true = true_assignments[:, self.coverage[i]]
             y_pred = decision_outputs[i]
+            # TODO accuracy per classifier / per classifier and class
             self.accuracy[i] = accuracy_score(y_true, y_pred)  # accuracy_score method?
 
     def combine(self, decision_outputs):  # TODO doc, test coverage

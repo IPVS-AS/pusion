@@ -6,6 +6,10 @@ from pusion.util.constants import *
 
 
 class NeuralNetworkCombiner(TrainableCombiner):
+    """
+    NeuralNetworkCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -59,6 +63,10 @@ class NeuralNetworkCombiner(TrainableCombiner):
 
 
 class CRNeuralNetworkCombiner(NeuralNetworkCombiner):  # TODO extend, extract (DT cr, DS cr, MLE cr)?
+    """
+    CRNeuralNetworkCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),

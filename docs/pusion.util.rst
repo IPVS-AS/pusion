@@ -1,8 +1,6 @@
 pusion.util package
 ===================
 
-Submodules
-----------
 
 pusion.util.constants module
 ----------------------------

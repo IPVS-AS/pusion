@@ -4,6 +4,10 @@ from pusion.util.constants import *
 
 
 class MaximumLikelihoodCombiner(TrainableCombiner):
+    """
+    MaximumLikelihoodCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -84,6 +88,10 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
 # TODO eval.
 
 class CRMaximumLikelihoodCombiner(MaximumLikelihoodCombiner):  # TODO extend, extract (DT cr, DS cr, MLE cr)?
+    """
+    CRMaximumLikelihoodCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),

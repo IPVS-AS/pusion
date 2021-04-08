@@ -4,6 +4,10 @@ from pusion.util.transformer import *
 
 
 class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
+    """
+    BehaviourKnowledgeSpaceCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
@@ -84,6 +88,10 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
 
 
 class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
+    """
+    CRBehaviourKnowledgeSpaceCombiner
+    """
+
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
