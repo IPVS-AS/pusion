@@ -1,4 +1,4 @@
-Welcome to Pusion's documentation!
+Welcome to pusion's documentation!
 ==================================
 
 .. toctree::
