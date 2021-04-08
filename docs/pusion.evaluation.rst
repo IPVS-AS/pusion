@@ -9,7 +9,6 @@ pusion.evaluation.evaluation\_metrics module
 
 .. automodule:: pusion.evaluation.evaluation_metrics
    :members:
-   :undoc-members:
    :show-inheritance:
 
 Module contents
@@ -17,5 +16,4 @@ Module contents
 
 .. automodule:: pusion.evaluation
    :members:
-   :undoc-members:
    :show-inheritance:

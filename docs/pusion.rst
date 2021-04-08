@@ -20,5 +20,4 @@ Module contents
 
 .. automodule:: pusion
    :members:
-   :undoc-members:
    :show-inheritance:
