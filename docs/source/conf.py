@@ -101,7 +101,7 @@ html_static_path = ['_static']
 # html_sidebars = {}
 
 
-html_logo = "images/pusion_logo_wide.png"
+html_logo = "_static/images/pusion_logo_wide.png"
 html_theme_options = {
     'logo_only': True,
     'display_version': False,
