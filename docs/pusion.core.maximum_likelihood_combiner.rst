@@ -1,0 +1,6 @@
+pusion.core.maximum\_likelihood\_combiner module
+================================================
+
+.. automodule:: pusion.core.maximum_likelihood_combiner
+   :members:
+   :show-inheritance:

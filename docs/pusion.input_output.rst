@@ -2,12 +2,10 @@ pusion.input\_output package
 ============================
 
 
-pusion.input\_output.file\_input\_output module
------------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.input_output.file_input_output
-   :members:
-   :show-inheritance:
+   pusion.input_output.file_input_output
 
 Module contents
 ---------------

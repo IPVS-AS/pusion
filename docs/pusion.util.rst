@@ -2,47 +2,15 @@ pusion.util package
 ===================
 
 
-pusion.util.constants module
-----------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.util.constants
-   :members:
-   :show-inheritance:
-
-pusion.util.exceptions module
------------------------------
-
-.. automodule:: pusion.util.exceptions
-   :members:
-   :show-inheritance:
-
-pusion.util.functions module
-----------------------------
-
-.. automodule:: pusion.util.functions
-   :members:
-   :show-inheritance:
-
-pusion.util.generator module
-----------------------------
-
-.. automodule:: pusion.util.generator
-   :members:
-   :show-inheritance:
-
-pusion.util.output module
--------------------------
-
-.. automodule:: pusion.util.output
-   :members:
-   :show-inheritance:
-
-pusion.util.transformer module
-------------------------------
-
-.. automodule:: pusion.util.transformer
-   :members:
-   :show-inheritance:
+   pusion.util.constants
+   pusion.util.exceptions
+   pusion.util.functions
+   pusion.util.generator
+   pusion.util.output
+   pusion.util.transformer
 
 Module contents
 ---------------

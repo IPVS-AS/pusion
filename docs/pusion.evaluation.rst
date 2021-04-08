@@ -2,12 +2,10 @@ pusion.evaluation package
 =========================
 
 
-pusion.evaluation.evaluation\_metrics module
---------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.evaluation.evaluation_metrics
-   :members:
-   :show-inheritance:
+   pusion.evaluation.evaluation_metrics
 
 Module contents
 ---------------

@@ -2,19 +2,11 @@ pusion.model package
 ====================
 
 
-pusion.model.configuration module
----------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.model.configuration
-   :members:
-   :show-inheritance:
-
-pusion.model.report module
---------------------------
-
-.. automodule:: pusion.model.report
-   :members:
-   :show-inheritance:
+   pusion.model.configuration
+   pusion.model.report
 
 Module contents
 ---------------

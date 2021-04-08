@@ -2,26 +2,12 @@ pusion.control package
 ======================
 
 
-pusion.control.decision\_processor module
------------------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.control.decision_processor
-   :members:
-   :show-inheritance:
-
-pusion.control.evaluation module
---------------------------------
-
-.. automodule:: pusion.control.evaluation
-   :members:
-   :show-inheritance:
-
-pusion.control.normalizer module
---------------------------------
-
-.. automodule:: pusion.control.normalizer
-   :members:
-   :show-inheritance:
+   pusion.control.decision_processor
+   pusion.control.evaluation
+   pusion.control.normalizer
 
 Module contents
 ---------------

@@ -2,19 +2,11 @@ pusion.auto package
 ===================
 
 
-pusion.auto.auto\_combiner module
----------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: pusion.auto.auto_combiner
-   :members:
-   :show-inheritance:
-
-pusion.auto.generic\_combiner module
-------------------------------------
-
-.. automodule:: pusion.auto.generic_combiner
-   :members:
-   :show-inheritance:
+   pusion.auto.auto_combiner
+   pusion.auto.generic_combiner
 
 Module contents
 ---------------
