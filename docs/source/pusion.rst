@@ -1,4 +1,4 @@
-pusion package
+Pusion package
 ==============
 
 Subpackages
