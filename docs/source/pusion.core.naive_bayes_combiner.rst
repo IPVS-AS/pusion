@@ -1,5 +1,5 @@
-pusion.core.naive\_bayes\_combiner module
-=========================================
+pusion.core.naive\_bayes\_combiner
+==================================
 
 .. automodule:: pusion.core.naive_bayes_combiner
    :members:

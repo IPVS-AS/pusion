@@ -1,5 +1,5 @@
-pusion.core.combiner module
-===========================
+pusion.core.combiner
+====================
 
 .. automodule:: pusion.core.combiner
    :members:

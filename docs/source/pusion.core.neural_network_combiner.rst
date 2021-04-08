@@ -1,5 +1,5 @@
-pusion.core.neural\_network\_combiner module
-============================================
+pusion.core.neural\_network\_combiner
+=====================================
 
 .. automodule:: pusion.core.neural_network_combiner
    :members:

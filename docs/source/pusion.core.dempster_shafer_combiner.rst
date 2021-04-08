@@ -1,5 +1,5 @@
-pusion.core.dempster\_shafer\_combiner module
-=============================================
+pusion.core.dempster\_shafer\_combiner
+======================================
 
 .. automodule:: pusion.core.dempster_shafer_combiner
    :members:

@@ -1,5 +1,5 @@
-pusion.auto.auto\_combiner module
-=================================
+pusion.auto.auto\_combiner
+==========================
 
 .. automodule:: pusion.auto.auto_combiner
    :members:

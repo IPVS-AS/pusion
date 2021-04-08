@@ -6,6 +6,8 @@ Welcome to pusion's documentation!
    :caption: Contents:
 
    pusion
+   install
+
 
 Test
 ====

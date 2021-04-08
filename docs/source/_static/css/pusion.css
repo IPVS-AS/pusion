@@ -1,7 +1,49 @@
-a:visited {
-    color:#2980b9;
+.wy-side-nav-search {
+    width: 350px !important;
+    background-color:#efefef !important;
 }
 
-.wy-side-nav-search{
-    background-color:#efefef !important;
+.wy-nav-content {
+    padding: 50px 100px;
+    height: 100%;
+    max-width: 1500px;
+    margin: 0;
+    background-color: #ffffff;
+}
+
+.wy-nav-side {
+    width: 350px !important;
+    background-color: #ABB4BD !important;
+}
+
+.wy-side-scroll {
+    width: 370px !important;
+}
+
+.wy-menu-vertical {
+    width: 350px !important;
+}
+
+a:visited {
+    color: #006C9E;
+}
+
+.caption-text {
+    color: #000000;
+}
+
+.internal {
+    color: #006C9E;
+}
+
+.internal:hover {
+    color: #6daed0;
+}
+
+.wy-menu-vertical li.toctree-l1>a {
+    color: #006C9E;
+}
+
+.wy-menu-vertical li.toctree-l1>a:hover {
+    background-color: #fcfcfc;
 }

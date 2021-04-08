@@ -42,6 +42,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
+    # 'sphinx_paramlinks'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -186,3 +187,6 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+
+# -- Other configurations ----------------------------------------------------
+autodoc_member_order = 'bysource'

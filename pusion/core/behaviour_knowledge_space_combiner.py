@@ -5,7 +5,15 @@ from pusion.util.transformer import *
 
 class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
     """
-    BehaviourKnowledgeSpaceCombiner
+    The `BehaviourKnowledgeSpaceCombiner` (BKS) is adopted from the decision fusion method originally proposed by
+    Huang, Suen et al. [1]_. BKS analyses the behaviour of multiple classifiers based on their classification outputs
+    with respect to each available class.
+    This behaviour is recorded by means of a lookup table, which is used for final combination of multiple
+    classification outputs for a sample.
+
+    .. [1]  HUANG, Yea S.; SUEN, Ching Y. The behavior-knowledge space method for combination of multiple classifiers.
+            In: IEEE computer society conference on computer vision and pattern recognition.
+            Institute of Electrical Engineers Inc (IEEE), 1993. S. 347-347.
     """
 
     _SUPPORTED_PAC = [
@@ -35,14 +43,11 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
                 Matrix of crisp label assignments :math:`\\{0,1\\}` which is considered true for each sample during
                 the training procedure.
         """
-        # TODO disable for cr
-        # if decision_tensor.shape[1] != true_assignments.shape[0]:
-        #     raise TypeError("True assignment vector dimension does not match the number of samples.")
+        # TODO disable for CR and check input
         configs = decision_tensor_to_configs(decision_tensor)
         unique_configs = np.unique(configs, axis=0)
         self.n_classes = np.shape(true_assignments)[1]
         n_unique_configs = np.shape(unique_configs)[0]
-        # config_class_distribution = np.empty((n_unique_configs, self.n_classes), dtype=int)
         config_class_distribution = np.zeros((n_unique_configs, self.n_classes), dtype=int)
 
         for i in range(n_unique_configs):
@@ -57,21 +62,20 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by Behaviour Knowledge Space (BKS) method introduced by Huan [05] and
-        Suen et al. [06]. This procedure involves looking up the most representative class for a given classification
-        output regarding the behaviour of all classifiers in the ensemble. Only crisp classification outputs are
-        supported. If a trained lookup entry for certain classification configuration is not present,
-        no decision fusion can be made for the sample, which led to that configuration. In this case, the decision
-        fusion is a zero element.
+        Combine decision outputs by the Behaviour Knowledge Space (BKS) method. This procedure involves looking up the
+        most representative class for a given classification output regarding the behaviour of all classifiers in the
+        ensemble. Only crisp classification outputs are supported. If a trained lookup entry is not present for a
+        certain classification configuration, no decision fusion can be made for the sample, which led to that
+        configuration. In this case, the decision fusion is a zero vector.
 
-        :param decision_tensor: Tensor of crisp decision outputs by different classifiers per sample
-        (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments which are obtained by the best representative class for a certain
-        classifier's behaviour per sample. Axis 0 represents samples and axis 1 the class labels which are aligned
-        with axis 2 in C{decision_tensor} input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of crisp decision outputs :math:`\\{0,1\\}` by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
+                for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 the class labels
+                which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         configs = decision_tensor_to_configs(decision_tensor)
-        # fused_decisions = np.zeros_like(decision_tensor[0])  # TODO delete
         fused_decisions = np.zeros((len(decision_tensor[0]), self.n_classes))
 
         for i in range(len(configs)):
@@ -89,7 +93,11 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
 
 class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
     """
-    CRBehaviourKnowledgeSpaceCombiner
+    `CRBehaviourKnowledgeSpaceCombiner` is a modification of :class:`BehaviourKnowledgeSpaceCombiner` that also supports
+    complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
+    assignments are considered as a constant, respectively.
+    To use methods :meth:`train` and :meth:`combine` a coverage needs to be set first by the inherited
+    :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
@@ -106,34 +114,41 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
     def set_coverage(self, coverage):  # TODO delete, superclass Combiner contains the method and the attribute.
         self.coverage = coverage
 
-    def train(self, decision_outputs, true_assignments):  # TODO update doc
+    def train(self, decision_outputs, true_assignments):
         """
         Train the Behaviour Knowledge Space model (BKS) by extracting the classification configuration from all
         classifiers and summarizing samples of each true class that leads to that configuration. This relationship is
         recorded in a lookup table. Only crisp classification outputs are supported.
 
-        :param decision_outputs: Tensor of crisp  decision outputs by different classifiers per sample
-        (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :param true_assignments: Matrix of crisp label assignments {0,1} which is considered true for each sample during
-        the training procedure (axis 0: samples; axis 1: classes).
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                :math:`\\{0,1\\}` per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of crisp label assignments :math:`\\{0,1\\}` which is considered true for each sample during
+                the training procedure.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         super().train(t_decision_outputs, true_assignments)
 
-    def combine(self, decision_outputs):  # TODO update doc
+    def combine(self, decision_outputs):
         """
-        Combining decision outputs by Behaviour Knowledge Space (BKS) method introduced by Huan [05] and
-        Suen et al. [06]. This procedure involves looking up the most representative class for a given classification
-        output regarding the behaviour of all classifiers in the ensemble. Only crisp classification outputs are
-        supported. If a trained lookup entry for certain classification configuration is not present,
-        no decision fusion can be made for the sample, which led to that configuration. In this case, the decision
-        fusion is a zero element.
+        Combine decision outputs by the Behaviour Knowledge Space (BKS) method. This procedure involves looking up the
+        most representative class for a given classification output regarding the behaviour of all classifiers in the
+        ensemble. Only crisp classification outputs are supported. If a trained lookup entry is not present for a
+        certain classification configuration, no decision fusion can be made for the sample, which led to that
+        configuration. In this case, the decision fusion is a zero vector.
 
-        :param decision_outputs: Tensor of crisp decision outputs by different classifiers per sample
-        (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments which are obtained by the best representative class for a certain
-        classifier's behaviour per sample. Axis 0 represents samples and axis 1 the class labels which are aligned
-        with axis 2 in C{decision_tensor} input tensor.
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                :math:`\\{0,1\\}` per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
+                for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 all the class
+                labels which are provided by the coverage.
+
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
