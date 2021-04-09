@@ -42,6 +42,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
+    'sphinxcontrib.bibtex',
     # 'sphinx_paramlinks'
 ]
 
@@ -190,3 +191,5 @@ epub_exclude_files = ['search.html']
 
 # -- Other configurations ----------------------------------------------------
 autodoc_member_order = 'bysource'
+bibtex_bibfiles = ['refs.bib']
+bibtex_default_style = 'unsrt'

@@ -6,14 +6,10 @@ from pusion.util.transformer import *
 class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
     """
     The `BehaviourKnowledgeSpaceCombiner` (BKS) is adopted from the decision fusion method originally proposed by
-    Huang, Suen et al. [1]_. BKS analyses the behaviour of multiple classifiers based on their classification outputs
-    with respect to each available class.
+    Huang, Suen et al. :cite:`huang1993behavior`. BKS analyses the behaviour of multiple classifiers based on their
+    classification outputs with respect to each available class.
     This behaviour is recorded by means of a lookup table, which is used for final combination of multiple
     classification outputs for a sample.
-
-    .. [1]  HUANG, Yea S.; SUEN, Ching Y. The behavior-knowledge space method for combination of multiple classifiers.
-            In: IEEE computer society conference on computer vision and pattern recognition.
-            Institute of Electrical Engineers Inc (IEEE), 1993. S. 347-347.
     """
 
     _SUPPORTED_PAC = [
