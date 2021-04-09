@@ -5,7 +5,13 @@ from pusion.util.constants import *
 
 class DecisionTemplatesCombiner(TrainableCombiner):
     """
-    DecisionTemplatesCombiner
+    The :class:`DecisionTemplatesCombiner` (DT) is adopted from the decision fusion method originally proposed by
+    Kuncheva :footcite:`kuncheva2014combining`. A decision template is the average matrix of all decision profiles,
+    which correspond to samples of one specific class. A decision profile contains classification outputs from all
+    classifiers for a sample in a row-wise fashion. The decision fusion is performed based on distance calculations
+    between decision templates and the decision profile generated from the ensemble outputs.
+
+    .. footbibliography::
     """
 
     _SUPPORTED_PAC = [
@@ -24,23 +30,25 @@ class DecisionTemplatesCombiner(TrainableCombiner):
         # decision templates according to kuncheva per distinct label assignment (aligned with distinct_labels)
         self.decision_templates = None
 
-    def train(self, decision_tensor, true_assignment):
+    def train(self, decision_tensor, true_assignments):
         """
         Train the Decision Templates Combiner model by precalculating decision templates from given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
-        calculations mean decision profiles (decision templates) for each true label assignment.
+        calculating means of decision profiles (decision templates) for each true class.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :param true_assignment: Matrix of crisp label assignments {0,1} which is considered true for each sample during
-        the training procedure (axis 0: samples; axis 1: classes).
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
         """
-        if np.shape(decision_tensor)[1] != np.shape(true_assignment)[0]:
+        if np.shape(decision_tensor)[1] != np.shape(true_assignments)[0]:
             raise TypeError("True assignment vector dimension does not match the number of samples.")
 
         # represent outputs of multiple classifiers as a DP for each sample
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
-        self.distinct_labels = np.unique(true_assignment, axis=0)
+        self.distinct_labels = np.unique(true_assignments, axis=0)
 
         self.decision_templates = np.zeros((len(self.distinct_labels),
                                             np.shape(decision_profiles[0])[0],
@@ -49,21 +57,22 @@ class DecisionTemplatesCombiner(TrainableCombiner):
         for i in range(len(self.distinct_labels)):
             # calculate the mean decision profile (decision template) for each label assignment.
             label = self.distinct_labels[i]
-            label_indices = np.where(np.all(label == true_assignment, axis=1))[0]
+            label_indices = np.where(np.all(label == true_assignments, axis=1))[0]
             self.decision_templates[i] = np.average(decision_profiles[label_indices], axis=0)
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by using the Decision Templates method introduced by Kuncheva (ref. [01]).
+        Combine decision outputs by using the Decision Templates method.
         Both continuous and crisp classification outputs are supported. Combining requires a trained
-        DecisionTemplatesCombiner.
+        :class:`DecisionTemplatesCombiner`.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of continuous or crisp label assignments which are obtained by the minimum distance between
-        decision profiles of C{decision_tensor} and precalculated decision templates.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+                decisions obtained by the minimum distance between decision profiles of ``decision_tensor`` and
+                precalculated decision templates. Axis 0 represents samples and axis 1 the class assignments which
+                are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         fused_decisions = np.zeros_like(decision_tensor[0])
@@ -90,7 +99,10 @@ class DecisionTemplatesCombiner(TrainableCombiner):
 
 class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
     """
-    CRDecisionTemplatesCombiner
+    The :class:`CRDecisionTemplatesCombiner` is a modification of :class:`DecisionTemplatesCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
+    classification assignments are considered as a constant, respectively. To use methods :meth:`train` and
+    :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = []  # TODO analyse in cases of CR with continuous values.
@@ -104,12 +116,38 @@ class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    # TODO doc class_ind. corr. to t_a, check class_indices cover? consistency of do between train and combine
-    def train(self, decision_outputs, true_assignment):
-        t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
-        super().train(t_decision_outputs, true_assignment)
+    def train(self, decision_outputs, true_assignments):
+        """
+        Train the Decision Templates Combiner model by precalculating decision templates from given decision outputs and
+        true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+        calculating means of decision profiles (decision templates) for each true class.
 
-    def combine(self, decision_outputs):  # TODO doc, return includes all classes for the cr scenario
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
+                decision outputs per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
+        """
+        t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
+        super().train(t_decision_outputs, true_assignments)
+
+    def combine(self, decision_outputs):
+        """
+        Combine decision outputs by using the Decision Templates method.
+        Both continuous and crisp classification outputs are supported. Combining requires a trained
+        :class:`CRDecisionTemplatesCombiner`.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
+                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+
+        :return: A matrix (`numpy.array`) of crisp or continuous class assignments which represents fused decisions.
+                Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+                ``decision_tensor`` input tensor.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
 

@@ -57,15 +57,6 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         """
         self.accuracy = evidence
 
-    def combine_multilabel_using_mean_accuracy(self):
-        pass
-
-    def combine_multilabel_using_max_accuracy(self):
-        pass
-
-    def combine_multilabel_using_authority(self):
-        pass
-
 
 class CRWeightedVotingCombiner(WeightedVotingCombiner):
     """

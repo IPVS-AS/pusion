@@ -3,7 +3,14 @@ from pusion.core.decision_templates_combiner import *
 
 class DempsterShaferCombiner(TrainableCombiner):
     """
-    DempsterShaferCombiner
+    The :class:`DempsterShaferCombiner` (DS) fuses decision outputs by means of the Dempster Shafer evidence theory
+    referenced by Polikar :footcite:`polikar2006ensemble` and Ghosh et al. :footcite:`ghosh2011evaluation`.
+    DS involves computing the `proximity` and `belief` values per classifier and class, depending on a sample.
+    Then, the total class support is calculated using the Dempster's rule as the product of belief values across all
+    classifiers to each class, respectively. The class with the highest product is considered as a fused decision.
+    DS shares the same training procedure with the :class:`DecisionTemplatesCombiner`.
+
+    .. footbibliography::
     """
 
     _SUPPORTED_PAC = [
@@ -20,34 +27,38 @@ class DempsterShaferCombiner(TrainableCombiner):
         self.decision_templates = None
         self.distinct_labels = None
 
-    def train(self, decision_tensor, true_assignment):
+    def train(self, decision_tensor, true_assignments):
         """
         Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
         calculations mean decision profiles (decision templates) for each true label assignment.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :param true_assignment: Matrix of crisp label assignments {0,1} which is considered true for each sample during
-        the training procedure (axis 0: samples; axis 1: classes).
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
         """
         dt_combiner = DecisionTemplatesCombiner()
-        dt_combiner.train(decision_tensor, true_assignment)
+        dt_combiner.train(decision_tensor, true_assignments)
         self.decision_templates = dt_combiner.get_decision_templates()
         self.distinct_labels = dt_combiner.get_distinct_labels()
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by using Dempster Shafer evidence theory referenced by Polikar [03] and
-        Ghosh et al. [04]. Both continuous and crisp classification outputs are supported. Combining requires a trained
-        DempsterShaferCombiner. This procedure involves computing the proximity, the belief values, and the total class
-        support using the Dempster's rule.
+        Combine decision outputs by using the Dempster Shafer method.
+        Both continuous and crisp classification outputs are supported. Combining requires a trained
+        :class:`DempsterShaferCombiner`.
+        This procedure involves computing the proximity, the belief values, and the total class support using the
+        Dempster's rule.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of continuous or crisp label assignments which are obtained by the maximum class support.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+                decisions obtained by the maximum class support. Axis 0 represents samples and axis 1 the class
+                assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         fused_decisions = np.zeros_like(decision_tensor[0])
@@ -94,10 +105,12 @@ class DempsterShaferCombiner(TrainableCombiner):
         return fused_decisions
 
 
-# TODO eval.
-class CRDempsterShaferCombiner(DempsterShaferCombiner):  # TODO extend, extract (DT cr & DS cr)?
+class CRDempsterShaferCombiner(DempsterShaferCombiner):
     """
-    CRDempsterShaferCombiner
+    The :class:`CRDempsterShaferCombiner` is a modification of :class:`DempsterShaferCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
+    classification assignments are considered as a constant, respectively. To use methods :meth:`train` and
+    :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
     SHORT_NAME = 'DS (CR)'
@@ -109,12 +122,40 @@ class CRDempsterShaferCombiner(DempsterShaferCombiner):  # TODO extend, extract 
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    # TODO doc class_ind. corr. to t_a, check class_indices cover? consistency of do between train and combine
     def train(self, decision_outputs, true_assignments):
+        """
+        Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
+        true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+        calculations mean decision profiles (decision templates) for each true label assignment.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
+                decision outputs per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         super().train(t_decision_outputs, true_assignments)
 
-    def combine(self, decision_outputs):  # TODO doc, return includes all classes for the cr scenario
+    def combine(self, decision_outputs):
+        """
+        Combine decision outputs by using the Dempster Shafer method.
+        Both continuous and crisp classification outputs are supported. Combining requires a trained
+        :class:`DempsterShaferCombiner`.
+        This procedure involves computing the proximity, the belief values, and the total class support using the
+        Dempster's rule.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
+                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+
+        :return: A matrix (`numpy.array`) of crisp or continuous class assignments which represents fused decisions.
+                Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+                ``decision_tensor`` input tensor.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
 

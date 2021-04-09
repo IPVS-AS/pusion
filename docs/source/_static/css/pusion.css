@@ -47,3 +47,8 @@ a:visited {
 .wy-menu-vertical li.toctree-l1>a:hover {
     background-color: #fcfcfc;
 }
+
+.label {
+    border: none !important;
+    background: none !important;
+}

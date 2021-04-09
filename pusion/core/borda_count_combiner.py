@@ -5,10 +5,11 @@ from pusion.util.constants import *
 
 class BordaCountCombiner(UtilityBasedCombiner):
     """
-    The `BordaCountCombiner` (BC) is a decision fusion method that establishes a ranking between label assignments for a
-    sample. This ranking is implicitly given by continuous support outputs and is mapped to different amounts of votes
-    (:math:`0` of :math:`L` votes for the lowest support, and :math:`L-1` votes for the highest one). A class with the
-    highest sum of these votes (borda counts) across all classifiers is considered as a winner for the final decision.
+    The :class:`BordaCountCombiner` (BC) is a decision fusion method that establishes a ranking between label
+    assignments for a sample. This ranking is implicitly given by continuous support outputs and is mapped to different
+    amounts of votes (:math:`0` of :math:`L` votes for the lowest support, and :math:`L-1` votes for the highest one).
+    A class with the highest sum of these votes (borda counts) across all classifiers is considered as a winner for the
+    final decision.
     """
 
     _SUPPORTED_PAC = [
@@ -54,7 +55,7 @@ class BordaCountCombiner(UtilityBasedCombiner):
 
 class CRBordaCountCombiner(BordaCountCombiner):
     """
-    `CRBordaCountCombiner` is a modification of :class:`BordaCountCombiner` that also supports
+    The :class:`CRBordaCountCombiner` is a modification of :class:`BordaCountCombiner` that also supports
     complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
     assignments are considered as `0`, respectively. To use :meth:`combine` a coverage needs to be set first
     by the inherited :meth:`set_coverage` method.

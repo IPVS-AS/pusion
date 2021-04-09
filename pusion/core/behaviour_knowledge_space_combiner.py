@@ -5,11 +5,14 @@ from pusion.util.transformer import *
 
 class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
     """
-    The `BehaviourKnowledgeSpaceCombiner` (BKS) is adopted from the decision fusion method originally proposed by
-    Huang, Suen et al. :cite:`huang1993behavior`. BKS analyses the behaviour of multiple classifiers based on their
+    The :class:`BehaviourKnowledgeSpaceCombiner` (BKS) is adopted from the decision fusion method originally proposed by
+    Huang, Suen et al. :footcite:`huang1993behavior`. BKS analyses the behaviour of multiple classifiers based on their
     classification outputs with respect to each available class.
     This behaviour is recorded by means of a lookup table, which is used for final combination of multiple
     classification outputs for a sample.
+
+    .. footbibliography::
+
     """
 
     _SUPPORTED_PAC = [
@@ -36,7 +39,7 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
                 Tensor of crisp decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
-                Matrix of crisp label assignments which is considered true for each sample during
+                Matrix of crisp label assignments which are considered true for each sample during
                 the training procedure.
         """
         # TODO disable for CR and check input
@@ -89,11 +92,10 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
 
 class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
     """
-    `CRBehaviourKnowledgeSpaceCombiner` is a modification of :class:`BehaviourKnowledgeSpaceCombiner` that also supports
-    complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
-    assignments are considered as a constant, respectively.
-    To use methods :meth:`train` and :meth:`combine` a coverage needs to be set first by the inherited
-    :meth:`set_coverage` method.
+    The :class:`CRBehaviourKnowledgeSpaceCombiner` is a modification of :class:`BehaviourKnowledgeSpaceCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
+    classification assignments are considered as a constant, respectively. To use methods :meth:`train` and
+    :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
