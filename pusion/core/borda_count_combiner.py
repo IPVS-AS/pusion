@@ -5,7 +5,10 @@ from pusion.util.constants import *
 
 class BordaCountCombiner(UtilityBasedCombiner):
     """
-    BordaCountCombiner
+    The `BordaCountCombiner` (BC) is a decision fusion method that establishes a ranking between label assignments for a
+    sample. This ranking is implicitly given by continuous support outputs and is mapped to different amounts of votes
+    (:math:`0` of :math:`L` votes for the lowest support, and :math:`L-1` votes for the highest one). A class with the
+    highest sum of these votes (borda counts) across all classifiers is considered as a winner for the final decision.
     """
 
     _SUPPORTED_PAC = [
@@ -19,16 +22,17 @@ class BordaCountCombiner(UtilityBasedCombiner):
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by the Borda Count (BC) method. BC establishes a ranking between label assignments
-        for a sample. This ranking is implicitly given by continuous support outputs and is mapped to
-        different amounts of votes (0 of L votes for the lowest support, and L-1 votes for the highest one).
-        A class with the highest sum of these votes (borda counts) across all classifiers is considered as a winner
-        for the final decision. Only continuous classification outputs are supported.
+        Combine decision outputs by the Borda Count (BC) method. Firstly, the continuous classification is mapped to a
+        ranking with respect to available classes for each sample. Those rankings are then summed up across all
+        classifiers to establish total votes (borda counts) for each class in a sample. The class with the highest
+        number of borda counts is considered as decision fusion. Only continuous classification outputs are supported.
 
-        :param decision_tensor: Tensor of continuous decision outputs by different classifiers per sample
-        (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments {0,1} which are obtained by the Borda Count. Axis 0 represents
-        samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor} input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of continuous decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused decisions.
+                Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+                ``decision_tensor`` input tensor.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         fused_decisions = np.zeros_like(decision_tensor[0], dtype=int)
@@ -37,8 +41,7 @@ class BordaCountCombiner(UtilityBasedCombiner):
             dp = decision_profiles[i]
             sort_indices = np.argsort(dp, axis=1)
             bc_dp = self.swap_index_and_values(sort_indices)
-            # TODO use a relation for the multilabel problem?
-            fused_decisions[i, np.argmax(np.sum(bc_dp, axis=0))] = 1
+            fused_decisions[i, np.argmax(np.sum(bc_dp, axis=0))] = 1  # TODO use a relation for the multilabel problem?
         return fused_decisions
 
     def swap_index_and_values(self, m):
@@ -51,7 +54,10 @@ class BordaCountCombiner(UtilityBasedCombiner):
 
 class CRBordaCountCombiner(BordaCountCombiner):
     """
-    CRBordaCountCombiner
+    `CRBordaCountCombiner` is a modification of :class:`BordaCountCombiner` that also supports
+    complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
+    assignments are considered as `0`, respectively. To use :meth:`combine` a coverage needs to be set first
+    by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
@@ -67,7 +73,24 @@ class CRBordaCountCombiner(BordaCountCombiner):
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    def combine(self, decision_outputs):  # TODO doc, return includes all classes for the cr scenario
+    def combine(self, decision_outputs):
+        """
+        Combine complementary-redundant decision outputs by the Borda Count (BC) method. Firstly, the continuous
+        classification is mapped to a ranking with respect to available classes for each sample. Those rankings are then
+        summed up across all classifiers to establish total votes (borda counts) for each class in a sample. The class
+        with the highest number of borda counts is considered as decision fusion. Only continuous classification outputs
+        are supported.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains continuous decision outputs
+                per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused decisions.
+                Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+                ``decision_tensor`` input tensor.
+
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
 
@@ -77,7 +100,6 @@ class CRBordaCountCombiner(BordaCountCombiner):
         n_decisions = len(decision_outputs[0])
         n_classes = len(np.unique(np.concatenate(coverage)))
         # tensor for transformed decision outputs
-        # use zeros to generate proper confusion matrices in the nb training phase
         t_decision_outputs = np.zeros((n_classifier, n_decisions, n_classes))
         for i in range(n_classifier):
             t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T

@@ -33,10 +33,10 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
         recorded in a lookup table. Only crisp classification outputs are supported.
 
         :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
-                Tensor of crisp decision outputs :math:`\\{0,1\\}` by different classifiers per sample.
+                Tensor of crisp decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
-                Matrix of crisp label assignments :math:`\\{0,1\\}` which is considered true for each sample during
+                Matrix of crisp label assignments which is considered true for each sample during
                 the training procedure.
         """
         # TODO disable for CR and check input
@@ -65,7 +65,7 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
         configuration. In this case, the decision fusion is a zero vector.
 
         :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
-                Tensor of crisp decision outputs :math:`\\{0,1\\}` by different classifiers per sample.
+                Tensor of crisp decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
                 for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 the class labels
@@ -119,10 +119,10 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
                 Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
-                :math:`\\{0,1\\}` per sample.
+                per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
-                Matrix of crisp label assignments :math:`\\{0,1\\}` which is considered true for each sample during
+                Matrix of crisp label assignments which is considered true for each sample during
                 the training procedure.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
@@ -139,7 +139,7 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
                 Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
-                :math:`\\{0,1\\}` per sample.
+                per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
                 for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 all the class
