@@ -7,7 +7,9 @@ from pusion.util.constants import *
 
 class MacroMajorityVoteCombiner(UtilityBasedCombiner):
     """
-    MacroMajorityVoteCombiner
+    The :class:`MacroMajorityVoteCombiner` (MAMV) is based on a variation of the general majority vote method.
+    The fusion consists of a decision vector which is given by the majority of the classifiers in the ensemble for a
+    sample. MAMV does not consider outputs for each individual class (macro).
     """
 
     _SUPPORTED_PAC = [
@@ -22,14 +24,14 @@ class MacroMajorityVoteCombiner(UtilityBasedCombiner):
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by majority voting across all classifiers considering the most common classification
+        Combine decision outputs by majority voting across all classifiers considering the most common classification
         assignment (macro). Only crisp classification outputs are supported.
 
-        :param decision_tensor: Tensor of crisp decision outputs by different classifiers per sample
-        (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments {0,1} which are obtained by Macro majority vote.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of crisp decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments obtained by MAMV. Axis 0 represents samples and
+                axis 1 the class labels which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         fused_decisions = np.zeros_like(decision_tensor[0])
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)

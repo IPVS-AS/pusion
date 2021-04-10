@@ -5,7 +5,12 @@ from pusion.util.constants import *
 
 class NaiveBayesCombiner(TrainableCombiner):
     """
-    NaiveBayesCombiner
+    The :class:`NaiveBayesCombiner` (NB) is a fusion method based on the Bayes theorem which is applied according to
+    Kuncheva :footcite:`kuncheva2014combining` and Titterington et al. :footcite:`titterington1981comparison`.
+    NB uses the confusion matrix as an evidence to calculate the a-priori probability and the bayesian belief value,
+    which in turn the decision fusion bases on. NB requires outputs from uncorrelated classifiers in the ensemble.
+
+    .. footbibliography::
     """
 
     _SUPPORTED_PAC = [
@@ -20,41 +25,40 @@ class NaiveBayesCombiner(TrainableCombiner):
         # Number of samples per class
         self.n_samples_per_class = None
 
-    def set_evidence(self, evidence):  # TODO
-        """
-        :param evidence: List of accuracy measurement values of all classifiers which is aligned with decision_tensor
-        on axis 0.
-        """
+    def set_evidence(self, evidence):
         self.confusion_matrices = evidence
         self.n_samples_per_class = np.sum(evidence[0], axis=1)
 
-    def train(self, decision_tensor, true_assignment):
+    def train(self, decision_tensor, true_assignments):
         """
         Train the Naive Bayes combiner model by precalculating confusion matrices from given decision outputs and
         true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
         the MAX rule.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :param true_assignment: Matrix of crisp label assignments {0,1} which is considered true for each sample during
-        the training procedure (axis 0: samples; axis 1: classes).
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
         """
-        self.confusion_matrices = generate_multiclass_confusion_matrices(decision_tensor, true_assignment)
+        self.confusion_matrices = generate_multiclass_confusion_matrices(decision_tensor, true_assignments)
         # Number of samples of certain class (multiclass case)
-        self.n_samples_per_class = np.sum(true_assignment, axis=0)
+        self.n_samples_per_class = np.sum(true_assignments, axis=0)
         # self.sum_of_samples_per_class = np.sum(confusion_matrices[0], axis=1)
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by using the Naive Bayes method according to Kuncheva (ref. [01]) and
-        Titterington et al. (ref. [02]). Continuous decision outputs are converted to crisp multiclass
-        predictions using the MAX rule. Combining requires a trained NaiveBayesCombiner.
+        Combine decision outputs by using the Naive Bayes method.
+        Continuous decision outputs are converted to crisp multiclass predictions using the MAX rule.
+        Combining requires a trained :class:`NaiveBayesCombiner` or evidence set with ``set_evidence``.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments {0,1} which are obtained by the maximum weighted class support.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused
+                decisions obtained by the maximum class support. Axis 0 represents samples and axis 1 the class
+                assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         if self.confusion_matrices is None or self.n_samples_per_class is None:
             raise RuntimeError("Untrained model.")
@@ -76,9 +80,12 @@ class NaiveBayesCombiner(TrainableCombiner):
 
 
 # TODO align confusion matrices
-class CRNaiveBayesCombiner(NaiveBayesCombiner):  # TODO extend, extract (DT cr & DS cr...)?
+class CRNaiveBayesCombiner(NaiveBayesCombiner):
     """
-    CRNaiveBayesCombiner
+    The :class:`CRNaiveBayesCombiner` is a modification of :class:`NaiveBayesCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
+    classification assignments are considered as `0`, respectively. To call :meth:`combine` a coverage needs to be set
+    first by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
@@ -94,12 +101,38 @@ class CRNaiveBayesCombiner(NaiveBayesCombiner):  # TODO extend, extract (DT cr &
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    # TODO doc class_ind. corr. to t_a, check class_indices cover? consistency of do between train and combine
     def train(self, decision_outputs, true_assignments):
+        """
+        Train the Naive Bayes combiner model by precalculating confusion matrices from given decision outputs and
+        true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+        the MAX rule.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
+                decision outputs per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         super().train(t_decision_outputs, true_assignments)
 
-    def combine(self, decision_outputs):  # TODO doc, return includes all classes for the cr scenario
+    def combine(self, decision_outputs):
+        """
+        Combine decision outputs by using the Naive Bayes method.
+        Continuous decision outputs are converted to crisp multiclass predictions using the MAX rule.
+        Combining requires a trained :class:`NaiveBayesCombiner` or evidence set with ``set_evidence``.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
+                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+
+        :return: A matrix (`numpy.array`) of crisp class assignments which represents fused decisions.
+                Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+                ``decision_tensor`` input tensor.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
 
@@ -109,7 +142,7 @@ class CRNaiveBayesCombiner(NaiveBayesCombiner):  # TODO extend, extract (DT cr &
         n_decisions = len(decision_outputs[0])
         n_classes = len(np.unique(np.concatenate(coverage)))
         # tensor for transformed decision outputs
-        # use zeros to generate proper confusion matrices in the nb training phase
+        # use zeros to generate proper confusion matrices in the training phase
         t_decision_outputs = np.zeros((n_classifier, n_decisions, n_classes))
         for i in range(n_classifier):
             t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T

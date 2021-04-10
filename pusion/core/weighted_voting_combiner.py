@@ -6,7 +6,12 @@ from pusion.util.constants import *
 
 class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
     """
-    WeightedVotingCombiner
+    The :class:`WeightedVotingCombiner` (WV) is a weighted voting schema adopted from Kuncheva (eq. 4.43)
+    :footcite:`kuncheva2014combining`. Classifiers with better performance (i.e. accuracy) are given more
+    weight contributing to final decisions. Nevertheless, if classifiers of high performance disagree on a sample,
+    low performance classifiers may contribute to the final decision.
+
+    .. footbibliography::
     """
 
     _SUPPORTED_PAC = [
@@ -20,21 +25,34 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         super().__init__()
         self.accuracy = None
 
-    def train(self, decision_tensor, true_assignment):
-        cms = generate_multiclass_confusion_matrices(decision_tensor, true_assignment)
+    def train(self, decision_tensor, true_assignments):
+        """
+        Train the Weighted Voting combiner model by precalculating confusion matrices from given decision outputs and
+        true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+        the MAX rule.
+
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
+        """
+        cms = generate_multiclass_confusion_matrices(decision_tensor, true_assignments)
         self.accuracy = confusion_matrices_to_accuracy_vector(cms)
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by using the weighted voting schema according to Kuncheva (ref. [01]) (Eq. 4.43).
+        Combine decision outputs by the weighted voting schema.
         Classifiers with better performance (i.e. accuracy) are given more authority over final decisions.
+        Combining requires a trained :class:`WeightedVotingCombiner` or evidence set with ``set_evidence``.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :return: Matrix of crisp label assignments {0,1} which are obtained by the maximum weighted class support.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused
+                decisions obtained by the maximum weighted class support. Axis 0 represents samples and axis 1 the class
+                assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         if self.accuracy is None:
             raise TypeError("Accuracy is not set for this model as an evidence.")
@@ -52,15 +70,20 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
 
     def set_evidence(self, evidence):
         """
-        :param evidence: List of accuracy measurement values of all classifiers which is aligned with decision_tensor
-        on axis 0. Higher values indicate better accuracy. The accuracy is normalized to [0,1]-interval for weighting.
+        :param evidence: List of accuracy measurement values of all classifiers which is aligned with the
+                ``decision_tensor`` on axis 0. Higher values indicate better accuracy. The accuracy is normalized to the
+                [0,1]-interval.
         """
         self.accuracy = evidence
 
 
 class CRWeightedVotingCombiner(WeightedVotingCombiner):
     """
-    CRWeightedVotingCombiner
+    The :class:`CRWeightedVotingCombiner` is a modification of :class:`WeightedVotingCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed to a unified
+    tensor representation supporting undefined class assignments. The mean is calculated only for assignments which
+    are defined. To call methods :meth:`train` and :meth:`combine`, a coverage needs to be set first
+    by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
@@ -78,14 +101,21 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    def set_evidence(self, evidence):
-        """
-        :param evidence: List of accuracy measurement values of all classifiers which is aligned with decision_tensor
-        on axis 0. Higher values indicate better accuracy. The accuracy is normalized to [0,1]-interval for weighting.
-        """
-        self.accuracy = evidence
-
     def train(self, decision_outputs, true_assignments):
+        """
+        Train the Weighted Voting combiner model by precalculating confusion matrices from given decision outputs and
+        true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+        the MAX rule.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of crisp label assignments which is considered true for each sample during
+                the training procedure.
+        """
         self.accuracy = np.zeros(len(decision_outputs))
         for i in range(len(decision_outputs)):
             y_true = true_assignments[:, self.coverage[i]]
@@ -93,7 +123,21 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
             # TODO accuracy per classifier / per classifier and class
             self.accuracy[i] = accuracy_score(y_true, y_pred)  # accuracy_score method?
 
-    def combine(self, decision_outputs):  # TODO doc, test coverage
+    def combine(self, decision_outputs):
+        """
+        Combine decision outputs by the weighted voting schema.
+        Classifiers with better performance (i.e. accuracy) are given more authority over final decisions.
+        Combining requires a trained :class:`WeightedVotingCombiner` or evidence set with ``set_evidence``.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                per sample.
+
+        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
+                for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 all the class
+                labels which are provided by the coverage.
+        """
         if self.accuracy is None:
             raise TypeError("Accuracy is not set for this model as an evidence.")
         if len(decision_outputs) != len(self.accuracy):
@@ -120,3 +164,11 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         # find the maximum class support according to Kuncheva eq. (4.43)
         fused_decisions[np.arange(len(fused_decisions)), adp.argmax(1)] = 1
         return fused_decisions
+
+    def set_evidence(self, evidence):
+        """
+        :param evidence: List of accuracy measurement values of all classifiers which is aligned with the
+                ``decision_tensor`` on axis 0. Higher values indicate better accuracy. The accuracy is normalized to the
+                [0,1]-interval.
+        """
+        self.accuracy = evidence
