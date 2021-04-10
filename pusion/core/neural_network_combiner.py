@@ -7,7 +7,9 @@ from pusion.util.constants import *
 
 class NeuralNetworkCombiner(TrainableCombiner):
     """
-    NeuralNetworkCombiner
+    The :class:`NeuralNetworkCombiner` (NN) is a learning and classifier-based combiner that converts multiple decision
+    outputs into new features, which in turn are used to train this combiner. The NN includes one hidden layer with
+    100 neurons and :math:`\\alpha = 1`.
     """
 
     _SUPPORTED_PAC = [
@@ -25,12 +27,16 @@ class NeuralNetworkCombiner(TrainableCombiner):
 
     def train(self, decision_tensor, true_assignments):
         """
-        Train the Neural Network combiner model from the given decision outputs and true class assignments.
+        Train the NN combiner by fitting the Neural Network model with given decision outputs and
+        true class assignments. Both continuous and crisp classification outputs are supported.
+        This procedure transforms decision outputs into a new feature space.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :param true_assignments: Matrix of crisp label assignments {0,1} which is considered true for each sample during
-        the training procedure (axis 0: samples; axis 1: classes).
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
@@ -42,15 +48,16 @@ class NeuralNetworkCombiner(TrainableCombiner):
 
     def combine(self, decision_tensor):
         """
-        Combining decision outputs by the Neural Network.
-        Both continuous and crisp classification outputs are supported.
-        Combining requires a trained NeuralNetworkCombiner.
+        Combine decision outputs by the trained Neural Network model. Both continuous and crisp classification outputs
+        are supported. Combining requires a trained :class:`NeuralNetworkCombiner`. This procedure transforms decision
+        outputs into a new feature space.
 
-        :param decision_tensor: Tensor of either crisp or continuous decision outputs by different classifiers
-        per sample (axis 0: classifier; axis 1: samples; axis 2: classes).
-        :return: Matrix of crisp label assignments {0,1} which are obtained by the maximum weighted class support.
-        Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in C{decision_tensor}
-        input tensor.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+                decisions obtained by NN. Axis 0 represents samples and axis 1 the class assignments which are aligned
+                with axis 2 in ``decision_tensor`` input tensor.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
@@ -62,9 +69,12 @@ class NeuralNetworkCombiner(TrainableCombiner):
         return self.classifier.predict(featured_decisions)
 
 
-class CRNeuralNetworkCombiner(NeuralNetworkCombiner):  # TODO extend, extract (DT cr, DS cr, MLE cr)?
+class CRNeuralNetworkCombiner(NeuralNetworkCombiner):
     """
-    CRNeuralNetworkCombiner
+    The :class:`CRNeuralNetworkCombiner` is a modification of :class:`NeuralNetworkCombiner` that
+    also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
+    classification assignments are considered as a constant, respectively. To use methods :meth:`train` and
+    :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
     _SUPPORTED_PAC = [
@@ -83,12 +93,38 @@ class CRNeuralNetworkCombiner(NeuralNetworkCombiner):  # TODO extend, extract (D
     def set_coverage(self, coverage):
         self.coverage = coverage
 
-    # TODO doc class_ind. corr. to t_a, check class_indices cover? consistency of do between train and combine
     def train(self, decision_outputs, true_assignments):
+        """
+        Train the NN combiner by fitting the Neural Network model with given decision outputs and
+        true class assignments. Both continuous and crisp classification outputs are supported.
+        This procedure transforms decision outputs into a new feature space.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage.
+                Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
+                decision outputs per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                the training procedure.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         super().train(t_decision_outputs, true_assignments)
 
-    def combine(self, decision_outputs):  # TODO doc, return includes all classes for the cr scenario
+    def combine(self, decision_outputs):
+        """
+        Combine decision outputs by the trained Neural Network model. Both continuous and crisp classification outputs
+        are supported. Combining requires a trained :class:`NeuralNetworkCombiner`. This procedure transforms decision
+        outputs into a new feature space.
+
+        :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
+                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
+                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+
+        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+                decisions obtained by NN. Axis 0 represents samples and axis 1 the class assignments which are aligned
+                with axis 2 in ``decision_tensor`` input tensor.
+        """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
         return super().combine(t_decision_outputs)
 

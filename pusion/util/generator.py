@@ -7,16 +7,17 @@ from pusion.util.transformer import *
 
 def generate_classification_coverage(n_classifier, n_classes, overlap, normal_class=True):
     """
-        Generate random complementary redundant classification indices for each classifier 0..(n_classifier-1).
-        The coverage is drawn from normal distribution for all classifiers.
-        However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
-        :param n_classifier: Number of classifiers representing the classifier 0..(n_classifier-1).
-        :param n_classes: Number of classes representing the class label 0..(n_classes-1).
-        :param overlap: Indicator between 0 and 1 for overall classifier overlapping in terms of classes.
-                            If 0, only complementary class indices are obtained.
-                            If 1, the overlapping is fully redundant.
-        :param normal_class: If True, a class for the normal state is included for all classifiers as class index 0.
-        :return: List of sorted class label indices for each classifier.
+    Generate random complementary redundant classification indices for each classifier 0..(n_classifier-1).
+    The coverage is drawn from normal distribution for all classifiers.
+    However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
+
+    :param n_classifier: Number of classifiers representing the classifier 0..(n_classifier-1).
+    :param n_classes: Number of classes representing the class label 0..(n_classes-1).
+    :param overlap: Indicator between 0 and 1 for overall classifier overlapping in terms of classes.
+            If 0, only complementary class indices are obtained.
+            If 1, the overlapping is fully redundant.
+    :param normal_class: If True, a class for the normal state is included for all classifiers as class index 0.
+    :return: List of sorted class label indices for each classifier.
     """
     if normal_class:
         n_classes = n_classes - 1
