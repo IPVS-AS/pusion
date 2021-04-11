@@ -1,3 +1,5 @@
+.. _wv-cref:
+
 pusion.core.weighted\_voting\_combiner
 ======================================
 

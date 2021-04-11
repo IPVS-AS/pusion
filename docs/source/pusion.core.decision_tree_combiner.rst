@@ -1,3 +1,5 @@
+.. _dtree-cref:
+
 pusion.core.decision\_tree\_combiner
 ====================================
 

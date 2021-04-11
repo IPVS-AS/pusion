@@ -1,3 +1,5 @@
+.. _nb-cref:
+
 pusion.core.naive\_bayes\_combiner
 ==================================
 

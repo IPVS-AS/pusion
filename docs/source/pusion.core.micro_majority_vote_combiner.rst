@@ -1,3 +1,5 @@
+.. _mimv-cref:
+
 pusion.core.micro\_majority\_vote\_combiner
 ===========================================
 

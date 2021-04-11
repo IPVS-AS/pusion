@@ -193,3 +193,4 @@ epub_exclude_files = ['search.html']
 autodoc_member_order = 'bysource'
 bibtex_bibfiles = ['refs.bib']
 bibtex_default_style = 'unsrt'
+numfig = True

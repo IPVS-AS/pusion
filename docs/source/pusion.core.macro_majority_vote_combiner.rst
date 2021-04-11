@@ -1,3 +1,5 @@
+.. _mamv-cref:
+
 pusion.core.macro\_majority\_vote\_combiner
 ===========================================
 

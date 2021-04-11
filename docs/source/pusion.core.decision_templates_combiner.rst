@@ -1,3 +1,5 @@
+.. _dt-cref:
+
 pusion.core.decision\_templates\_combiner
 =========================================
 

@@ -1,3 +1,5 @@
+.. _bc-cref:
+
 pusion.core.borda\_count\_combiner
 ==================================
 

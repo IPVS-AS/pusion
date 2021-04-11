@@ -1,3 +1,5 @@
+.. _ds-cref:
+
 pusion.core.dempster\_shafer\_combiner
 ======================================
 

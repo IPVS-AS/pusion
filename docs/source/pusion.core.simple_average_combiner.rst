@@ -1,3 +1,5 @@
+.. _avg-cref:
+
 pusion.core.simple\_average\_combiner
 =====================================
 

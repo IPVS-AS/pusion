@@ -1,3 +1,5 @@
+.. _cos-cref:
+
 pusion.core.cosine\_similarity\_combiner
 ========================================
 

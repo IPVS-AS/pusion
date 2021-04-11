@@ -1,3 +1,5 @@
+.. _mle-cref:
+
 pusion.core.maximum\_likelihood\_combiner
 =========================================
 

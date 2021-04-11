@@ -1,3 +1,5 @@
+.. _nn-cref:
+
 pusion.core.neural\_network\_combiner
 =====================================
 

@@ -1,3 +1,5 @@
+.. _bks-cref:
+
 pusion.core.behaviour\_knowledge\_space\_combiner
 =================================================
 
