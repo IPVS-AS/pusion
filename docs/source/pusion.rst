@@ -1,5 +1,5 @@
-Pusion package
-==============
+API Reference
+=============
 
 Subpackages
 -----------

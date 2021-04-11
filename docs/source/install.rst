@@ -1,9 +1,18 @@
 Install Pusion
 ==============
 
-Python
-------
+Requirements
+------------
+
+
+Wheel package
+-------------
+
+Installation
+------------
+
 
 .. code:: bash
 
     pip install pusion
+    test

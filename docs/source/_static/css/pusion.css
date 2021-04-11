@@ -13,7 +13,7 @@
 
 .wy-nav-side {
     width: 350px !important;
-    background-color: #ABB4BD !important;
+    background-color: #c2cad1 !important;
 }
 
 .wy-side-scroll {
@@ -24,8 +24,13 @@
     width: 350px !important;
 }
 
-a:visited {
+
+a, a:visited {
     color: #006C9E;
+}
+
+a:hover {
+    color: #6daed0;
 }
 
 .caption-text {
@@ -51,4 +56,8 @@ a:visited {
 .label {
     border: none !important;
     background: none !important;
+}
+
+.version {
+    color: #727e87 !important;
 }
