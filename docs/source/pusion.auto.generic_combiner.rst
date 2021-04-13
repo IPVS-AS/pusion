@@ -1,3 +1,5 @@
+.. _gc-cref:
+
 pusion.auto.generic\_combiner
 =============================
 

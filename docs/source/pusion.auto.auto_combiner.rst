@@ -1,3 +1,5 @@
+.. _ac-cref:
+
 pusion.auto.auto\_combiner
 ==========================
 

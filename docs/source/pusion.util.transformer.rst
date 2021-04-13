@@ -1,3 +1,5 @@
+.. _transformer-cref:
+
 pusion.util.transformer module
 ==============================
 

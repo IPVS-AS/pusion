@@ -1,3 +1,5 @@
+.. _generator-cref:
+
 pusion.util.generator module
 ============================
 

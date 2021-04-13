@@ -99,13 +99,23 @@ The same applies also to the pusion's return, except that the output matrix is a
 
 Auto fusion
 -----------
-
+The framework provides an additional fusion method :ref:`AutoCombiner <ac-cref>` which is able to the detect the configuration
+based on the input classification data and to automatically select the fusion method with the best classification
+performance for the given problem.
+The `AutoCombiner` bundles all methods provided by the framework and probes each of them for the application on the
+given classification data.
+The `AutoCombiner` is transparent to the user as each of the core fusion methods.
 
 Generic fusion
 --------------
+In contrast to the `AutoCombiner`, the :ref:`GenericCombiner <gc-cref>` retrieves fusion results obtained by all
+compatible core methods by means of a `numpy.ndarray` tensor. In this case, the evaluation as well as the method
+selection is handed over to the user.
+
 
 Further functionalities
 -----------------------
-- Generation
-- Transformation
-- Evaluation
+- Classification data and coverage generation (see module :ref:`Generator <generator-cref>`)
+- Useful transformations for decision outputs, e.g. multilabel to multiclass conversion
+  (see module :ref:`Generator <transformer-cref>`)
+- Evaluation methods for different classification and coverage types (see class :ref:`Evaluation <eval-cref>`)
