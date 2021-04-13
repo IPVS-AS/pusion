@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 setup(
     name="pusion",
     packages=find_packages(exclude=['tests']),
-    version="1.3.2",
+    version="1.3.3",
     description="A python framework for combining multi-classifier decisions in classification problems",
     author="Admir Obralija",
     license="MIT",
