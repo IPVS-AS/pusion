@@ -21,7 +21,6 @@ This documentation includes the following sections:
    install
    pusion
    usage_and_examples
-   glossary
    license
    about
 

@@ -42,7 +42,7 @@ A classifier ensemble may yield a redundant, complementary or complementary-redu
 Core methods
 ------------
 
-The following core decision fusion methods are supported by `pusion` and classified according the evidence resolution
+The following core decision fusion methods are supported by `pusion` and classified according to the evidence resolution
 they accept. With lower evidence resolution, a weaker a-priori information about individual classifiers can be taken
 into account during the fusion process.
 Utility-based methods do not take any further information about classifiers into account.
@@ -70,7 +70,7 @@ Evidence-based methods (medium evidence resolution):
 
 Trainable methods (highest evidence resolution):
 
-- Behaviour Knowledge Space (:ref:`BSK <bks-cref>`)
+- Behaviour Knowledge Space (:ref:`BKS <bks-cref>`)
 - Decision Templates (:ref:`DT <dt-cref>`)
 - Decision Trees (:ref:`DTree <dtree-cref>`)
 - Dempster Shafer (:ref:`DS <ds-cref>`)
@@ -94,8 +94,8 @@ which is illustrated in :numref:`fig-input_tensor_illustration`.
 The same applies also to the pusion's return, except that the output matrix is a 2D `numpy.ndarray`.
 
 .. note::
-   In case of complementary-redundant decisions, the coverage needs to be specified in addition to ordinary python lists,
-   which are used alternatively to `numpy.ndarray`.
+   In case of complementary-redundant decisions, the coverage needs to be specified besides ordinary python lists,
+   which are used as an alternative to the `numpy.ndarray`.
 
 Auto fusion
 -----------
@@ -115,7 +115,7 @@ selection is handed over to the user.
 
 Further functionalities
 -----------------------
-- Classification data and coverage generation (see module :ref:`Generator <generator-cref>`)
+- Classification data and coverage generation (see module :ref:`generator <generator-cref>`)
 - Useful transformations for decision outputs, e.g. multilabel to multiclass conversion
-  (see module :ref:`Generator <transformer-cref>`)
+  (see module :ref:`transformer <transformer-cref>`)
 - Evaluation methods for different classification and coverage types (see class :ref:`Evaluation <eval-cref>`)
