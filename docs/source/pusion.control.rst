@@ -8,10 +8,3 @@ pusion.control package
    pusion.control.decision_processor
    pusion.control.evaluation
    pusion.control.normalizer
-
-Module contents
----------------
-
-.. automodule:: pusion.control
-   :members:
-   :show-inheritance:

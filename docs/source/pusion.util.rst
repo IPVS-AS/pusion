@@ -11,10 +11,3 @@ pusion.util package
    pusion.util.generator
    pusion.util.output
    pusion.util.transformer
-
-Module contents
----------------
-
-.. automodule:: pusion.util
-   :members:
-   :show-inheritance:

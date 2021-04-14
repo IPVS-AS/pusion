@@ -7,10 +7,3 @@ pusion.auto package
 
    pusion.auto.auto_combiner
    pusion.auto.generic_combiner
-
-Module contents
----------------
-
-.. automodule:: pusion.auto
-   :members:
-   :show-inheritance:

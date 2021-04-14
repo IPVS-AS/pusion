@@ -11,7 +11,6 @@ Subpackages
    pusion.control
    pusion.core
    pusion.evaluation
-   pusion.input_output
    pusion.model
    pusion.util
 

@@ -7,10 +7,3 @@ pusion.model package
 
    pusion.model.configuration
    pusion.model.report
-
-Module contents
----------------
-
-.. automodule:: pusion.model
-   :members:
-   :show-inheritance:

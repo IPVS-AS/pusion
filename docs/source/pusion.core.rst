@@ -19,10 +19,3 @@ pusion.core package
    pusion.core.neural_network_combiner
    pusion.core.simple_average_combiner
    pusion.core.weighted_voting_combiner
-
-Module contents
----------------
-
-.. automodule:: pusion.core
-   :members:
-   :show-inheritance:
