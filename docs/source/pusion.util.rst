@@ -6,7 +6,6 @@ pusion.util package
    :maxdepth: 4
 
    pusion.util.constants
-   pusion.util.exceptions
    pusion.util.functions
    pusion.util.generator
    pusion.util.output
