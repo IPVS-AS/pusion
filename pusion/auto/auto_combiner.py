@@ -70,8 +70,9 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
         Train the AutoCombiner (AC) model. This method detects the configuration based on the ``decision_tensor`` and
         trains all trainable combiners that are applicable to this configuration.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a list of `numpy.array`
-                of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific due to the coverage.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
 
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
@@ -100,9 +101,11 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
         supported. This procedure involves selecting the best method regarding its classification performance in case
         of a trained AC.
 
-        :param decision_tensor: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
-                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
-                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of crisp or continuous class assignments which represents fused decisions.
                 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in

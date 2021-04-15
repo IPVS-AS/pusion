@@ -64,8 +64,9 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         Train the Generic Combiner. This method detects the configuration based on the ``decision_tensor`` and
         trains all trainable combiners that are applicable to this configuration.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a list of `numpy.array`
-                of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific due to the coverage.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
 
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
@@ -90,9 +91,11 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         supported. This procedure involves combining decision outputs by each individual method which is applicable
         to the detected configuration.
 
-        :param decision_tensor: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
-                where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
-                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :return: list of `numpy.array` of shape `(n_samples, n_classifier)`.
                 Fusion results obtained by selected fusion methods.
