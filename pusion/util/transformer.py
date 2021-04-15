@@ -183,8 +183,8 @@ def generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignment,
             due to the coverage.
     :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
                 Matrix of crisp label assignments which are considered true for calculating confusion matrices.
-    :param coverage: `list` of `list` elements. Each list contains classes as integers covered by a classifier, which
-            is identified by the positional index of the respective list.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
     :return: List of multilabel confusion matrices.
     """
     cr_confusion_matrices = []
@@ -271,7 +271,7 @@ def decision_outputs_to_decision_tensor(decision_outputs):
 def intercept_normal_class(y, override=False):
     """
     Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
-    class assignment. E.g. the assignment `[0,0,0,0]` is transformed to [1,0,0,0]`, under the assumption that `0`
+    class assignment. E.g. the assignment `[0,0,0,0]` is transformed to `[1,0,0,0]`, under the assumption that `0`
     is a normal class.
 
     :param y: `numpy.array` of shape `(n_samples, n_classes)`. Matrix of decision outputs.
@@ -293,7 +293,7 @@ def intercept_normal_class(y, override=False):
 def intercept_normal_class_in_tensor(decision_tensor, override=False):
     """
     Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
-    class assignment. E.g. the assignment `[0,0,0,0]` is transformed to [1,0,0,0]`, under the assumption that `0`
+    class assignment. E.g. the assignment `[0,0,0,0]` is transformed to `[1,0,0,0]`, under the assumption that `0`
     is a normal class.
 
     :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.

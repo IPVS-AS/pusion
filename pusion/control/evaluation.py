@@ -3,6 +3,12 @@ from pusion.util.generator import *
 
 
 class Evaluation:
+    """
+    :class:`Evaluation` provides methods for evaluating decision outputs (i.e. combiners and classifiers) with different
+    problems and coverage types.
+
+    :param argv: Performance metric functions.
+    """
     def __init__(self, *argv):
         self.metrics = []
         self.instances = None
@@ -10,6 +16,21 @@ class Evaluation:
         self.set_metrics(*argv)
 
     def evaluate_cr_combiners(self, true_assignment, decision_tensor, coverage):
+        """
+        Evaluate complementary-redundant decision outputs of multiple CR combiners with already set classification
+        performance metrics.
+        The evaluation results are averaged across complementary-redundant outputs obtained from each combiner
+        for each coverage entry.
+
+        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp label assignments which are considered true for the evaluation.
+        :param decision_tensor: `numpy.array` of shape `(n_combiners, n_samples, n_classes)`.
+                Tensor of crisp decision outputs by different combiners per sample.
+        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
+                classifier, which is identified by the positional index of the respective list.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
         self.__check()
         if len(self.instances) != len(decision_tensor):
             raise TypeError("`decision_tensor` is not aligned with the number of instances.")
@@ -21,6 +42,26 @@ class Evaluation:
         return performance_matrix
 
     def evaluate_cr_combiner(self, true_assignment, decision_matrix, coverage):
+        """
+        Evaluate complementary-redundant decision outputs of a single CR combiner with already set classification
+        performance metrics.
+        The evaluation results are averaged across complementary-redundant outputs obtained from the ``decision_matrix``
+        for each coverage entry.
+
+        .. warning::
+
+            This evaluation should be used only for CR combiners, in order to make a reasonable comparison between a
+            CR ensemble (see ``evaluate_cr_ensemble``) and a CR combiner.
+
+        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp label assignments which are considered true for the evaluation.
+        :param decision_matrix: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp label assignments (fusion result) obtained by a CR combiner.
+        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
+                classifier, which is identified by the positional index of the respective list.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
         self.__check()
         cr_decision_outputs = []
         for i, cov in enumerate(coverage):
@@ -30,6 +71,24 @@ class Evaluation:
         return performance_matrix
 
     def evaluate_cr_ensemble(self, true_assignment, cr_decision_outputs, coverage):
+        """
+        Evaluate complementary-redundant decision outputs with already set classification performance metrics.
+        The evaluation results are averaged across complementary-redundant classifiers.
+
+        .. warning::
+
+            This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
+
+        :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of crisp label assignments which are considered true for the evaluation.
+        :param cr_decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
+                classifier, which is identified by the positional index of the respective list.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
         self.__check()
         if len(cr_decision_outputs) != len(coverage):
             raise TypeError("`cr_decision_outputs` is not aligned to `coverage`.")
@@ -47,6 +106,20 @@ class Evaluation:
         return performance_matrix
 
     def evaluate(self, true_assignment, decision_tensor):
+        """
+        Evaluate the decision outputs with already set classification performance metrics.
+
+        .. warning::
+
+            This evaluation is only applicable on redundant multiclass or multilabel decision outputs.
+
+        :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+                Matrix of crisp label assignments which are considered true for the evaluation.
+        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+                Tensor of crisp decision outputs by different classifiers per sample.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
         self.__check()
         # generalize to decision_tensor if a matrix is given
         decision_tensor = np.array(decision_tensor)
@@ -66,18 +139,38 @@ class Evaluation:
         return performance_matrix
 
     def get_report(self):
+        """
+        :return: A summary `Report` of performed evaluations including all involved instances and performance metrics.
+        """
         return Report(np.around(self.performance_matrix, 3), self.instances, self.metrics)
 
     def get_instances(self):
+        """
+        :return: A `list` of instances (i.e. combiner or classifiers) been evaluated.
+        """
         return self.instances
 
     def get_metrics(self):
+        """
+        :return: A `list` of performance metrics been used for evaluation.
+        """
         return self.metrics
 
     def get_performance_matrix(self):
+        """
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
         return self.performance_matrix
 
     def get_top_n_instances(self, n=None, metric=None):
+        """
+        Retrieve top `n` best instances according to the given `metric` in a sorted order.
+
+        :param n: `integer`. Number of instances to be retrieved. If unset, all instances are retrieved.
+        :param metric: The metric all instances are sorted by. If unset, the first metric is used.
+        :return: Evaluated top `n` instances.
+        """
         self.__check()
         if self.performance_matrix is None:
             raise TypeError("No evaluation performed.")
@@ -93,12 +186,18 @@ class Evaluation:
         return [(self.instances[i], self.performance_matrix[i, metric_index]) for i in top_n_instance_indices]
 
     def set_metrics(self, *argv):
+        """
+        :param argv: Performance metric functions.
+        """
         self.metrics = []
         for metric in argv:
             if metric not in self.metrics:
                 self.metrics.append(metric)
 
     def set_instances(self, instances):
+        """
+        :param instances: An instance or a `list` of instances to be evaluated, e.g. classifiers or combiners.
+        """
         if type(instances) != list:
             instances = [instances]
         self.instances = instances
