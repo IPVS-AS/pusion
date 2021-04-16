@@ -2,6 +2,14 @@ from pandas import DataFrame
 
 
 class Report:
+    """
+    :class:`Report` is a string representation of the performance matrix retrieved by :class:`Evaluation` methods.
+
+    :param performance_matrix: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing
+            performance values for each set instance row-wise and each set performance metric column-wise.
+    :param instances: `list` of instances been evaluated which is aligned with the performance_matrix on axis `0`.
+    :param metrics: `list` of metric functions which is aligned with the performance_matrix on axis `1`.
+    """
     def __init__(self, performance_matrix, instances, metrics):
         if performance_matrix.shape[0] != len(instances):
             raise TypeError("`performance_matrix` (axis 0) is not aligned with the number of instances.")
