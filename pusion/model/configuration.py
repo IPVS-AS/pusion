@@ -36,6 +36,6 @@ class Configuration:
 
     def get_pac(self):
         """
-        :return: A `tuple` of problem, assignment type and coverage type. Also referred as PAC.
+        :return: A `tuple` of problem, assignment type and coverage type. This tuple is also referred to as PAC.
         """
         return self.problem, self.assignment_type, self.coverage_type

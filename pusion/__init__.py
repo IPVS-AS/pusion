@@ -50,7 +50,7 @@ class PerformanceMetric:
     ACCURACY = accuracy
     F1_SCORE = f1
     JACCARD_SCORE = jaccard
-    MEAN_MULTILABEL_ACCURACY = mean_multilabel_accuracy
+    MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
 
 
 class DiversityMetric:
