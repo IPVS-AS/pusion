@@ -1,9 +1,6 @@
 API Reference
 =============
 
-Subpackages
------------
-
 .. toctree::
    :maxdepth: 4
 
@@ -13,10 +10,3 @@ Subpackages
    pusion.evaluation
    pusion.model
    pusion.util
-
-Module contents
----------------
-
-.. automodule:: pusion
-   :members:
-   :show-inheritance:
