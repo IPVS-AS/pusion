@@ -1,6 +1,5 @@
 from pusion.auto.auto_combiner import AutoCombiner
 from pusion.auto.generic_combiner import GenericCombiner
-from pusion.control.evaluation import Evaluation
 from pusion.core.combiner import Combiner, EvidenceBasedCombiner, TrainableCombiner
 from pusion.model.configuration import Configuration
 
@@ -9,7 +8,7 @@ class DecisionProcessor:
     def __init__(self, config: Configuration):
         self.config = config
         self.combiner = Combiner.obtain(config)
-        self.eval = Evaluation()
+        self.evaluation = None
 
     def set_coverage(self, coverage):
         self.combiner.set_coverage(coverage)
@@ -31,8 +30,10 @@ class DecisionProcessor:
         raise TypeError("No multi combiner output. Use combine(...) to retrieve the output of a single combiner.")
 
     def get_optimal_combiner(self):
+        if isinstance(self.combiner, GenericCombiner) and self.evaluation is None:
+            raise TypeError("No evaluation set for determining the optimal method using GenericCombiner.")
         if isinstance(self.combiner, GenericCombiner):
-            return self.eval.get_top_n_instances(1)[0]
+            return self.evaluation.get_top_n_instances(1)[0]
         elif isinstance(self.combiner, AutoCombiner):
             return self.combiner.get_selected_combiner()
         else:
@@ -47,11 +48,11 @@ class DecisionProcessor:
         return self.combiner
 
     def report(self):
-        return self.eval.get_report()
+        return self.evaluation.get_report()
 
     def info(self):
         if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
             return self.combiner.get_pac(), self.combiner.get_combiner_type_selection()
 
-    def set_performance_metrics(self, *argv):
-        self.eval.set_metrics(*argv)
+    def set_evaluation(self, evaluation):
+        self.evaluation = evaluation
