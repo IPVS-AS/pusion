@@ -1,29 +1,18 @@
 .wy-side-nav-search {
-    width: 350px !important;
     background-color:#efefef !important;
 }
 
 .wy-nav-content {
-    padding: 50px 100px;
-    height: 100%;
-    max-width: 1500px;
-    margin: 0;
     background-color: #ffffff;
 }
 
-.wy-nav-side {
-    width: 350px !important;
+.wy-nav-top {
     background-color: #c2cad1 !important;
 }
 
-.wy-side-scroll {
-    width: 370px !important;
+.wy-nav-side {
+    background-color: #c2cad1 !important;
 }
-
-.wy-menu-vertical {
-    width: 350px !important;
-}
-
 
 a, a:visited {
     color: #006C9E;
