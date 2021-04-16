@@ -7,4 +7,3 @@ pusion.control package
 
    pusion.control.decision_processor
    pusion.control.evaluation
-   pusion.control.normalizer

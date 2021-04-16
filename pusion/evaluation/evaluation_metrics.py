@@ -87,12 +87,3 @@ def q_statistic(decision_tensor):
 def correlation(decision_tensor):
     def correlation_func(a, b, c, d): return (a * d - b * c) / np.sqrt((a + b) * (c + d) * (a + c) * (b + d))
     return pairwise_micro_score(decision_tensor, correlation_func)
-
-
-def evaluate_ensemble(y_true, y_ensemble, metric=None):
-    scores = []
-    if not metric:
-        metric = accuracy
-    for y_pred in y_ensemble:
-        scores.append(metric(y_true, y_pred))
-    return scores
