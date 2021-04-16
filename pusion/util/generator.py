@@ -1,23 +1,23 @@
 from sklearn.datasets import make_classification, make_multilabel_classification
 from sklearn.model_selection import train_test_split
 
-from pusion.evaluation.evaluation_metrics import *
 from pusion.util.transformer import *
 
 
 def generate_classification_coverage(n_classifier, n_classes, overlap, normal_class=True):
     """
-    Generate random complementary redundant classification indices for each classifier 0..(n_classifier-1).
+    Generate random complementary redundant class indices for each classifier `0..(n_classifier-1)`.
     The coverage is drawn from normal distribution for all classifiers.
     However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
 
-    :param n_classifier: Number of classifiers representing the classifier 0..(n_classifier-1).
-    :param n_classes: Number of classes representing the class label 0..(n_classes-1).
-    :param overlap: Indicator between 0 and 1 for overall classifier overlapping in terms of classes.
-            If 0, only complementary class indices are obtained.
-            If 1, the overlapping is fully redundant.
-    :param normal_class: If True, a class for the normal state is included for all classifiers as class index 0.
-    :return: List of sorted class label indices for each classifier.
+    :param n_classifier: Number of classifiers representing the classifier `0..(n_classifier-1)`.
+    :param n_classes: Number of classes representing the class label `0..(n_classes-1)`.
+    :param overlap: Indicator between `0` and `1` for overall classifier overlapping in terms of classes.
+            If `0`, only complementary class indices are obtained.
+            If `1`, the overlapping is fully redundant.
+    :param normal_class: If `True`, a class for the normal state is included for all classifiers as class index `0`.
+    :return: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
     """
     if normal_class:
         n_classes = n_classes - 1
@@ -40,6 +40,24 @@ def generate_classification_coverage(n_classifier, n_classes, overlap, normal_cl
 
 
 def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+    """
+    Generate random multiclass crisp classification outputs (assignments) for the given ensemble of classifiers.
+
+    :param classifiers: Classifiers used to generate classification outputs.
+            These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
+    :param n_classes: `integer`. Number of classes, predictions are made for.
+    :param n_samples: `integer`. Number of samples.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+            If unset, redundant classification outputs are retrieved.
+    :return: `tuple` of:
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a validation dataset.
+            - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a test dataset.
+            - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
+    """
     x, y = make_classification(n_samples=n_samples,
                                n_classes=n_classes,
                                n_redundant=0,
@@ -84,6 +102,25 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
 
 
 def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+    """
+    Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
+    the normal class included at index `0`.
+
+    :param classifiers: Classifiers used to generate classification outputs.
+            These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
+    :param n_classes: `integer`. Number of classes, predictions are made for with the normal class included.
+    :param n_samples: `integer`. Number of samples.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+            If unset, redundant classification outputs are retrieved.
+    :return: `tuple` of:
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a validation dataset.
+            - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a test dataset.
+            - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
+    """
     x, y = make_multilabel_classification(n_samples=n_samples,
                                           n_classes=n_classes-1,  # -1, due to normal class
                                           n_labels=2,
@@ -126,7 +163,17 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
 
 
 def shrink_to_coverage(decision_tensor, coverage):
-    # Assumption: the normal class is covered by each classifier.
+    """
+    Shrink the given decision tensor to decision outputs according to the given coverage.
+    Assumption: the normal class is covered by each classifier at index `0`.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+            Tensor of crisp multilabel decision outputs by different classifiers per sample.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+    :return: `list` of `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is
+            classifier-specific due to the coverage.
+    """
     decision_tensor = np.array(decision_tensor)
     decision_outputs = []
     for i in range(len(decision_tensor)):

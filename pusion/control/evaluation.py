@@ -15,14 +15,14 @@ class Evaluation:
         self.performance_matrix = None
         self.set_metrics(*argv)
 
-    def evaluate_cr_combiners(self, true_assignment, decision_tensor, coverage):
+    def evaluate_cr_combiners(self, true_assignments, decision_tensor, coverage):
         """
         Evaluate complementary-redundant decision outputs of multiple CR combiners with already set classification
         performance metrics.
         The evaluation results are averaged across complementary-redundant outputs obtained from each combiner
         for each coverage entry.
 
-        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
         :param decision_tensor: `numpy.array` of shape `(n_combiners, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different combiners per sample.
@@ -36,12 +36,12 @@ class Evaluation:
             raise TypeError("`decision_tensor` is not aligned with the number of instances.")
         performance_matrix = np.full((len(decision_tensor), len(self.metrics)), np.nan)
         for i in range(len(decision_tensor)):
-            pm = self.evaluate_cr_combiner(true_assignment, decision_tensor[i], coverage)
+            pm = self.evaluate_cr_combiner(true_assignments, decision_tensor[i], coverage)
             performance_matrix[i] = np.squeeze(pm)
         self.performance_matrix = performance_matrix
         return performance_matrix
 
-    def evaluate_cr_combiner(self, true_assignment, decision_matrix, coverage):
+    def evaluate_cr_combiner(self, true_assignments, decision_matrix, coverage):
         """
         Evaluate complementary-redundant decision outputs of a single CR combiner with already set classification
         performance metrics.
@@ -53,7 +53,7 @@ class Evaluation:
             This evaluation should be used only for CR combiners, in order to make a reasonable comparison between a
             CR ensemble (see ``evaluate_cr_ensemble``) and a CR combiner.
 
-        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
         :param decision_matrix: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments (fusion result) obtained by a CR combiner.
@@ -66,11 +66,11 @@ class Evaluation:
         cr_decision_outputs = []
         for i, cov in enumerate(coverage):
             cr_decision_outputs.append(decision_matrix[:, cov])
-        performance_matrix = self.evaluate_cr_ensemble(true_assignment, cr_decision_outputs, coverage)
+        performance_matrix = self.evaluate_cr_ensemble(true_assignments, cr_decision_outputs, coverage)
         self.performance_matrix = performance_matrix
         return performance_matrix
 
-    def evaluate_cr_ensemble(self, true_assignment, cr_decision_outputs, coverage):
+    def evaluate_cr_ensemble(self, true_assignments, cr_decision_outputs, coverage):
         """
         Evaluate complementary-redundant decision outputs with already set classification performance metrics.
         The evaluation results are averaged across complementary-redundant classifiers.
@@ -79,7 +79,7 @@ class Evaluation:
 
             This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
 
-        :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
         :param cr_decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
@@ -97,7 +97,7 @@ class Evaluation:
         for i, metric in enumerate(self.metrics):
             score = 0.0
             for j, cr_do in enumerate(cr_decision_outputs):
-                ta = intercept_normal_class(true_assignment[:, coverage[j]], override=True)
+                ta = intercept_normal_class(true_assignments[:, coverage[j]], override=True)
                 do = intercept_normal_class(cr_do, override=True)
                 score += metric(ta, do)
             avg_score = score / len(cr_decision_outputs)
@@ -105,7 +105,7 @@ class Evaluation:
         self.performance_matrix = performance_matrix
         return performance_matrix
 
-    def evaluate(self, true_assignment, decision_tensor):
+    def evaluate(self, true_assignments, decision_tensor):
         """
         Evaluate the decision outputs with already set classification performance metrics.
 
@@ -113,7 +113,7 @@ class Evaluation:
 
             This evaluation is only applicable on redundant multiclass or multilabel decision outputs.
 
-        :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
         :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
@@ -133,7 +133,7 @@ class Evaluation:
         for i in range(len(decision_tensor)):
             for j in range(len(self.metrics)):
                 metric = self.metrics[j]
-                score = metric(true_assignment, decision_tensor[i])
+                score = metric(true_assignments, decision_tensor[i])
                 performance_matrix[i, j] = score
         self.performance_matrix = performance_matrix
         return performance_matrix
