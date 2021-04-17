@@ -106,20 +106,6 @@ def multiclass_assignments_to_labels(assignments):
     return np.argmax(assignments, axis=assignments.ndim - 1)
 
 
-def transform_labels_to_class_assignments(labels, n_classes):
-    """
-    Transform labels to multiclass assignments. A vector of shape `(n_samples,)`, with element-wise labels is converted
-    to the assignment matrix of shape `(n_samples, n_classes)`.
-
-    :param labels: `numpy.array` of shape `(n_samples,)` with an integer label per element.
-    :param n_classes: Number of classes to be considered.
-    :return: `numpy.array` of shape `(n_samples, n_classes)`. Multiclass assignments.
-    """
-    assignments = np.zeros((len(labels), n_classes))
-    assignments[np.arange(len(labels)), labels] = 1
-    return assignments
-
-
 def transform_label_tensor_to_class_assignment_tensor(label_tensor, n_classes):
     """
     Transform a label tensor of shape `(n_classifiers, n_samples)` to the tensor of class assignments of shape
@@ -145,8 +131,6 @@ def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes):
     :param n_classes: Number of classes to be considered.
     :return: `numpy.array` of shape `(n_samples, n_classes)`. Multiclass assignments.
     """
-    if label_vector.ndim > 1:  # TODO: label vector is always one-dimensional
-        return label_vector
     assignments = transform_label_tensor_to_class_assignment_tensor(np.array([label_vector]), n_classes)
     return assignments.squeeze()
 
