@@ -185,7 +185,7 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
 
     def get_multi_combiner_decision_tensor(self):
         """
-        :return: list of `numpy.array` of shape `(n_samples, n_classifier)`.
+        :return: list of `numpy.array` elements of shape `(n_samples, n_classifier)`.
                 Fusion results obtained by selected fusion methods.
                 The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
         """
