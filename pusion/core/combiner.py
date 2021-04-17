@@ -165,13 +165,13 @@ class TrainableCombiner(Combiner):
         pass
 
     @abstractmethod
-    def train(self, decision_tensor, true_assignment):
+    def train(self, decision_tensor, true_assignments):
         """
         Abstract method. Train combiner's implementation using decision outputs an appropriate true assignments.
          
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
-        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of class assignments which are considered true for each sample during the training procedure.
         """
         pass

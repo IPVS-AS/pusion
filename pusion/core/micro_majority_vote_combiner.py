@@ -44,7 +44,7 @@ class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):
     """
     The :class:`CRMicroMajorityVoteCombiner` is a modification of :class:`MicroMajorityVoteCombiner` that
     also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
-    classification assignments are considered as a constant, respectively. To use :meth:`combine` a coverage needs to
+    classification assignments are considered as a constant, respectively. To call :meth:`combine` a coverage needs to
     be set first by the inherited :meth:`set_coverage` method.
     """
 

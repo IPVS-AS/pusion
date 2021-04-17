@@ -135,7 +135,8 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
     :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
             Matrix of true class assignments.
     :param validation_size: Proportion between `0` and `1` for the size of the validation data set.
-    :return: `tuple` of (1) `numpy.array` of shape `(n_classifiers, n_samples', n_classes)`,
+    :return: `tuple` of
+            (1) `numpy.array` of shape `(n_classifiers, n_samples', n_classes)`,
             (2) `numpy.array` of shape `(n_classifiers, n_samples')`,
             (3) `numpy.array` of shape `(n_classifiers, n_samples'', n_classes)`,
             (4) `numpy.array` of shape `(n_classifiers, n_samples'')`, with `n_samples'` as the number of training
@@ -147,8 +148,8 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
     mask = np.ones(len(all_indices), bool)
     mask[validation_indices] = 0
     train_indices = all_indices[mask]
-    true_assignment_train = true_assignments[train_indices]
-    true_assignment_validation = true_assignments[validation_indices]
+    true_assignments_train = true_assignments[train_indices]
+    true_assignments_validation = true_assignments[validation_indices]
     decision_tensor_train = []
     decision_tensor_validation = []
 
@@ -157,6 +158,6 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
         decision_tensor_validation.append(decision_matrix[validation_indices])
 
     return decision_outputs_to_decision_tensor(decision_tensor_train), \
-        decision_outputs_to_decision_tensor(true_assignment_train), \
+        decision_outputs_to_decision_tensor(true_assignments_train), \
         decision_outputs_to_decision_tensor(decision_tensor_validation), \
-        decision_outputs_to_decision_tensor(true_assignment_validation)
+        decision_outputs_to_decision_tensor(true_assignments_validation)

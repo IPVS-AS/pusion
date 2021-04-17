@@ -57,7 +57,7 @@ class CRBordaCountCombiner(BordaCountCombiner):
     """
     The :class:`CRBordaCountCombiner` is a modification of :class:`BordaCountCombiner` that also supports
     complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
-    assignments are considered as `0`, respectively. To use :meth:`combine` a coverage needs to be set first
+    assignments are considered as `0`, respectively. To call :meth:`combine` a coverage needs to be set first
     by the inherited :meth:`set_coverage` method.
     """
 

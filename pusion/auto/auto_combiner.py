@@ -36,7 +36,7 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
         self.selected_combiner = None
 
         self.decision_tensor_validation = None
-        self.true_assignment_validation = None
+        self.true_assignments_validation = None
 
         self.performance_measures = None
 
@@ -88,7 +88,7 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
         self.__prepare()
 
         # split the training data set into train and validation in order to establish evaluation
-        dt_train, ta_train, self.decision_tensor_validation, self.true_assignment_validation = \
+        dt_train, ta_train, self.decision_tensor_validation, self.true_assignments_validation = \
             split_into_train_and_validation_data(decision_tensor, true_assignments)
 
         for combiner in self.combiners:
@@ -120,7 +120,7 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
             self.performance_measures = np.zeros(len(self.combiners))
             for i, combiner in enumerate(self.combiners):
                 res = combiner.combine(self.decision_tensor_validation)
-                self.performance_measures[i] = accuracy(self.true_assignment_validation, res)
+                self.performance_measures[i] = accuracy(self.true_assignments_validation, res)
 
         if not self.__combiner_type_selected(TrainableCombiner):
             self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
