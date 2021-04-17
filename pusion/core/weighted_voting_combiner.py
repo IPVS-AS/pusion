@@ -172,11 +172,3 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         for i in range(n_classifiers):
             t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T
         return t_decision_outputs
-
-    def set_evidence(self, evidence):
-        """
-        :param evidence: List of accuracy measurement values of all classifiers which is aligned with the
-                ``decision_tensor`` on axis 0. Higher values indicate better accuracy. The accuracy is normalized to the
-                [0,1]-interval.
-        """
-        self.accuracy = evidence
