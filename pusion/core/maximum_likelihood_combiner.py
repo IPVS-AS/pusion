@@ -44,7 +44,7 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of either crisp or continuous label assignments which are considered true for each sample during
                 the training procedure.
         """
@@ -137,7 +137,7 @@ class CRMaximumLikelihoodCombiner(MaximumLikelihoodCombiner):
                 Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
                 decision outputs per sample.
 
-        :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of either crisp or continuous label assignments which are considered true for each sample during
                 the training procedure.
         """

@@ -171,7 +171,7 @@ class TrainableCombiner(Combiner):
          
         :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
-        :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of class assignments which are considered true for each sample during the training procedure.
         """
         pass

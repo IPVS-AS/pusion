@@ -55,7 +55,7 @@ class DecisionProcessor:
 
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :param y_valid: `numpy.array` of shape `(n_classifier, n_samples)`.
+        :param y_valid: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """

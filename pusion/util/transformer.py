@@ -122,7 +122,7 @@ def transform_labels_to_class_assignments(labels, n_classes):
 
 def transform_label_tensor_to_class_assignment_tensor(label_tensor, n_classes):
     """
-    Transform a tensor label tensor of shape `(n_classifier, n_samples)` to the tensor of class assignments of shape
+    Transform a label tensor of shape `(n_classifier, n_samples)` to the tensor of class assignments of shape
     `(n_classifier, n_samples, n_classes)`. A label is an integer between `0` and `n_classes - 1`.
 
     :param label_tensor: `numpy.array` of shape `(n_classifier, n_samples)`. Label tensor.
@@ -158,7 +158,7 @@ def generate_multiclass_confusion_matrices(decision_tensor, true_assignment):  #
 
     :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
-    :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+    :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for calculating confusion matrices.
     :return: `numpy.array` of shape `(n_classifier, n_samples, n_samples)`. Confusion matrices per classifier.
     """
@@ -181,7 +181,7 @@ def generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignment,
     :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
-    :param true_assignment: `numpy.array` of shape `(n_classifier, n_samples)`.
+    :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for calculating confusion matrices.
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.

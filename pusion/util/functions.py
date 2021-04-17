@@ -132,7 +132,7 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
 
     :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
             Tensor of decision outputs by different classifiers per sample.
-    :param true_assignments: `numpy.array` of shape `(n_classifier, n_samples)`.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
             Matrix of true class assignments.
     :param validation_size: Proportion between `0` and `1` for the size of the validation data set.
     :return: `tuple` of (1) `numpy.array` of shape `(n_classifier, n_samples', n_classes)`,
