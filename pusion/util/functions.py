@@ -67,13 +67,13 @@ def __determine_tensor_assignment_type(decision_tensor):
     """
     Helper method for ``determine_assignment_type`` to determine the assignment type on `numpy.array` tensors.
     """
-    if np.all(decision_tensor <= 0) or np.any(decision_tensor > 1):
+    if np.any(decision_tensor < 0) or np.any(decision_tensor > 1) or np.all(decision_tensor == 0):
         raise TypeError("The assignment type could not be determined for the given decision tensor.")
 
     if np.all(np.logical_or(decision_tensor == 0, decision_tensor == 1)):
         return AssignmentType.CRISP
 
-    if np.all(np.logical_or(decision_tensor >= 0, decision_tensor <= 1)):
+    if np.all(np.logical_and(decision_tensor >= 0, decision_tensor <= 1)):
         return AssignmentType.CONTINUOUS
 
 
