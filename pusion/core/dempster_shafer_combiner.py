@@ -31,13 +31,13 @@ class DempsterShaferCombiner(TrainableCombiner):
         """
         Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
-        calculations mean decision profiles (decision templates) for each true label assignment.
+        calculations mean decision profiles (decision templates) for each true class assignment.
 
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
         dt_combiner = DecisionTemplatesCombiner()
@@ -56,7 +56,7 @@ class DempsterShaferCombiner(TrainableCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+        :return: A matrix (`numpy.array`) of either crisp or continuous class assignments which represents fused
                 decisions obtained by the maximum class support. Axis 0 represents samples and axis 1 the class
                 assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
@@ -126,7 +126,7 @@ class CRDempsterShaferCombiner(DempsterShaferCombiner):
         """
         Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
-        calculations mean decision profiles (decision templates) for each true label assignment.
+        calculations mean decision profiles (decision templates) for each true class assignment.
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
@@ -134,7 +134,7 @@ class CRDempsterShaferCombiner(DempsterShaferCombiner):
                 decision outputs per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)

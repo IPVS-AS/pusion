@@ -159,7 +159,7 @@ def generate_multiclass_confusion_matrices(decision_tensor, true_assignments):  
     :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
     :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for calculating confusion matrices.
+                Matrix of crisp class assignments which are considered true for calculating confusion matrices.
     :return: `numpy.array` of shape `(n_classifiers, n_samples, n_samples)`. Confusion matrices per classifier.
     """
     true_assignment_labels = np.argmax(true_assignments, axis=1)
@@ -182,7 +182,7 @@ def generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignments
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for calculating confusion matrices.
+                Matrix of crisp class assignments which are considered true for calculating confusion matrices.
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.
     :return: List of multilabel confusion matrices.

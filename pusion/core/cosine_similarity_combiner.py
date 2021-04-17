@@ -47,7 +47,7 @@ class CosineSimilarityCombiner(UtilityBasedCombiner):
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
 
-        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+        :return: A matrix (`numpy.array`) of either crisp or continuous class assignments which represents fused
                 decisions obtained by the highest cumulative cosine-similarity. Axis 0 represents samples and axis 1 the
                 class labels which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """

@@ -30,7 +30,7 @@ class MacroMajorityVoteCombiner(UtilityBasedCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments obtained by MAMV. Axis 0 represents samples and
+        :return: A matrix (`numpy.array`) of crisp class assignments obtained by MAMV. Axis 0 represents samples and
                 axis 1 the class labels which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         fused_decisions = np.zeros_like(decision_tensor[0])

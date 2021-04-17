@@ -23,7 +23,7 @@ class Evaluation:
         for each coverage entry.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for the evaluation.
+                Matrix of crisp class assignments which are considered true for the evaluation.
         :param decision_tensor: `numpy.array` of shape `(n_combiners, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different combiners per sample.
         :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
@@ -54,9 +54,9 @@ class Evaluation:
             CR ensemble (see ``evaluate_cr_ensemble``) and a CR combiner.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for the evaluation.
+                Matrix of crisp class assignments which are considered true for the evaluation.
         :param decision_matrix: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments (fusion result) obtained by a CR combiner.
+                Matrix of crisp class assignments (fusion result) obtained by a CR combiner.
         :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
                 classifier, which is identified by the positional index of the respective list.
         :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
@@ -80,7 +80,7 @@ class Evaluation:
             This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for the evaluation.
+                Matrix of crisp class assignments which are considered true for the evaluation.
         :param cr_decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
@@ -114,7 +114,7 @@ class Evaluation:
             This evaluation is only applicable on redundant multiclass or multilabel decision outputs.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for the evaluation.
+                Matrix of crisp class assignments which are considered true for the evaluation.
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values

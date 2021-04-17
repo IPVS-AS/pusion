@@ -31,7 +31,7 @@ class BordaCountCombiner(UtilityBasedCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of continuous decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused decisions.
+        :return: A matrix (`numpy.array`) of crisp class assignments which represents fused decisions.
                 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
                 ``decision_tensor`` input tensor.
         """
@@ -87,7 +87,7 @@ class CRBordaCountCombiner(BordaCountCombiner):
                 Each matrix corresponds to one of `n_classifiers` classifiers and contains continuous decision outputs
                 per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments which represents fused decisions.
+        :return: A matrix (`numpy.array`) of crisp class assignments which represents fused decisions.
                 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
                 ``decision_tensor`` input tensor.
 

@@ -31,7 +31,7 @@ class MicroMajorityVoteCombiner(UtilityBasedCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments obtained by MIMV. Axis 0 represents samples and
+        :return: A matrix (`numpy.array`) of crisp class assignments obtained by MIMV. Axis 0 represents samples and
                 axis 1 the class labels which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         decision_tensor = decision_tensor - .5
@@ -72,7 +72,7 @@ class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):
                 Each matrix corresponds to one of `n_classifiers` classifiers and contains crisp decision outputs
                 per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by MIMV. Axis 0 represents
+        :return: A matrix (`numpy.array`) of crisp class assignments which are obtained by MIMV. Axis 0 represents
                 samples and axis 1 all the class labels which are provided by the coverage.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)

@@ -25,9 +25,10 @@ class DecisionTemplatesCombiner(TrainableCombiner):
 
     def __init__(self):
         super().__init__()
-        # all possible classification occurrences (label assignments) in training data
-        self.distinct_labels = None
-        # decision templates according to kuncheva per distinct label assignment (aligned with distinct_labels)
+        # all possible classification occurrences (class assignments) in training data
+        self.distinct_class_assignments = None
+        # decision templates according to kuncheva per distinct class assignment (aligned with
+        # distinct_class_assignments)
         self.decision_templates = None
 
     def train(self, decision_tensor, true_assignments):
@@ -40,7 +41,7 @@ class DecisionTemplatesCombiner(TrainableCombiner):
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
         if np.shape(decision_tensor)[1] != np.shape(true_assignments)[0]:
@@ -48,15 +49,15 @@ class DecisionTemplatesCombiner(TrainableCombiner):
 
         # represent outputs of multiple classifiers as a DP for each sample
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
-        self.distinct_labels = np.unique(true_assignments, axis=0)
+        self.distinct_class_assignments = np.unique(true_assignments, axis=0)
 
-        self.decision_templates = np.zeros((len(self.distinct_labels),
+        self.decision_templates = np.zeros((len(self.distinct_class_assignments),
                                             np.shape(decision_profiles[0])[0],
                                             np.shape(decision_profiles[0])[1]))
 
-        for i in range(len(self.distinct_labels)):
-            # calculate the mean decision profile (decision template) for each label assignment.
-            label = self.distinct_labels[i]
+        for i in range(len(self.distinct_class_assignments)):
+            # calculate the mean decision profile (decision template) for each class assignment.
+            label = self.distinct_class_assignments[i]
             label_indices = np.where(np.all(label == true_assignments, axis=1))[0]
             self.decision_templates[i] = np.average(decision_profiles[label_indices], axis=0)
 
@@ -69,7 +70,7 @@ class DecisionTemplatesCombiner(TrainableCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
+        :return: A matrix (`numpy.array`) of either crisp or continuous class assignments which represents fused
                 decisions obtained by the minimum distance between decision profiles of ``decision_tensor`` and
                 precalculated decision templates. Axis 0 represents samples and axis 1 the class assignments which
                 are aligned with axis 2 in ``decision_tensor`` input tensor.
@@ -77,8 +78,8 @@ class DecisionTemplatesCombiner(TrainableCombiner):
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         fused_decisions = np.zeros_like(decision_tensor[0])
 
-        # Compute the euclidean distance between each DP (for a label assignment) and trained DT.
-        # The label assignment associated with the DT with minimal distance to the DP
+        # Compute the euclidean distance between each DP (for a class assignment) and trained DT.
+        # The class assignment associated with the DT with minimal distance to the DP
         # is considered as the fused decision.
         for i in range(len(decision_profiles)):
             dp = decision_profiles[i]
@@ -86,7 +87,7 @@ class DecisionTemplatesCombiner(TrainableCombiner):
             for j in range(len(self.decision_templates)):
                 dt = self.decision_templates[j]
                 dist[j] = np.average((dp - dt)**2)
-            min_dist_label = self.distinct_labels[dist.argmin()]
+            min_dist_label = self.distinct_class_assignments[dist.argmin()]
             fused_decisions[i] = min_dist_label
         return fused_decisions
 
@@ -94,7 +95,7 @@ class DecisionTemplatesCombiner(TrainableCombiner):
         return self.decision_templates
 
     def get_distinct_labels(self):
-        return self.distinct_labels
+        return self.distinct_class_assignments
 
 
 class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
@@ -128,7 +129,7 @@ class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
                 decision outputs per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)

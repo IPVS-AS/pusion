@@ -39,7 +39,7 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
                 Tensor of crisp decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which are considered true for each sample during
+                Matrix of crisp class assignments which are considered true for each sample during
                 the training procedure.
         """
         # TODO disable for CR and check input
@@ -70,7 +70,7 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
         :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
+        :return: A matrix (`numpy.array`) of crisp class assignments which are obtained by the best representative class
                 for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 the class labels
                 which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
@@ -124,7 +124,7 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
                 per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp label assignments which is considered true for each sample during
+                Matrix of crisp class assignments which is considered true for each sample during
                 the training procedure.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
@@ -143,7 +143,7 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
                 Each matrix corresponds to one of `n_classifiers` classifiers and contains crisp decision outputs
                 per sample.
 
-        :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
+        :return: A matrix (`numpy.array`) of crisp class assignments which are obtained by the best representative class
                 for a certain classifier's behaviour per sample. Axis 0 represents samples and axis 1 all the class
                 labels which are provided by the coverage.
 

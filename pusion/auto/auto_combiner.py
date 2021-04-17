@@ -77,7 +77,7 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of either crisp or continuous label assignments which are considered true for each sample during
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
         self.__add_combiner_type(UtilityBasedCombiner)
