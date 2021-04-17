@@ -81,7 +81,7 @@ class Evaluation:
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
-        :param cr_decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+        :param cr_decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
         :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
@@ -115,7 +115,7 @@ class Evaluation:
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for the evaluation.
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
                 for each set instance row-wise and each set performance metric column-wise.

@@ -128,14 +128,14 @@ def pairwise_cohens_kappa_multiclass(decision_tensor):
     E.g., for 3 classifiers `(0,1,2)`, the agreement score is calculated for classifier tuples `(0,1)`, `(0,2)` and
     `(1,2)`. These scores are then averaged over all 3 classifiers.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     :return: Pairwise (averages) Cohen's Kappa score.
     """
     decision_tensor = np.array(decision_tensor)
-    n_classifier = decision_tensor.shape[0]
+    n_classifiers = decision_tensor.shape[0]
     n_classes = decision_tensor.shape[2]
-    indices = np.array(np.triu_indices(n_classifier, k=1))
+    indices = np.array(np.triu_indices(n_classifiers, k=1))
     sum_kappa = 0.0
     for i, j in zip(indices[0], indices[1]):
         decision_labels = multiclass_assignments_to_labels([decision_tensor[i], decision_tensor[j]])
@@ -151,7 +151,7 @@ def pairwise_cohens_kappa_multilabel(decision_tensor):
 
     The multilabel outputs are transformed to equivalent multiclass outputs.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     :return: Pairwise (averages) Cohen's Kappa score.
     """
@@ -184,7 +184,7 @@ def q_statistic(decision_tensor):
 
     .. footbibliography::
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     :return: Pairwise Q-statistic score.
     """
@@ -199,7 +199,7 @@ def correlation(decision_tensor):
 
     .. footbibliography::
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     :return: Pairwise correlation score.
     """

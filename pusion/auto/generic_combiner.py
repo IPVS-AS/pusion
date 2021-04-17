@@ -53,7 +53,7 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         Set the evidence for evidence based combiners. This method preselects all combiners of type
         `EvidenceBasedCombiner`.
 
-        :param evidence: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param evidence: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Confusion matrices for each of `n` classifiers.
         """
         self.__add_combiner_type(EvidenceBasedCombiner)
@@ -64,7 +64,7 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         Train the Generic Combiner. This method detects the configuration based on the ``decision_tensor`` and
         trains all trainable combiners that are applicable to this configuration.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
 
@@ -91,13 +91,13 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         supported. This procedure involves combining decision outputs by each individual method which is applicable
         to the detected configuration.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
 
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
-        :return: list of `numpy.array` of shape `(n_samples, n_classifier)`.
+        :return: list of `numpy.array` of shape `(n_samples, n_classifiers)`.
                 Fusion results obtained by selected fusion methods.
                 The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
         """
@@ -161,7 +161,7 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
 
     def get_multi_combiner_decision_tensor(self):
         """
-        :return: list of `numpy.array` of shape `(n_samples, n_classifier)`.
+        :return: list of `numpy.array` of shape `(n_samples, n_classifiers)`.
                 Fusion results obtained by selected fusion methods.
                 The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
         """

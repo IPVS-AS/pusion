@@ -31,7 +31,7 @@ class NeuralNetworkCombiner(TrainableCombiner):
         true class assignments. Both continuous and crisp classification outputs are supported.
         This procedure transforms decision outputs into a new feature space.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
@@ -52,7 +52,7 @@ class NeuralNetworkCombiner(TrainableCombiner):
         are supported. Combining requires a trained :class:`NeuralNetworkCombiner`. This procedure transforms decision
         outputs into a new feature space.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
@@ -101,7 +101,7 @@ class CRNeuralNetworkCombiner(NeuralNetworkCombiner):
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
-                Each matrix corresponds to one of `n_classifier` classifiers and contains either crisp or continuous
+                Each matrix corresponds to one of `n_classifiers` classifiers and contains either crisp or continuous
                 decision outputs per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
@@ -119,7 +119,7 @@ class CRNeuralNetworkCombiner(NeuralNetworkCombiner):
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage. Each matrix corresponds to
-                one of `n_classifier` classifiers and contains crisp or continuous decision outputs per sample.
+                one of `n_classifiers` classifiers and contains crisp or continuous decision outputs per sample.
 
         :return: A matrix (`numpy.array`) of either crisp or continuous label assignments which represents fused
                 decisions obtained by NN. Axis 0 represents samples and axis 1 the class assignments which are aligned
@@ -130,11 +130,11 @@ class CRNeuralNetworkCombiner(NeuralNetworkCombiner):
 
     @staticmethod
     def __transform_to_uniform_decision_tensor(decision_outputs, coverage):
-        n_classifier = len(decision_outputs)
+        n_classifiers = len(decision_outputs)
         n_decisions = len(decision_outputs[0])
         n_classes = len(np.unique(np.concatenate(coverage)))
         # tensor for transformed decision outputs
-        t_decision_outputs = np.negative(np.ones((n_classifier, n_decisions, n_classes)))
-        for i in range(n_classifier):
+        t_decision_outputs = np.negative(np.ones((n_classifiers, n_decisions, n_classes)))
+        for i in range(n_classifiers):
             t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T
         return t_decision_outputs

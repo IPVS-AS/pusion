@@ -98,7 +98,7 @@ class Combiner:
         """
         Abstract method. Combine decision outputs by combiner's implementation.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_samples, n_classes)`. A matrix of class assignments which represents fused
                 decisions obtained by combiner's implementation. Axis 0 represents samples and axis 1 the class
@@ -132,7 +132,7 @@ class UtilityBasedCombiner(Combiner):
         """
         Abstract method. Combine decision outputs by combiner's implementation.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_samples, n_classes)`. A matrix of class assignments which represents fused
                 decisions obtained by combiner's implementation. Axis 0 represents samples and axis 1 the class
@@ -156,7 +156,7 @@ class TrainableCombiner(Combiner):
         """
         Abstract method. Combine decision outputs by combiner's implementation.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_samples, n_classes)`. A matrix of class assignments which represents fused
                 decisions obtained by combiner's implementation. Axis 0 represents samples and axis 1 the class
@@ -169,7 +169,7 @@ class TrainableCombiner(Combiner):
         """
         Abstract method. Train combiner's implementation using decision outputs an appropriate true assignments.
          
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
         :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of class assignments which are considered true for each sample during the training procedure.
@@ -193,7 +193,7 @@ class EvidenceBasedCombiner(Combiner):
         """
         Abstract method. Combine decision outputs by combiner's implementation.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of decision outputs by different classifiers per sample.
         :return: `numpy.array` of shape `(n_samples, n_classes)`. A matrix of class assignments which represents fused
                 decisions obtained by combiner's implementation. Axis 0 represents samples and axis 1 the class

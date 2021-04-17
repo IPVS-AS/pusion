@@ -31,7 +31,7 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
         the MAX rule.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
@@ -47,7 +47,7 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         Classifiers with better performance (i.e. accuracy) are given more authority over final decisions.
         Combining requires a trained :class:`WeightedVotingCombiner` or evidence set with ``set_evidence``.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments which represents fused
@@ -109,7 +109,7 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
-                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                Each matrix corresponds to one of `n_classifiers` classifiers and contains crisp decision outputs
                 per sample.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
@@ -131,7 +131,7 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
-                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                Each matrix corresponds to one of `n_classifiers` classifiers and contains crisp decision outputs
                 per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by the best representative class
@@ -144,12 +144,12 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
             raise TypeError("Accuracy vector dimension does not match the number of classifiers in the input tensor.")
 
         # TODO begin - extract method?
-        n_classifier = len(decision_outputs)
+        n_classifiers = len(decision_outputs)
         n_decisions = len(decision_outputs[0])
         n_classes = len(np.unique(np.concatenate(self.coverage)))
         # tensor for transformed decision outputs
-        t_decision_outputs = np.full((n_classifier, n_decisions, n_classes), np.nan)
-        for i in range(n_classifier):
+        t_decision_outputs = np.full((n_classifiers, n_decisions, n_classes), np.nan)
+        for i in range(n_classifiers):
             t_decision_outputs[i, :, self.coverage[i]] = decision_outputs[i].T
         # TODO end
         # convert decision_tensor to decision profiles for better handling

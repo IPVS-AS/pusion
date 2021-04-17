@@ -28,7 +28,7 @@ class MicroMajorityVoteCombiner(UtilityBasedCombiner):
         Combine decision outputs by MIMV across all classifiers per class (micro).
         Only crisp classification outputs are supported.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments obtained by MIMV. Axis 0 represents samples and
@@ -69,7 +69,7 @@ class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):
 
         :param decision_outputs: `list` of `numpy.array` matrices, each of shape `(n_samples, n_classes')`,
                 where `n_classes'` is classifier-specific and described by the coverage.
-                Each matrix corresponds to one of `n_classifier` classifiers and contains crisp decision outputs
+                Each matrix corresponds to one of `n_classifiers` classifiers and contains crisp decision outputs
                 per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments which are obtained by MIMV. Axis 0 represents
@@ -80,11 +80,11 @@ class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):
 
     @staticmethod
     def __transform_to_uniform_decision_tensor(decision_outputs, coverage):
-        n_classifier = len(decision_outputs)
+        n_classifiers = len(decision_outputs)
         n_decisions = len(decision_outputs[0])
         n_classes = len(np.unique(np.concatenate(coverage)))
         # tensor for transformed decision outputs
-        t_decision_outputs = np.full((n_classifier, n_decisions, n_classes), .5)
-        for i in range(n_classifier):
+        t_decision_outputs = np.full((n_classifiers, n_decisions, n_classes), .5)
+        for i in range(n_classifiers):
             t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T
         return t_decision_outputs

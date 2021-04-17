@@ -49,7 +49,7 @@ class DecisionProcessor:
 
             A trainable combiner is always trained with the validation dataset provided by ensemble classifiers.
 
-        :param y_ensemble_valid: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+        :param y_ensemble_valid: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
 
@@ -66,7 +66,7 @@ class DecisionProcessor:
         """
         Combine decision outputs using the combiner model determined by the configuration.
 
-        :param y_ensemble_test: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+        :param y_ensemble_test: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
                 `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
                 due to the coverage.
 

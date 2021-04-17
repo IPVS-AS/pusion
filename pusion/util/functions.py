@@ -6,7 +6,7 @@ def determine_problem(decision_outputs):
     """
     Determine the classification problem based on the decision outputs.
 
-    :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :return: `string` constant `'MULTI_CLASS'` or `'MULTI_LABEL'`. See `pusion.util.constants.Problem`.
@@ -47,7 +47,7 @@ def determine_assignment_type(decision_outputs):
     """
     Determine the assignment type based on the decision outputs.
 
-    :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :return: `string` constant `'CRISP'` or `'CONTINUOUS'`. See `pusion.util.constants.AssignmentType`.
@@ -106,7 +106,7 @@ def determine_pac(decision_outputs, coverage=None):
     Determine the PAC-tuple (problem, assignment type and coverage type) based on the given decision outputs and
     coverage.
 
-    :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
@@ -130,15 +130,15 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
     Split the decision outputs (tensor) from multiple classifiers as well as the true assignments randomly into train
     and validation datasets.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of decision outputs by different classifiers per sample.
     :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
             Matrix of true class assignments.
     :param validation_size: Proportion between `0` and `1` for the size of the validation data set.
-    :return: `tuple` of (1) `numpy.array` of shape `(n_classifier, n_samples', n_classes)`,
-            (2) `numpy.array` of shape `(n_classifier, n_samples')`,
-            (3) `numpy.array` of shape `(n_classifier, n_samples'', n_classes)`,
-            (4) `numpy.array` of shape `(n_classifier, n_samples'')`, with `n_samples'` as the number of training
+    :return: `tuple` of (1) `numpy.array` of shape `(n_classifiers, n_samples', n_classes)`,
+            (2) `numpy.array` of shape `(n_classifiers, n_samples')`,
+            (3) `numpy.array` of shape `(n_classifiers, n_samples'', n_classes)`,
+            (4) `numpy.array` of shape `(n_classifiers, n_samples'')`, with `n_samples'` as the number of training
             samples and `n_samples''` as the number of validation samples.
     """
     n_validation_samples = int(len(true_assignments) * validation_size)

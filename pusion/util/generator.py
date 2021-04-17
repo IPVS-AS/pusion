@@ -4,13 +4,13 @@ from sklearn.model_selection import train_test_split
 from pusion.util.transformer import *
 
 
-def generate_classification_coverage(n_classifier, n_classes, overlap, normal_class=True):
+def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_class=True):
     """
-    Generate random complementary redundant class indices for each classifier `0..(n_classifier-1)`.
+    Generate random complementary redundant class indices for each classifier `0..(n_classifiers-1)`.
     The coverage is drawn from normal distribution for all classifiers.
     However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
 
-    :param n_classifier: Number of classifiers representing the classifier `0..(n_classifier-1)`.
+    :param n_classifiers: Number of classifiers representing the classifier `0..(n_classifiers-1)`.
     :param n_classes: Number of classes representing the class label `0..(n_classes-1)`.
     :param overlap: Indicator between `0` and `1` for overall classifier overlapping in terms of classes.
             If `0`, only complementary class indices are obtained.
@@ -21,20 +21,20 @@ def generate_classification_coverage(n_classifier, n_classes, overlap, normal_cl
     """
     if normal_class:
         n_classes = n_classes - 1
-    coverage_matrix = np.zeros((n_classifier, n_classes), dtype=int)
-    n_selected_classifier = int(np.interp(overlap, [0, 1], [np.ceil(n_classifier/n_classes), n_classifier]))
+    coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
+    n_selected_classifier = int(np.interp(overlap, [0, 1], [np.ceil(n_classifiers/n_classes), n_classifiers]))
     while np.any(coverage_matrix.sum(axis=1) < 1):
-        coverage_matrix = np.zeros((n_classifier, n_classes), dtype=int)
+        coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
         for i in range(n_classes):
-            selected_classifier = np.random.choice(np.arange(n_classifier), n_selected_classifier, replace=False)
+            selected_classifier = np.random.choice(np.arange(n_classifiers), n_selected_classifier, replace=False)
             coverage_matrix[selected_classifier, i] = 1
 
     class_index_list = []
     if normal_class:
-        for i in range(n_classifier):
+        for i in range(n_classifiers):
             class_index_list.append(np.array([0, *np.where(coverage_matrix[i])[0] + 1]))
     else:
-        for i in range(n_classifier):
+        for i in range(n_classifiers):
             class_index_list.append(np.where(coverage_matrix[i])[0])
     return class_index_list
 
@@ -167,7 +167,7 @@ def shrink_to_coverage(decision_tensor, coverage):
     Shrink the given decision tensor to decision outputs according to the given coverage.
     Assumption: the normal class is covered by each classifier at index `0`.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multilabel decision outputs by different classifiers per sample.
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.

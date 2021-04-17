@@ -8,9 +8,9 @@ def confusion_matrices_to_accuracy_vector(confusion_matrix_tensor):
     """
     Convert confusion matrices of respective classification to an accuracy vector.
 
-    :param confusion_matrix_tensor: `numpy.array` of shape `(n_classifier, n_classes, n_classes)`
+    :param confusion_matrix_tensor: `numpy.array` of shape `(n_classifiers, n_classes, n_classes)`
             Confusion matrices.
-    :return: One-dimensional `numpy.array` of shape of length `n_classifier` containing the accuracy for each confusion
+    :return: One-dimensional `numpy.array` of shape of length `n_classifiers` containing the accuracy for each confusion
             matrix.
     """
     accuracies = np.zeros(len(confusion_matrix_tensor))
@@ -49,9 +49,9 @@ def decision_tensor_to_decision_profiles(decision_tensor):
     """
     Transform the given decision tensor to decision profiles for each respective sample.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of either crisp or continuous decision outputs by different classifiers per sample.
-    :return: `numpy.array` of shape `(n_samples, n_classifier, n_classes)`.
+    :return: `numpy.array` of shape `(n_samples, n_classifiers, n_classes)`.
             Decision profiles.
     """
     return np.array(decision_tensor).transpose((1, 0, 2))
@@ -72,7 +72,7 @@ def multiclass_predictions_to_decisions(predictions):
     """
     Transform a continuously valued matrix of multiclass decisions to crisp decision outputs.
 
-    :param predictions: `numpy.array` of shape `(n_classifier, n_classes)`. Continuous predictions.
+    :param predictions: `numpy.array` of shape `(n_classifiers, n_classes)`. Continuous predictions.
     :return: `numpy.array` of the same shape as ``predictions``. Crisp decision outputs.
     """
     decisions = np.zeros_like(predictions)
@@ -85,7 +85,7 @@ def decision_tensor_to_configs(decision_outputs):
     Transform decision outputs to decision configs. A decision config shows concatenated classification outputs of each
     classifier per sample.
 
-    :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :return: `numpy.array` of shape `(n_samples, n_classes*)`, `n_classes*` is the sum of all classes covered by
@@ -122,12 +122,12 @@ def transform_labels_to_class_assignments(labels, n_classes):
 
 def transform_label_tensor_to_class_assignment_tensor(label_tensor, n_classes):
     """
-    Transform a label tensor of shape `(n_classifier, n_samples)` to the tensor of class assignments of shape
-    `(n_classifier, n_samples, n_classes)`. A label is an integer between `0` and `n_classes - 1`.
+    Transform a label tensor of shape `(n_classifiers, n_samples)` to the tensor of class assignments of shape
+    `(n_classifiers, n_samples, n_classes)`. A label is an integer between `0` and `n_classes - 1`.
 
-    :param label_tensor: `numpy.array` of shape `(n_classifier, n_samples)`. Label tensor.
+    :param label_tensor: `numpy.array` of shape `(n_classifiers, n_samples)`. Label tensor.
     :param n_classes: Number of classes to be considered.
-    :return: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`. Class assignment tensor (decision tensor).
+    :return: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`. Class assignment tensor (decision tensor).
     """
     label_tensor = np.array(label_tensor)
     assignments = np.zeros((label_tensor.shape[0], label_tensor.shape[1], n_classes))
@@ -156,11 +156,11 @@ def generate_multiclass_confusion_matrices(decision_tensor, true_assignment):  #
     Generate multiclass confusion matrices out of the given decision tensor and true assignments.
     Continuous outputs are converted to multiclass assignments using the MAX rule.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
     :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp label assignments which are considered true for calculating confusion matrices.
-    :return: `numpy.array` of shape `(n_classifier, n_samples, n_samples)`. Confusion matrices per classifier.
+    :return: `numpy.array` of shape `(n_classifiers, n_samples, n_samples)`. Confusion matrices per classifier.
     """
     true_assignment_labels = np.argmax(true_assignment, axis=1)
     confusion_matrices = np.zeros((np.shape(decision_tensor)[0],
@@ -178,7 +178,7 @@ def generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignment,
     """
     Generate multilabel confusion matrices for complementary-redundant multilabel classification outputs.
 
-    :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
             `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
             due to the coverage.
     :param true_assignment: `numpy.array` of shape `(n_samples, n_classes)`.
@@ -203,9 +203,9 @@ def multilabel_to_multiclass_assignments(decision_tensor):
     which is one of the `2^3` classes in the multiclass decision space.
     This method is inverse to the ``multiclass_to_multilabel_assignments`` method.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multilabel decision outputs by different classifiers per sample.
-    :return: `numpy.array` of shape `(n_classifier, n_samples, 2^n_classes)`.
+    :return: `numpy.array` of shape `(n_classifiers, n_samples, 2^n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     """
     decision_tensor = np.array(decision_tensor)
@@ -233,9 +233,9 @@ def multiclass_to_multilabel_assignments(decision_tensor):
     converted to the multilabel class assignment `[1,1]` (classes `0` and `1` in the multilabel decision space).
     This method is inverse to the ``multilabel_to_multiclass_assignments`` method.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multilabel decision outputs by different classifiers per sample.
-    :return: `numpy.array` of shape `(n_classifier, n_samples, log_2(n_classes))`.
+    :return: `numpy.array` of shape `(n_classifiers, n_samples, log_2(n_classes))`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     """
     decision_tensor = np.array(decision_tensor)
@@ -296,7 +296,7 @@ def intercept_normal_class_in_tensor(decision_tensor, override=False):
     class assignment. E.g. the assignment `[0,0,0,0]` is transformed to `[1,0,0,0]`, under the assumption that `0`
     is a normal class.
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of decision outputs by different classifiers per sample.
     :param override: If `true`, the class `0` is assumed as a normal class. Otherwise a new class is prepended to
             existing classes.

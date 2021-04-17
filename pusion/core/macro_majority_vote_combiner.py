@@ -27,7 +27,7 @@ class MacroMajorityVoteCombiner(UtilityBasedCombiner):
         Combine decision outputs by majority voting across all classifiers considering the most common classification
         assignment (macro). Only crisp classification outputs are supported.
 
-        :param decision_tensor: `numpy.array` of shape `(n_classifier, n_samples, n_classes)`.
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
                 Tensor of crisp decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of crisp label assignments obtained by MAMV. Axis 0 represents samples and
