@@ -1,10 +1,10 @@
-from pusion.core.combiner import TrainableCombiner, EvidenceBasedCombiner
+from pusion.core.combiner import EvidenceBasedCombiner, TrainableCombiner
 from pusion.util.transformer import *
 from sklearn.metrics import accuracy_score
 from pusion.util.constants import *
 
 
-class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
+class WeightedVotingCombiner(EvidenceBasedCombiner, TrainableCombiner):
     """
     The :class:`WeightedVotingCombiner` (WV) is a weighted voting schema adopted from Kuncheva (eq. 4.43)
     :footcite:`kuncheva2014combining`. Classifiers with better performance (i.e. accuracy) are given more
@@ -24,6 +24,18 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
     def __init__(self):
         super().__init__()
         self.accuracy = None
+
+    def set_evidence(self, evidence):
+        """
+        Set the evidence given by confusion matrices calculated according to Kuncheva :footcite:`kuncheva2014combining`
+        for each ensemble classifier.
+
+        .. footbibliography::
+
+        :param evidence: `numpy.array` of shape `(n_classifiers, n_classes, n_classes)`.
+                Confusion matrices for each of `n` classifiers.
+        """
+        self.accuracy = confusion_matrices_to_accuracy_vector(evidence)
 
     def train(self, decision_tensor, true_assignments):
         """
@@ -67,14 +79,6 @@ class WeightedVotingCombiner(TrainableCombiner, EvidenceBasedCombiner):
         # find the maximum class support according to Kuncheva eq. (4.43)
         fused_decisions[np.arange(len(fused_decisions)), adp.argmax(1)] = 1
         return fused_decisions
-
-    def set_evidence(self, evidence):
-        """
-        :param evidence: List of accuracy measurement values of all classifiers which is aligned with the
-                ``decision_tensor`` on axis 0. Higher values indicate better accuracy. The accuracy is normalized to the
-                [0,1]-interval.
-        """
-        self.accuracy = evidence
 
 
 class CRWeightedVotingCombiner(WeightedVotingCombiner):

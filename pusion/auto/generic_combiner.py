@@ -53,7 +53,7 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         Set the evidence for evidence based combiners. This method preselects all combiners of type
         `EvidenceBasedCombiner`.
 
-        :param evidence: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+        :param evidence: `numpy.array` of shape `(n_classifiers, n_classes, n_classes)`.
                 Confusion matrices for each of `n` classifiers.
         """
         self.__add_combiner_type(EvidenceBasedCombiner)

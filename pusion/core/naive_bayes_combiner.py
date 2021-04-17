@@ -3,7 +3,7 @@ from pusion.util.transformer import *
 from pusion.util.constants import *
 
 
-class NaiveBayesCombiner(TrainableCombiner):
+class NaiveBayesCombiner(EvidenceBasedCombiner, TrainableCombiner):
     """
     The :class:`NaiveBayesCombiner` (NB) is a fusion method based on the Bayes theorem which is applied according to
     Kuncheva :footcite:`kuncheva2014combining` and Titterington et al. :footcite:`titterington1981comparison`.
@@ -26,6 +26,15 @@ class NaiveBayesCombiner(TrainableCombiner):
         self.n_samples_per_class = None
 
     def set_evidence(self, evidence):
+        """
+        Set the evidence given by confusion matrices calculated according to Kuncheva :footcite:`kuncheva2014combining`
+        for each ensemble classifier.
+
+        .. footbibliography::
+
+        :param evidence: `numpy.array` of shape `(n_classifiers, n_classes, n_classes)`.
+                Confusion matrices for each of `n` classifiers.
+        """
         self.confusion_matrices = evidence
         self.n_samples_per_class = np.sum(evidence[0], axis=1)
 
