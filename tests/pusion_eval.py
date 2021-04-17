@@ -22,7 +22,7 @@ from pusion.input_output.file_input_output import *
 warnings.filterwarnings('error')  # TODO delete
 
 eval_id = uuid.uuid4().hex
-n_runs = 1
+n_runs = 3
 
 
 classifiers_performance_run_tuples = []
@@ -60,7 +60,7 @@ for i in range(n_runs):
         # QuadraticDiscriminantAnalysis(),
     ]
 
-    coverage = p.generate_classification_coverage(n_classifier=len(classifiers),
+    coverage = p.generate_classification_coverage(n_classifiers=len(classifiers),
                                                   n_classes=4,
                                                   overlap=1,
                                                   normal_class=True)
