@@ -143,15 +143,8 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         if len(decision_outputs) != len(self.accuracy):
             raise TypeError("Accuracy vector dimension does not match the number of classifiers in the input tensor.")
 
-        # TODO begin - extract method?
-        n_classifiers = len(decision_outputs)
-        n_decisions = len(decision_outputs[0])
-        n_classes = len(np.unique(np.concatenate(self.coverage)))
-        # tensor for transformed decision outputs
-        t_decision_outputs = np.full((n_classifiers, n_decisions, n_classes), np.nan)
-        for i in range(n_classifiers):
-            t_decision_outputs[i, :, self.coverage[i]] = decision_outputs[i].T
-        # TODO end
+        t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
+
         # convert decision_tensor to decision profiles for better handling
         decision_profiles = decision_tensor_to_decision_profiles(t_decision_outputs)
         # use a masked array due to classifications which do not cover all classes
@@ -164,6 +157,17 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         # find the maximum class support according to Kuncheva eq. (4.43)
         fused_decisions[np.arange(len(fused_decisions)), adp.argmax(1)] = 1
         return fused_decisions
+
+    @staticmethod
+    def __transform_to_uniform_decision_tensor(decision_outputs, coverage):
+        n_classifiers = len(decision_outputs)
+        n_decisions = len(decision_outputs[0])
+        n_classes = len(np.unique(np.concatenate(coverage)))
+        # tensor for transformed decision outputs
+        t_decision_outputs = np.full((n_classifiers, n_decisions, n_classes), np.nan)
+        for i in range(n_classifiers):
+            t_decision_outputs[i, :, coverage[i]] = decision_outputs[i].T
+        return t_decision_outputs
 
     def set_evidence(self, evidence):
         """
