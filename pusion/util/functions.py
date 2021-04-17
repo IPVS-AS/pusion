@@ -103,7 +103,7 @@ def determine_coverage_type(coverage):
 
 def determine_pac(decision_outputs, coverage=None):
     """
-    Determine the PAC-tuple (problem,assignment type and coverage type) based on the given decision outputs and
+    Determine the PAC-tuple (problem, assignment type and coverage type) based on the given decision outputs and
     coverage.
 
     :param decision_outputs: `numpy.array` of shape `(n_classifier, n_samples, n_classes)` or a `list` of
