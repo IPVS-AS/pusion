@@ -17,8 +17,6 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
 
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
-        (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
-        (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.REDUNDANT),
     ]
 
     SHORT_NAME = 'BKS'
@@ -42,7 +40,6 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
                 Matrix of crisp class assignments which are considered true for each sample during
                 the training procedure.
         """
-        # TODO disable for CR and check input
         configs = decision_tensor_to_configs(decision_tensor)
         unique_configs = np.unique(configs, axis=0)
         self.n_classes = np.shape(true_assignments)[1]
@@ -84,9 +81,6 @@ class BehaviourKnowledgeSpaceCombiner(TrainableCombiner):
                 uc_index = lookup[0]
                 # set the class decision according to the maximum sample numbers for this config
                 fused_decisions[i, self.config_class_distribution[uc_index].argmax()] = 1
-                # TODO Multilabel:
-                # dist = self.config_class_distribution[uc_index]
-                # fused_decisions[i, np.argwhere(dist == dist.max())] = 1
         return fused_decisions
 
 
@@ -100,7 +94,6 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
 
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
-        (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
     SHORT_NAME = 'BKS (CR)'
