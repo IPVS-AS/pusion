@@ -1,3 +1,5 @@
+![Pusion Framework](docs/source/_static/images/pusion_logo_medium.png)
+
 # _pusion_ – A framework for decision fusion
 
 Pusion is a flexible framework for combining multiple classifier’s decisions in Python.
@@ -11,4 +13,5 @@ classification, as well as crisp and continuous class assignments.
 The framework is originally designed for combining fault detection and diagnosis methods, but it’s application is not
 limited to this area.
 
-
+## Full Documentation
+The full documentation is available on [GitLab Pages](https://adob.gitlab.io/decision-fusion-framework).

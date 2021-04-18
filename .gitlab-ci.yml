@@ -1,0 +1,14 @@
+image: python:3.7-alpine
+
+pages:
+  script:
+  - pip install -U sphinx
+  - pip install sphinx_rtd_theme
+  - pip install sphinxcontrib-bibtex
+  - sphinx-build -d _build/doctrees docs/source _build/html
+  - mv _build/html public
+  artifacts:
+        paths:
+        - public
+  only:
+  - master
