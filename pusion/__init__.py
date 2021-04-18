@@ -31,7 +31,7 @@ class Method:
     BORDA_COUNT = BordaCountCombiner
     COSINE_SIMILARITY = CosineSimilarityCombiner
     DECISION_TEMPLATES = DecisionTemplatesCombiner
-    DECISION_TREE_COMBINER = DecisionTreeCombiner
+    DECISION_TREE = DecisionTreeCombiner
     DEMPSTER_SHAFER = DempsterShaferCombiner
     MACRO_MAJORITY_VOTE = MacroMajorityVoteCombiner
     MAXIMUM_LIKELIHOOD = MaximumLikelihoodCombiner
