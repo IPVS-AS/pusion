@@ -1,6 +1,6 @@
 from pusion.core.combiner import EvidenceBasedCombiner, TrainableCombiner
 from pusion.util.transformer import *
-from sklearn.metrics import accuracy_score
+from pusion.evaluation.evaluation_metrics import accuracy
 from pusion.util.constants import *
 
 
@@ -16,7 +16,6 @@ class WeightedVotingCombiner(EvidenceBasedCombiner, TrainableCombiner):
 
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
-        (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.REDUNDANT),
     ]
 
     SHORT_NAME = 'WV'
@@ -73,11 +72,11 @@ class WeightedVotingCombiner(EvidenceBasedCombiner, TrainableCombiner):
             raise TypeError("Accuracy vector dimension does not match the number of classifiers in the input tensor.")
         # convert decision_tensor to decision profiles for better handling
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
-        # average all decision templates, i-th row contains decisions of i-th sample
-        adp = np.array([np.average(dp, axis=0, weights=self.accuracy) for dp in decision_profiles])
-        fused_decisions = np.zeros_like(adp)
+        # average all decision profiles, i-th row contains decisions for i-th sample
+        decision_matrix = np.array([np.average(dp, axis=0, weights=self.accuracy) for dp in decision_profiles])
+        fused_decisions = np.zeros_like(decision_matrix)
         # find the maximum class support according to Kuncheva eq. (4.43)
-        fused_decisions[np.arange(len(fused_decisions)), adp.argmax(1)] = 1
+        fused_decisions[np.arange(len(fused_decisions)), decision_matrix.argmax(1)] = 1
         return fused_decisions
 
 
@@ -92,7 +91,6 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
 
     _SUPPORTED_PAC = [
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
-        (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT)
     ]
 
     SHORT_NAME = 'WV (CR)'
@@ -125,7 +123,7 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
             y_true = true_assignments[:, self.coverage[i]]
             y_pred = decision_outputs[i]
             # TODO accuracy per classifier / per classifier and class
-            self.accuracy[i] = accuracy_score(y_true, y_pred)  # accuracy_score method?
+            self.accuracy[i] = accuracy(y_true, y_pred)
 
     def combine(self, decision_outputs):
         """
