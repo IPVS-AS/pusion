@@ -113,6 +113,11 @@ class CRDempsterShaferCombiner(DempsterShaferCombiner):
     :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
+    _SUPPORTED_PAC = [
+        (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
+        (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
+    ]
+
     SHORT_NAME = 'DS (CR)'
 
     def __init__(self):
