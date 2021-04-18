@@ -40,10 +40,8 @@ class NeuralNetworkCombiner(TrainableCombiner):
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
-        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))  # TODO  MKK only
-        # featured_decisions = np.sum(decision_profiles, axis=1)      # MLK
-        # n = 1 / np.sum(featured_decisions, axis=1)                  # MLK  # TODO dbz
-        # featured_decisions = featured_decisions * n[:, np.newaxis]  # MLK
+        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
+
         self.classifier.fit(featured_decisions, true_assignments)
 
     def combine(self, decision_tensor):
@@ -61,10 +59,7 @@ class NeuralNetworkCombiner(TrainableCombiner):
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
-        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))  # TODO  MKK only
-        # featured_decisions = np.sum(decision_profiles, axis=1)      # MLK
-        # n = 1 / np.sum(featured_decisions, axis=1)                  # MLK
-        # featured_decisions = featured_decisions * n[:, np.newaxis]  # MLK
+        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
 
         return self.classifier.predict(featured_decisions)
 

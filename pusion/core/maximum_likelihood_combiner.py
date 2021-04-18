@@ -50,10 +50,7 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
-        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))  # TODO  MKK only
-        # featured_decisions = np.sum(decision_profiles, axis=1)      # MLK
-        # n = 1 / np.sum(featured_decisions, axis=1)                  # MLK  # TODO dbz
-        # featured_decisions = featured_decisions * n[:, np.newaxis]  # MLK
+        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
 
         # extract all occurring classifications
         self.unique_assignments, unique_inv_indices = np.unique(true_assignments, axis=0, return_inverse=True)
@@ -84,10 +81,7 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
         fused_decisions = np.zeros_like(decision_tensor[0])
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
-        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))  # TODO  MKK only
-        # featured_decisions = np.sum(decision_profiles, axis=1)      # MLK
-        # n = 1 / np.sum(featured_decisions, axis=1)                  # MLK
-        # featured_decisions = featured_decisions * n[:, np.newaxis]  # MLK
+        featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
 
         for i in range(len(featured_decisions)):
             x = featured_decisions[i]
