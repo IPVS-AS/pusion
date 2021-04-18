@@ -24,9 +24,6 @@ class SimpleAverageCombiner(UtilityBasedCombiner):
     def __init__(self):
         UtilityBasedCombiner.__init__(self)
 
-    def train(self, decision_tensor, true_assignments):
-        pass
-
     def combine(self, decision_tensor):
         """
         Combine decision outputs by averaging the class support of each classifier in the given ensemble.
