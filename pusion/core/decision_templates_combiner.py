@@ -106,7 +106,12 @@ class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
     :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
     """
 
-    _SUPPORTED_PAC = []  # TODO analyse in cases of CR with continuous values.
+    _SUPPORTED_PAC = [
+        (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
+        (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
+        (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
+        (Problem.MULTI_LABEL, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
+    ]
 
     SHORT_NAME = 'DT (CR)'
 
