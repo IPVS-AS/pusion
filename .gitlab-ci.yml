@@ -3,9 +3,9 @@ image: debian:buster
 pages:
   script:
   - apt-get update
-  - apt-get install -y python python-pip
-  - pip install numpy scipy sklearn pandas matplotlib setuptools
-  - pip install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
+  - apt-get install -y python3 python3-pip
+  - pip3 install numpy scipy sklearn pandas matplotlib setuptools
+  - pip3 install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
   - sphinx-build -d build/doctrees docs/source build/html
   - mv build/html public
   artifacts:
