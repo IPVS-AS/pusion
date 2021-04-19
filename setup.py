@@ -12,7 +12,6 @@ setup(
         'scipy>=1.6.2',
         'sklearn>=0.0',
         'pusion>=1.3.3',
-        'scikit-learn>=0.24.1',
         'pandas>=1.2.3',
         'matplotlib>=3.4.1',
         'setuptools>=54.2.0'
