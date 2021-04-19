@@ -1,13 +1,12 @@
-image: python:3.7-alpine
+image: debian:buster
 
 pages:
   script:
+  - apt-get install -y python python-pip
   - pip install numpy scipy sklearn pusion scikit-learn pandas matplotlib setuptools
-  - pip install -U sphinx
-  - pip install sphinx_rtd_theme
-  - pip install sphinxcontrib-bibtex
-  - sphinx-build -d _build/doctrees docs/source _build/html
-  - mv _build/html public
+  - pip install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
+  - sphinx-build -d build/doctrees docs/source build/html
+  - mv build/html public
   artifacts:
         paths:
         - public
