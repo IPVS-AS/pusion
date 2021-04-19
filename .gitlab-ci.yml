@@ -2,7 +2,7 @@ image: python:3.7-alpine
 
 pages:
   script:
-  - pip install .
+  - pip install numpy scipy sklearn pusion scikit-learn pandas matplotlib setuptools
   - pip install -U sphinx
   - pip install sphinx_rtd_theme
   - pip install sphinxcontrib-bibtex
