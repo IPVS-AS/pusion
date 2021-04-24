@@ -1,5 +1,5 @@
 from pusion.control.decision_processor import DecisionProcessor
-from pusion.control.evaluation import Evaluation
+from pusion.evaluation.evaluation import Evaluation
 from pusion.core import *
 from pusion.model.configuration import Configuration
 from pusion.util import *

@@ -1,7 +1,7 @@
 from sklearn.neural_network import MLPClassifier
 
 import pusion as p
-from pusion.control.evaluation import Evaluation
+from pusion.evaluation.evaluation import Evaluation
 
 classifiers = [
     MLPClassifier(max_iter=5000, hidden_layer_sizes=(10,)),  # MLK

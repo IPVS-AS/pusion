@@ -3,7 +3,7 @@ import warnings
 from sklearn.neural_network import MLPClassifier
 
 import pusion as p
-from pusion.control.evaluation import Evaluation
+from pusion.evaluation.evaluation import Evaluation
 
 warnings.filterwarnings('error')  # TODO delete
 

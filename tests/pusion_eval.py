@@ -15,7 +15,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-from pusion.control.evaluation import Evaluation
+from pusion.evaluation.evaluation import Evaluation
 from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
 
