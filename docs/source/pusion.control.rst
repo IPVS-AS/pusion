@@ -6,4 +6,4 @@ pusion.control package
    :maxdepth: 4
 
    pusion.control.decision_processor
-   pusion.control.evaluation
+   pusion.evaluation.evaluation
