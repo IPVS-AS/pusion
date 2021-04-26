@@ -182,3 +182,41 @@ def shrink_to_coverage(decision_tensor, coverage):
         sdt = intercept_normal_class(sdt, override=True)
         decision_outputs.append(sdt)
     return decision_outputs_to_decision_tensor(decision_outputs)
+
+
+def split_into_train_and_validation_data(decision_tensor, true_assignments, validation_size=0.5):
+    """
+    Split the decision outputs (tensor) from multiple classifiers as well as the true assignments randomly into train
+    and validation datasets.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of true class assignments.
+    :param validation_size: Proportion between `0` and `1` for the size of the validation data set.
+    :return: `tuple` of
+            (1) `numpy.array` of shape `(n_classifiers, n_samples', n_classes)`,
+            (2) `numpy.array` of shape `(n_classifiers, n_samples')`,
+            (3) `numpy.array` of shape `(n_classifiers, n_samples'', n_classes)`,
+            (4) `numpy.array` of shape `(n_classifiers, n_samples'')`, with `n_samples'` as the number of training
+            samples and `n_samples''` as the number of validation samples.
+    """
+    n_validation_samples = int(len(true_assignments) * validation_size)
+    all_indices = np.arange(len(true_assignments))
+    validation_indices = np.random.choice(all_indices, n_validation_samples, replace=False)
+    mask = np.ones(len(all_indices), bool)
+    mask[validation_indices] = 0
+    train_indices = all_indices[mask]
+    true_assignments_train = true_assignments[train_indices]
+    true_assignments_validation = true_assignments[validation_indices]
+    decision_tensor_train = []
+    decision_tensor_validation = []
+
+    for decision_matrix in decision_tensor:
+        decision_tensor_train.append(decision_matrix[train_indices])
+        decision_tensor_validation.append(decision_matrix[validation_indices])
+
+    return decision_outputs_to_decision_tensor(decision_tensor_train), \
+        decision_outputs_to_decision_tensor(true_assignments_train), \
+        decision_outputs_to_decision_tensor(decision_tensor_validation), \
+        decision_outputs_to_decision_tensor(true_assignments_validation)

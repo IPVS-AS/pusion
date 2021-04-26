@@ -1,5 +1,6 @@
 from pusion.core.combiner import *
 from pusion.util.detector import *
+from pusion.util.generator import *
 from pusion.evaluation.evaluation_metrics import *
 
 
