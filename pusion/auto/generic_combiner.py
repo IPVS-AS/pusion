@@ -1,5 +1,5 @@
 from pusion.core.combiner import *
-from pusion.util.detector import *
+from pusion.auto.detector import *
 
 
 class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner, Generic):

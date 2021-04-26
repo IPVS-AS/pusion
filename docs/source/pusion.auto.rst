@@ -7,3 +7,4 @@ pusion.auto package
 
    pusion.auto.auto_combiner
    pusion.auto.generic_combiner
+   pusion.auto.detector
