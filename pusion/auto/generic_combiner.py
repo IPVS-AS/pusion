@@ -2,7 +2,7 @@ from pusion.core.combiner import *
 from pusion.auto.detector import *
 
 
-class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner, Generic):
+class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner):
     """
     `GenericCombiner` (GC) allows for automatic decision fusion using all methods provided by the framework, which are
     applicable to the given problem. The key feature of this combiner is the transparency in terms of it's outer
@@ -129,8 +129,8 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         for combiner_type in combiner_types:
             for map_entry in super()._ALL_PAC_MAPPINGS:
                 method, pac_ = map_entry[0], map_entry[1]
-                if pac_ == pac and method not in methods and not issubclass(method, Generic) \
-                        and issubclass(method, combiner_type):
+                if pac_ == pac and method not in methods and not issubclass(method, GenericCombiner) \
+                        and method is not GenericCombiner and issubclass(method, combiner_type):
                     methods.append(method)
         return [method() for method in methods]
 

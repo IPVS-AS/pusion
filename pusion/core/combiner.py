@@ -213,7 +213,3 @@ class EvidenceBasedCombiner(Combiner):
                 for each ensemble classifier.
         """
         pass
-
-
-class Generic:
-    pass
