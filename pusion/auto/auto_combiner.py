@@ -96,6 +96,13 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
             if isinstance(combiner, TrainableCombiner):
                 combiner.train(dt_train, ta_train)
 
+        # Evaluation phase
+        if self.__combiner_type_selected(TrainableCombiner):
+            self.performance_measures = np.zeros(len(self.combiners))
+            for i, combiner in enumerate(self.combiners):
+                res = combiner.combine(self.decision_tensor_validation)
+                self.performance_measures[i] = accuracy(self.true_assignments_validation, res)
+
     def combine(self, decision_tensor):
         """
         Combine decision outputs using the AutoCombiner (AC) model. Both continuous and crisp classification outputs are
@@ -115,13 +122,6 @@ class AutoCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombine
         self.__add_combiner_type(UtilityBasedCombiner)
         self.problem = determine_problem(decision_tensor)
         self.assignment_type = determine_assignment_type(decision_tensor)
-
-        # Evaluation phase
-        if self.__combiner_type_selected(TrainableCombiner):
-            self.performance_measures = np.zeros(len(self.combiners))
-            for i, combiner in enumerate(self.combiners):
-                res = combiner.combine(self.decision_tensor_validation)
-                self.performance_measures[i] = accuracy(self.true_assignments_validation, res)
 
         if not self.__combiner_type_selected(TrainableCombiner):
             self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
