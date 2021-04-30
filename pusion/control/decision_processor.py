@@ -99,11 +99,11 @@ class DecisionProcessor:
 
         :return: The combiner object.
         """
-        if isinstance(self.combiner, GenericCombiner) and self.evaluation is None:
+        if type(self.combiner) is GenericCombiner and self.evaluation is None:
             raise TypeError("No evaluation set for determining the optimal method using GenericCombiner.")
-        if isinstance(self.combiner, GenericCombiner):
+        if type(self.combiner) is GenericCombiner:
             return self.evaluation.get_top_n_instances(1)[0]
-        elif isinstance(self.combiner, AutoCombiner):
+        elif type(self.combiner) is AutoCombiner:
             return self.combiner.get_selected_combiner()
         else:
             return self.combiner
