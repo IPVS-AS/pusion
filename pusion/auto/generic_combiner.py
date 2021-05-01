@@ -1,5 +1,6 @@
 from pusion.core.combiner import *
 from pusion.auto.detector import *
+import multiprocessing as mp
 
 
 class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner):
@@ -35,6 +36,7 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         self.multi_combiner_decision_tensor = []
 
         self.evidence = None
+        self.parallel = True
 
     def set_coverage(self, coverage):
         """
@@ -59,6 +61,49 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         self.__add_combiner_type(EvidenceBasedCombiner)
         self.evidence = evidence
 
+    def p_train(self, index, combiner, decision_tensor, true_assignment, queue):
+        combiner.train(decision_tensor, true_assignment)
+        queue.put((index, combiner))
+
+    def train_par(self, decision_tensor, true_assignments):
+        self.__add_combiner_type(UtilityBasedCombiner)
+        self.__add_combiner_type(TrainableCombiner)
+        self.problem = determine_problem(decision_tensor)
+        self.assignment_type = determine_assignment_type(decision_tensor)
+        self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
+        self.__prepare()
+
+        # Create a thread-safe queue for combiners
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, combiner in enumerate(self.combiners):
+            if isinstance(combiner, TrainableCombiner):
+                process = mp.Process(target=self.p_train, args=(i, combiner, decision_tensor, true_assignments, queue))
+                processes.append(process)
+            else:
+                queue.put((i, combiner))
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+
+        self.combiners = [None for i in range(len(self.combiners))]
+        while not queue.empty():
+            i, combiner = queue.get()
+            self.combiners[i] = combiner
+
+    def train_seq(self, decision_tensor, true_assignments):
+        self.__add_combiner_type(UtilityBasedCombiner)
+        self.__add_combiner_type(TrainableCombiner)
+        self.problem = determine_problem(decision_tensor)
+        self.assignment_type = determine_assignment_type(decision_tensor)
+        self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
+        self.__prepare()
+
+        for combiner in self.combiners:
+            if isinstance(combiner, TrainableCombiner):
+                combiner.train(decision_tensor, true_assignments)
+
     def train(self, decision_tensor, true_assignments):
         """
         Train the Generic Combiner. This method detects the configuration based on the ``decision_tensor`` and
@@ -74,16 +119,56 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
                 Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
+        if self.parallel:
+            self.train_par(decision_tensor, true_assignments)
+        else:
+            self.train_seq(decision_tensor, true_assignments)
+
+    def p_combine(self, index, combiner, decision_tensor, queue):
+        decision_matrix = combiner.combine(decision_tensor)
+        queue.put((index, decision_matrix))
+
+    def combine_par(self, decision_tensor):
         self.__add_combiner_type(UtilityBasedCombiner)
-        self.__add_combiner_type(TrainableCombiner)
         self.problem = determine_problem(decision_tensor)
         self.assignment_type = determine_assignment_type(decision_tensor)
-        self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
+
+        if not self.__combiner_type_selected(TrainableCombiner):
+            self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
+
         self.__prepare()
 
+        # Create a thread-safe queue for combiners
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, combiner in enumerate(self.combiners):
+            process = mp.Process(target=self.p_combine, args=(i, combiner, decision_tensor, queue))
+            processes.append(process)
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+
+        self.multi_combiner_decision_tensor = [None for i in range(len(self.combiners))]
+        while not queue.empty():
+            i, decision_matrix = queue.get()
+            self.multi_combiner_decision_tensor[i] = decision_matrix
+        return self.multi_combiner_decision_tensor
+
+    def combine_seq(self, decision_tensor):
+        self.__add_combiner_type(UtilityBasedCombiner)
+        self.problem = determine_problem(decision_tensor)
+        self.assignment_type = determine_assignment_type(decision_tensor)
+
+        if not self.__combiner_type_selected(TrainableCombiner):
+            self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
+
+        self.__prepare()
+
+        self.multi_combiner_decision_tensor = []
         for combiner in self.combiners:
-            if isinstance(combiner, TrainableCombiner):
-                combiner.train(decision_tensor, true_assignments)
+            self.multi_combiner_decision_tensor.append(combiner.combine(decision_tensor))
+        return self.multi_combiner_decision_tensor
 
     def combine(self, decision_tensor):
         """
@@ -101,20 +186,10 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
                 Fusion results obtained by selected fusion methods.
                 The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
         """
-        self.__add_combiner_type(UtilityBasedCombiner)
-        self.problem = determine_problem(decision_tensor)
-        self.assignment_type = determine_assignment_type(decision_tensor)
-
-        if not self.__combiner_type_selected(TrainableCombiner):
-            self.combiners = self.__obtain_from_registered_methods(self.get_pac(), self.combiner_type_selection)
-
-        self.__prepare()
-
-        # Combine phase
-        for combiner in self.combiners:
-            self.multi_combiner_decision_tensor.append(combiner.combine(decision_tensor))
-
-        return self.multi_combiner_decision_tensor
+        if self.parallel:
+            return self.combine_par(decision_tensor)
+        else:
+            return self.combine_seq(decision_tensor)
 
     def __prepare(self):
         for combiner in self.combiners:
@@ -166,3 +241,10 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
                 The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
         """
         return self.multi_combiner_decision_tensor
+
+    def set_parallel(self, parallel=True):
+        """
+        Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
+        :param parallel: If `True`, training and combining is performed in parallel respectively. Otherwise in sequence.
+        """
+        self.parallel = parallel

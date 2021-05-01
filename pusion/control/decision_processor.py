@@ -151,3 +151,13 @@ class DecisionProcessor:
                 performed with.
         """
         self.evaluation = evaluation
+
+    def set_parallel(self, parallel=True):
+        """
+        Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
+        :param parallel: If `True`, training and combining is performed in parallel respectively. Otherwise in sequence.
+        """
+        if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
+            self.combiner.set_parallel(parallel)
+        else:
+            raise TypeError("set_parallel() is not callable for a core combiner.")
