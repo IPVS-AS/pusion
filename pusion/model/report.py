@@ -18,7 +18,7 @@ class Report:
 
         self.records = {}
         self.instance_names = self.__generate_instance_names(instances)
-        self.metric_names = [metric.__name__ for metric in metrics]
+        self.metric_names = [metric if type(metric) is str else metric.__name__ for metric in metrics]
 
         for i, pv in enumerate(performance_matrix):
             self.records[self.instance_names[i]] = pv

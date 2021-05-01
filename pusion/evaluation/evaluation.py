@@ -13,6 +13,7 @@ class Evaluation:
         self.metrics = []
         self.instances = None
         self.performance_matrix = None
+        self.runtime_matrix = None
         self.set_metrics(*argv)
 
     def evaluate_cr_combiners(self, true_assignments, decision_tensor, coverage):
@@ -144,6 +145,14 @@ class Evaluation:
         """
         return Report(np.around(self.performance_matrix, 3), self.instances, self.metrics)
 
+    def get_runtime_report(self):
+        """
+        :return: A summary `Report` of train and combine runtimes for all involved instances.
+        """
+        if self.runtime_matrix is not None:
+            return Report(np.around(self.runtime_matrix, 4), self.instances, ['t_train (sec)', 't_comb (sec)'])
+        raise TypeError("A runtime matrix is not set.")
+
     def get_instances(self):
         """
         :return: A `list` of instances (i.e. combiner or classifiers) been evaluated.
@@ -201,6 +210,17 @@ class Evaluation:
         if type(instances) != list:
             instances = [instances]
         self.instances = instances
+
+    def set_runtimes(self, runtimes):
+        """
+        :param runtimes: A `tuple` of two lists of tuples describing the train and combine runtimes respectively.
+                Each runtime list is aligned with the list of set instances.
+        """
+        runtime_matrix = np.full((len(self.instances), 2), np.nan)
+        for t in range(len(runtimes)):
+            for i in range(len(runtimes[t])):
+                runtime_matrix[runtimes[t][i][0], t] = runtimes[t][i][1]
+        self.runtime_matrix = runtime_matrix
 
     def __check(self):
         if len(self.metrics) == 0:

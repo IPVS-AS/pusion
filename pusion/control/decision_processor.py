@@ -145,6 +145,18 @@ class DecisionProcessor:
             return self.combiner.get_pac(), self.combiner.get_combiner_type_selection()
         raise TypeError("info() is not callable for a core combiner.")
 
+    def get_multi_combiner_runtimes(self):
+        """
+        Retrieve the train and combine runtime for each combiner used during a generic fusion.
+
+        :return: A `tuple` of two lists of tuples describing the train and combine runtimes respectively.
+                Each inner tuple key value indexes the list of preselected fusion methods
+                (retrievable by ``get_combiners()``).
+        """
+        if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
+            return self.combiner.get_multi_combiner_runtimes()
+        raise TypeError("info_runtime() is not callable for a core combiner.")
+
     def set_evaluation(self, evaluation):
         """
         :param evaluation: :class:`pusion.control.evaluation.Evaluation` object, a combiner evaluation was
