@@ -26,8 +26,8 @@ def __determine_tensor_problem(decision_tensor):
     """
     Helper method for ``determine_problem`` to determine the classification problem on `numpy.array` tensors.
     """
-    # sum up all decisions along classes
-    decision_sum = np.sum(decision_tensor, axis=decision_tensor.ndim - 1)
+    # sum up all decisions along classes tolerating the inaccuracy of floating point numbers
+    decision_sum = np.around(np.sum(decision_tensor, axis=decision_tensor.ndim - 1), 5)
     assignment_type = determine_assignment_type(decision_tensor)
     if assignment_type == AssignmentType.CRISP:
         if np.all(decision_sum == 1):
