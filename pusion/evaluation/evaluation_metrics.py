@@ -77,6 +77,32 @@ def mean_multilabel_confusion_matrix(y_true, y_pred):
     return cm_sum / (len(y_pred) * np.max(cm_sum))
 
 
+def mean_confidence(y_true, y_pred):
+    """
+    Calculate the mean confidence for continuous multiclass and multilabel classification outputs.
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted class assignments.
+
+    :return: Mean confidence.
+    """
+    y_pred = np.array(y_pred).astype(float)
+    mask = y_true.astype(bool)
+    y_pred[~mask] = 1 - y_pred[~mask]
+    return np.nanmean(y_pred)
+
+
+# TODO evaluate. Only confidences of 1-assignments in y_pred are considered.
+def mean_confidence_tp(y_true, y_pred, average='macro'):
+    y_pred = np.array(y_pred).astype(float)
+    mask = y_true.astype(bool)
+    y_pred[~mask] = np.nan
+    if average == 'micro':
+        return np.nanmean(y_pred)
+    elif average == 'macro':
+        return np.nanmean(np.nanmean(y_pred, axis=0))
+
+
 def hamming(y_true, y_pred):
     """
     Calculate the average Hamming Loss.
