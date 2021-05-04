@@ -51,10 +51,14 @@ class PerformanceMetric:
     F1_SCORE = f1
     JACCARD_SCORE = jaccard
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
+    MEAN_CONFIDENCE = mean_confidence
 
 
 class DiversityMetric:
-    COHENS_KAPPA_MULTICLASS = pairwise_cohens_kappa_multiclass
-    COHENS_KAPPA_MULTILABEL = pairwise_cohens_kappa_multilabel
-    CORRELATION = correlation
-    Q_STATISTIC = q_statistic
+    PAIRWISE_COHENS_KAPPA = pairwise_cohens_kappa
+    PAIRWISE_CORRELATION = pairwise_correlation
+    PAIRWISE_Q_STATISTIC = pairwise_q_statistic
+    PAIRWISE_KAPPA_STATISTIC = pairwise_kappa_statistic
+    PAIRWISE_DISAGREEMENT = pairwise_disagreement
+    PAIRWISE_DOUBLE_FAULT = pairwise_double_fault
+    PAIRWISE_EUCLIDEAN_DISTANCE = pairwise_euclidean_distance

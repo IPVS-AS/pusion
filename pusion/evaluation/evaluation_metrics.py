@@ -1,6 +1,8 @@
 import numpy as np
+from pusion.util.constants import Problem
 from sklearn.metrics import *
 
+from pusion.auto.detector import determine_problem
 from pusion.util.transformer import multiclass_assignments_to_labels, multilabel_to_multiclass_assignments
 
 
@@ -81,8 +83,8 @@ def mean_confidence(y_true, y_pred):
     """
     Calculate the mean confidence for continuous multiclass and multilabel classification outputs.
 
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted class assignments.
 
     :return: Mean confidence.
     """
@@ -148,7 +150,7 @@ def cohens_kappa(y1, y2, labels):
     return (a - e) / (1 - e)
 
 
-def pairwise_cohens_kappa_multiclass(decision_tensor):
+def pairwise_cohens_kappa(decision_tensor):
     """
     Calculate the average of pairwise Cohen's Kappa scores over all multiclass decision outputs.
     E.g., for 3 classifiers `(0,1,2)`, the agreement score is calculated for classifier tuples `(0,1)`, `(0,2)` and
@@ -159,6 +161,10 @@ def pairwise_cohens_kappa_multiclass(decision_tensor):
     :return: Pairwise (averages) Cohen's Kappa score.
     """
     decision_tensor = np.array(decision_tensor)
+
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+
     n_classifiers = decision_tensor.shape[0]
     n_classes = decision_tensor.shape[2]
     indices = np.array(np.triu_indices(n_classifiers, k=1))
@@ -169,56 +175,92 @@ def pairwise_cohens_kappa_multiclass(decision_tensor):
     return sum_kappa / len(indices[0])
 
 
-def pairwise_cohens_kappa_multilabel(decision_tensor):
+def __relations(y1, y2, y_true):
     """
-    Calculate the average of pairwise Cohen's Kappa scores over all multilabel decision outputs.
-    E.g., for 3 classifiers `(0,1,2)`, the agreement score is calculated for classifier tuples `(0,1)`, `(0,2)` and
-    `(1,2)`. These scores are then averaged over all 3 classifiers.
-
-    The multilabel outputs are transformed to equivalent multiclass outputs.
-
-    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
-            Tensor of crisp multiclass decision outputs by different classifiers per sample.
-    :return: Pairwise (averages) Cohen's Kappa score.
+    A helper function for calculating the correctness relations between two classifier outputs.
+    `A` accumulates samples which are correctly classified by both classifiers, `B` accumulates those which are
+    correctly classified by `c_1` but not by `c_2` and so on.
     """
-    mc_decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
-    return pairwise_cohens_kappa_multiclass(mc_decision_tensor)
+    n_samples = len(y_true)
+    a, b, c, d = 0, 0, 0, 0
+    for i in range(n_samples):
+        if np.all(y1[i] == y_true[i]) and np.all(y_true[i] == y2[i]):
+            a += 1  # both classifiers are correct.
+        elif np.all(y1[i] == y_true[i]) and np.any(y_true[i] != y2[i]):
+            b += 1  # c1 is correct, c2 is wrong.
+        elif np.any(y1[i] != y_true[i]) and np.all(y_true[i] == y2[i]):
+            c += 1  # c1 is wrong, c2 is correct.
+        elif np.any(y1[i] != y_true[i]) and np.any(y_true[i] != y2[i]):
+            d += 1  # both classifiers are wrong.
+    return a/n_samples, b/n_samples, c/n_samples, d/n_samples
 
 
-def __pairwise_micro_score(decision_tensor, score_func):
+def __pairwise_avg_score(decision_tensor, true_assignments, score_func):
     """
-    A helper function for calculating pairwise score statistics (e.g. Q-statistic).
+    A helper function for calculating pairwise average score statistics.
     """
     decision_tensor = np.array(decision_tensor)
     indices = np.array(np.triu_indices(decision_tensor.shape[0], k=1))
     scores = []
     for i, j in zip(indices[0], indices[1]):
-        norm_cm = multilabel_confusion_matrix(decision_tensor[i], decision_tensor[j]) / len(decision_tensor[i])
-        mean_cm = np.mean(norm_cm, axis=0)
-        a = mean_cm[1, 1]
-        b = mean_cm[1, 0]
-        c = mean_cm[0, 1]
-        d = mean_cm[0, 0]
-        scores.append(score_func(a, b, c, d))
+        scores.append(score_func(decision_tensor[i], decision_tensor[j], true_assignments))
     return np.mean(scores)
 
 
-def q_statistic(decision_tensor):
+def correlation(y1, y2, y_true):
     """
-    Calculate the average of pairwise Q-statistic scores over all decision outputs according to Yule
+    Calculate the correlation score for decision outputs of two classifiers according to Kuncheva
+    :footcite:`kuncheva2014combining`.
+
+    .. footbibliography::
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Correlation score.
+    """
+    a, b, c, d = __relations(y1, y2, y_true)
+    return (a * d - b * c) / np.sqrt((a + b) * (c + d) * (a + c) * (b + d))
+
+
+def q_statistic(y1, y2, y_true):
+    """
+    Calculate the Q statistic score for decision outputs of two classifiers according to Yule
     :footcite:`udny1900association`.
 
     .. footbibliography::
 
-    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
-            Tensor of crisp multiclass decision outputs by different classifiers per sample.
-    :return: Pairwise Q-statistic score.
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Correlation score.
     """
-    def q_stat_func(a, b, c, d): return (a * d - b * c) / (a * d + b * c)
-    return __pairwise_micro_score(decision_tensor, q_stat_func)
+    a, b, c, d = __relations(y1, y2, y_true)
+    return (a * d - b * c) / (a * d + b * c)
 
 
-def correlation(decision_tensor):
+def kappa_statistic(y1, y2, y_true):
+    a, b, c, d = __relations(y1, y2, y_true)
+    return (2 * (a * d - b * c))/((a + b)*(b + d) + (a + c)*(c + d))
+
+
+def disagreement(y1, y2, y_true):
+    a, b, c, d = __relations(y1, y2, y_true)
+    return b + c
+
+
+def double_fault(y1, y2, y_true):
+    a, b, c, d = __relations(y1, y2, y_true)
+    return d
+
+
+def pairwise_correlation(decision_tensor, true_assignments):
     """
     Calculate the average of pairwise correlation scores over all decision outputs according to Polikar
     :footcite:`polikar2006ensemble`.
@@ -227,7 +269,60 @@ def correlation(decision_tensor):
 
     :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
     :return: Pairwise correlation score.
     """
-    def correlation_func(a, b, c, d): return (a * d - b * c) / np.sqrt((a + b) * (c + d) * (a + c) * (b + d))
-    return __pairwise_micro_score(decision_tensor, correlation_func)
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+        true_assignments = multilabel_to_multiclass_assignments(true_assignments)
+    return __pairwise_avg_score(decision_tensor, true_assignments, correlation)
+
+
+def pairwise_q_statistic(decision_tensor, true_assignments):
+    """
+    Calculate the average of pairwise Q-statistic scores over all decision outputs according to Polikar
+    :footcite:`polikar2006ensemble`.
+
+    .. footbibliography::
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Pairwise correlation score.
+    """
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+        true_assignments = multilabel_to_multiclass_assignments(true_assignments)
+    return __pairwise_avg_score(decision_tensor, true_assignments, q_statistic)
+
+
+def pairwise_kappa_statistic(decision_tensor, true_assignments):
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+        true_assignments = multilabel_to_multiclass_assignments(true_assignments)
+    return __pairwise_avg_score(decision_tensor, true_assignments, kappa_statistic)
+
+
+def pairwise_disagreement(decision_tensor, true_assignments):
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+        true_assignments = multilabel_to_multiclass_assignments(true_assignments)
+    return __pairwise_avg_score(decision_tensor, true_assignments, disagreement)
+
+
+def pairwise_double_fault(decision_tensor, true_assignments):
+    if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
+        decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
+        true_assignments = multilabel_to_multiclass_assignments(true_assignments)
+    return __pairwise_avg_score(decision_tensor, true_assignments, double_fault)
+
+
+def pairwise_euclidean_distance(decision_tensor):
+    decision_tensor = np.array(decision_tensor)
+    indices = np.array(np.triu_indices(decision_tensor.shape[0], k=1))
+    scores = []
+    for i, j in zip(indices[0], indices[1]):
+        scores.append(np.mean(np.linalg.norm(decision_tensor[i] - decision_tensor[j], axis=1)))
+    return np.mean(scores)
