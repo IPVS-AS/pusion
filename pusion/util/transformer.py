@@ -192,7 +192,7 @@ def multilabel_to_multiclass_assignments(decision_tensor):
     :return: `numpy.array` of shape `(n_classifiers, n_samples, 2^n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
     """
-    decision_tensor = np.array(decision_tensor)
+    decision_tensor = np.array(decision_tensor).astype(int)
     input_is_matrix = False
     if decision_tensor.ndim == 2:
         decision_tensor = decision_tensor[np.newaxis, :]
