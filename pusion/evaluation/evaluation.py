@@ -172,6 +172,14 @@ class Evaluation:
         """
         return self.performance_matrix
 
+    def get_runtime_matrix(self):
+        """
+        :return: `numpy.array` of shape `(n_instances, 2)`. Runtime matrix containing runtimes
+                for each set instance row-wise. The column at index `0` describes train times and the column at index
+                `1` describes combine times.
+        """
+        return self.runtime_matrix
+
     def get_top_n_instances(self, n=None, metric=None):
         """
         Retrieve top `n` best instances according to the given `metric` in a sorted order.
