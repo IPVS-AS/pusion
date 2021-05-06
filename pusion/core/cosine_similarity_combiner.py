@@ -55,7 +55,7 @@ class CosineSimilarityCombiner(UtilityBasedCombiner):
             accumulated_cos_sim = np.zeros(len(dp))
             for j in range(len(dp)):
                 for k in range(len(dp)):
-                    if j != k:
+                    if j != k and np.any(dp[j]) and np.any(dp[k]):
                         # Calculate the cosine distance (assumption: no zero elements)
                         accumulated_cos_sim[j] = accumulated_cos_sim[j] + (1 - spatial.distance.cosine(dp[j], dp[k]))
             fused_decisions[i] = dp[np.argmax(accumulated_cos_sim)]

@@ -32,7 +32,7 @@ def __determine_tensor_problem(decision_tensor):
     if assignment_type == AssignmentType.CRISP:
         if np.all(decision_sum == 1):
             return Problem.MULTI_CLASS
-        if np.all(decision_sum >= 1):
+        if np.all(decision_sum >= 0):  # >= 1, if zero outputs should not be tolerated by framework requirements.
             return Problem.MULTI_LABEL
 
     if assignment_type == AssignmentType.CONTINUOUS:
