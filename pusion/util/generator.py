@@ -39,17 +39,15 @@ def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_c
     return class_index_list
 
 
-def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples):
     """
-    Generate random multiclass crisp classification outputs (assignments) for the given ensemble of classifiers.
+    Generate random multiclass, crisp and redundant classification outputs (assignments) for the given ensemble of
+    classifiers.
 
     :param classifiers: Classifiers used to generate classification outputs.
             These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
     :param n_classes: `integer`. Number of classes, predictions are made for.
     :param n_samples: `integer`. Number of samples.
-    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
-            which is identified by the positional index of the respective list.
-            If unset, redundant classification outputs are retrieved.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
@@ -94,9 +92,70 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
     y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
 
-    if coverage:
-        y_ensemble_valid = shrink_to_coverage(y_ensemble_valid, coverage)
-        y_ensemble_test = shrink_to_coverage(y_ensemble_test, coverage)
+    return y_ensemble_valid, y_valid, y_ensemble_test, y_test
+
+
+def generate_cr_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+    """
+    Generate random multiclass, crisp and complementary-redundant classification outputs (assignments) for the given
+    ensemble of classifiers.
+
+    :param classifiers: Classifiers used to generate classification outputs.
+            These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
+    :param n_classes: `integer`. Number of classes, predictions are made for.
+    :param n_samples: `integer`. Number of samples.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+            If unset, redundant classification outputs are retrieved.
+    :return: `tuple` of:
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a validation dataset.
+            - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a test dataset.
+            - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
+    """
+    x, y = make_classification(n_samples=n_samples,
+                               n_classes=n_classes,
+                               n_redundant=0,
+                               n_informative=n_classes,
+                               n_clusters_per_class=1)
+
+    x_train, x_meta, y_train, y_meta = train_test_split(x, y, test_size=.5)
+    x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
+
+    # Transform to class assignments
+    y_train = transform_label_vector_to_class_assignment_matrix(y_train, n_classes)
+    y_valid = transform_label_vector_to_class_assignment_matrix(y_valid, n_classes)
+    y_test = transform_label_vector_to_class_assignment_matrix(y_test, n_classes)
+
+    # Classifier training
+    for i, clf in enumerate(classifiers):
+        print("Train classifier: ", type(clf).__name__, "...")
+        y_train_ = y_train[:, coverage[i]]
+        y_train_ = intercept_normal_class(y_train_, override=True)
+        y_train_ = multiclass_assignments_to_labels(y_train_)
+        clf.fit(x_train, y_train_)
+
+    # Classifier validation to generate combiner training data
+    y_ensemble_valid = []
+    for i, clf in enumerate(classifiers):
+        print("Validate classifier: ", type(clf).__name__, "...")
+        pred = clf.predict(x_valid)
+        pred = transform_label_vector_to_class_assignment_matrix(pred, len(coverage[i]))
+        y_ensemble_valid.append(pred)
+
+    # Classifier test
+    y_ensemble_test = []
+    for i, clf in enumerate(classifiers):
+        print("Test classifier: ", type(clf).__name__, "...")
+        pred = clf.predict(x_test)
+        pred = transform_label_vector_to_class_assignment_matrix(pred, len(coverage[i]))
+        y_ensemble_test.append(pred)
+
+    # Transform to numpy tensors if possible
+    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
+    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 

@@ -40,19 +40,18 @@ classifier_max_scores = []
 classifier_max_mean_confidences = []
 combiners_max_scores = []
 
-ensemble_diversity_cohens_kappa_scores = []
 ensemble_diversity_correlation_scores = []
 ensemble_diversity_q_statistic_scores = []
-
 ensemble_diversity_kappa_statistic = []
-
 ensemble_diversity_disagreement = []
 ensemble_diversity_double_fault = []
 
+ensemble_diversity_cohens_kappa_scores = []
 ensemble_pairwise_euclidean_distance = []
 
 combiners_runtime_run_matrices = []
 
+# plot properties
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 for i in range(n_runs):
@@ -400,6 +399,11 @@ plt.close()
 non_zero_indexes = np.nonzero(combiners_train_mean_runtimes)[0]
 combiners_train_mean_non_zero_runtimes = combiners_train_mean_runtimes[non_zero_indexes]
 combiners_non_zero_names = [combiners_names[i] for i in non_zero_indexes]
+
+# remove outliers
+max_index = np.argmax(combiners_train_mean_non_zero_runtimes)
+combiners_train_mean_non_zero_runtimes = np.delete(combiners_train_mean_non_zero_runtimes, max_index)
+del combiners_non_zero_names[max_index]
 
 plt.figure(figsize=(10, 4.8))
 plt.bar(combiners_non_zero_names, combiners_train_mean_non_zero_runtimes, color='#93c6ed')
