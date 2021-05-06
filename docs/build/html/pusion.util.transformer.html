@@ -1,0 +1,526 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.util.transformer module &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage and Examples" href="usage_and_examples.html" />
+    <link rel="prev" title="pusion.util.generator module" href="pusion.util.generator.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.core.html">pusion.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.util.html">pusion.util package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pusion.util.generator.html">pusion.util.generator module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.util.transformer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.util.html">pusion.util package</a> &raquo;</li>
+        
+      <li>pusion.util.transformer module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.util.transformer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.util.transformer">
+<span id="pusion-util-transformer-module"></span><span id="transformer-cref"></span><h1>pusion.util.transformer module<a class="headerlink" href="#module-pusion.util.transformer" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="pusion.util.transformer.confusion_matrices_to_accuracy_vector">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">confusion_matrices_to_accuracy_vector</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confusion_matrix_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.confusion_matrices_to_accuracy_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert confusion matrices of respective classification to an accuracy vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>confusion_matrix_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_classes, n_classes)</cite>
+Confusion matrices.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>One-dimensional <cite>numpy.array</cite> of shape of length <cite>n_classifiers</cite> containing the accuracy for each confusion
+matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.confusion_matrix_to_accuracy">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">confusion_matrix_to_accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.confusion_matrix_to_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the accuracy out of the given confusion matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cm</strong> – <cite>numpy.array</cite> of shape <cite>(n_classes, n_classes)</cite>.
+Confusion matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The accuracy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multilabel_cr_confusion_matrices_to_avg_accuracy">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multilabel_cr_confusion_matrices_to_avg_accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_cms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multilabel_cr_confusion_matrices_to_avg_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average accuracy for the given confusion matrices generated from complementary redundant multilabel
+output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>label_cms</strong> – <cite>list</cite> of confusion matrices given as 2-dimensional <cite>numpy.array</cite> respectively.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The average accuracy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.decision_tensor_to_decision_profiles">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">decision_tensor_to_decision_profiles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.decision_tensor_to_decision_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the given decision tensor to decision profiles for each respective sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples, n_classifiers, n_classes)</cite>.
+Decision profiles.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multilabel_predictions_to_decisions">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multilabel_predictions_to_decisions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multilabel_predictions_to_decisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a continuously valued tensor of multilabel decisions to crisp decision outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions</strong> – <cite>numpy.array</cite> of any shape. Continuous predictions.</p></li>
+<li><p><strong>threshold</strong> – <cite>float</cite>. A threshold value, based on which the crisp output is constructed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of the same shape as <code class="docutils literal notranslate"><span class="pre">predictions</span></code>. Crisp decision outputs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multiclass_predictions_to_decisions">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multiclass_predictions_to_decisions</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multiclass_predictions_to_decisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a continuously valued matrix of multiclass decisions to crisp decision outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predictions</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_classes)</cite>. Continuous predictions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of the same shape as <code class="docutils literal notranslate"><span class="pre">predictions</span></code>. Crisp decision outputs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.decision_tensor_to_configs">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">decision_tensor_to_configs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.decision_tensor_to_configs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform decision outputs to decision configs. A decision config shows concatenated classification outputs of each
+classifier per sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples, n_classes*)</cite>, <cite>n_classes*</cite> is the sum of all classes covered by
+all classifiers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multiclass_assignments_to_labels">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multiclass_assignments_to_labels</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multiclass_assignments_to_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform multiclass assignments to labels. A matrix of shape <cite>(n_samples, n_classes)</cite> is converted to a vector
+of shape <cite>(n_samples,)</cite>, with element-wise labels represented in integers from <cite>0</cite> to <cite>n_classes - 1</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Multiclass assignments.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> with an integer label per element.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.transform_label_tensor_to_class_assignment_tensor">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">transform_label_tensor_to_class_assignment_tensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.transform_label_tensor_to_class_assignment_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a label tensor of shape <cite>(n_classifiers, n_samples)</cite> to the tensor of class assignments of shape
+<cite>(n_classifiers, n_samples, n_classes)</cite>. A label is an integer between <cite>0</cite> and <cite>n_classes - 1</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples)</cite>. Label tensor.</p></li>
+<li><p><strong>n_classes</strong> – Number of classes to be considered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>. Class assignment tensor (decision tensor).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.transform_label_vector_to_class_assignment_matrix">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">transform_label_vector_to_class_assignment_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.transform_label_vector_to_class_assignment_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform labels to multiclass assignments. A vector of shape <cite>(n_samples,)</cite>, with element-wise labels is converted
+to the assignment matrix of shape <cite>(n_samples, n_classes)</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label_vector</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> with an integer label per element.</p></li>
+<li><p><strong>n_classes</strong> – Number of classes to be considered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Multiclass assignments.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.generate_multiclass_confusion_matrices">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">generate_multiclass_confusion_matrices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.generate_multiclass_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multiclass confusion matrices out of the given decision tensor and true assignments.
+Continuous outputs are converted to multiclass assignments using the MAX rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_samples)</cite>. Confusion matrices per classifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.generate_multilabel_cr_confusion_matrices">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">generate_multilabel_cr_confusion_matrices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.generate_multilabel_cr_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multilabel confusion matrices for complementary-redundant multilabel classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of multilabel confusion matrices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multilabel_to_multiclass_assignments">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multilabel_to_multiclass_assignments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multilabel_to_multiclass_assignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the multilabel decision tensor to the equivalent multiclass decision tensor using the power set method.
+The multilabel class assignments are considered as a binary number which represents a new class in the
+multiclass decision space. E.g. the assignment to the classes <cite>0</cite> and <cite>2</cite> (<cite>[1,0,1]</cite>) is converted to the class <cite>5</cite>,
+which is one of the <cite>2^3</cite> classes in the multiclass decision space.
+This method is inverse to the <code class="docutils literal notranslate"><span class="pre">multiclass_to_multilabel_assignments</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, 2^n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.multiclass_to_multilabel_assignments">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multiclass_to_multilabel_assignments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multiclass_to_multilabel_assignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the multiclass decision tensor to the equivalent multilabel decision tensor using the inverse
+power set method. The multiclass assignment is considered as a decimal which is converted to a binary number, which
+in turn represents the multilabel class assignment. E.g. the class assignment to the class <cite>3</cite> <cite>([0,0,0,1])</cite> is
+converted to the multilabel class assignment <cite>[1,1]</cite> (classes <cite>0</cite> and <cite>1</cite> in the multilabel decision space).
+This method is inverse to the <code class="docutils literal notranslate"><span class="pre">multilabel_to_multiclass_assignments</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, log_2(n_classes))</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.decision_outputs_to_decision_tensor">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">decision_outputs_to_decision_tensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.decision_outputs_to_decision_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert <cite>list</cite> decision outputs to <cite>numpy.array</cite> decision tensor, if possible.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.intercept_normal_class">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">intercept_normal_class</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.intercept_normal_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
+class assignment. E.g. the assignment <cite>[0,0,0,0]</cite> is transformed to <cite>[1,0,0,0]</cite>, under the assumption that <cite>0</cite>
+is a normal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Matrix of decision outputs.</p></li>
+<li><p><strong>override</strong> – If <cite>true</cite>, the class <cite>0</cite> is assumed as a normal class. Otherwise a new class is prepended to
+existing classes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite> for <cite>override=False</cite>.
+<cite>numpy.array</cite> of shape <cite>(n_samples, n_classes + 1)</cite> for <cite>override=True</cite>.
+Matrix of decision outputs with intercepted normal class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.transformer.intercept_normal_class_in_tensor">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">intercept_normal_class_in_tensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.intercept_normal_class_in_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
+class assignment. E.g. the assignment <cite>[0,0,0,0]</cite> is transformed to <cite>[1,0,0,0]</cite>, under the assumption that <cite>0</cite>
+is a normal class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>override</strong> – If <cite>true</cite>, the class <cite>0</cite> is assumed as a normal class. Otherwise a new class is prepended to
+existing classes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite> for <cite>override=False</cite>.
+<cite>numpy.array</cite> of shape <cite>(n_samples, n_classes + 1)</cite> for <cite>override=True</cite>.
+Matrix of decision outputs with intercepted normal class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="usage_and_examples.html" class="btn btn-neutral float-right" title="Usage and Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.util.generator.html" class="btn btn-neutral float-left" title="pusion.util.generator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.evaluation.evaluation_metrics module &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pusion.model package" href="pusion.model.html" />
+    <link rel="prev" title="pusion.evaluation.evaluation module" href="pusion.evaluation.evaluation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.core.html">pusion.core package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pusion.evaluation.evaluation.html">pusion.evaluation.evaluation module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.evaluation.evaluation_metrics module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.util.html">pusion.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.evaluation.html">pusion.evaluation package</a> &raquo;</li>
+        
+      <li>pusion.evaluation.evaluation_metrics module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.evaluation.evaluation_metrics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.evaluation.evaluation_metrics">
+<span id="pusion-evaluation-evaluation-metrics-module"></span><h1>pusion.evaluation.evaluation_metrics module<a class="headerlink" href="#module-pusion.evaluation.evaluation_metrics" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.precision">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">precision</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the precision, i.e. TP / (TP + FP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Precision.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.recall">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">recall</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the recall, i.e.  TP / (TP + FN).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Recall.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.accuracy">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the accuracy, i.e. (TP + TN) / (TP + FP + FN + TN).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.f1">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">f1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.f1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>F1-score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.jaccard">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">jaccard</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.jaccard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Jaccard-score, i.e. TP / (TP + FP + FN).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Jaccard-score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.mean_multilabel_confusion_matrix">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">mean_multilabel_confusion_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.mean_multilabel_confusion_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the normalized mean confusion matrix across all classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classes, n_classes)</cite>. Normalized mean confusion matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.mean_confidence">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">mean_confidence</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.mean_confidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the mean confidence for continuous multiclass and multilabel classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mean confidence.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.hamming">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">hamming</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.hamming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average Hamming Loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Average Hamming Loss.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.log">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">log</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Logistic Loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Logistic Loss.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.cohens_kappa">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">cohens_kappa</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.cohens_kappa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Cohen’s Kappa annotator agreement score according to <a class="footnote-reference brackets" href="#cohen1960coefficient" id="id1">1</a>.</p>
+<p><dl class="footnote brackets">
+<dt class="label" id="cohen1960coefficient"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Jacob Cohen. A coefficient of agreement for nominal scales. <em>Educational and psychological measurement</em>, 20(1):37–46, 1960.</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Labels or class assignments.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Labels or class assignments.</p></li>
+<li><p><strong>labels</strong> – <cite>list</cite> of all possible labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cohen’s Kappa score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_cohens_kappa">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_cohens_kappa</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_cohens_kappa" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise Cohen’s Kappa scores over all multiclass decision outputs.
+E.g., for 3 classifiers <cite>(0,1,2)</cite>, the agreement score is calculated for classifier tuples <cite>(0,1)</cite>, <cite>(0,2)</cite> and
+<cite>(1,2)</cite>. These scores are then averaged over all 3 classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise (averages) Cohen’s Kappa score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.correlation">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correlation score for decision outputs of two classifiers according to Kuncheva
+<a class="footnote-reference brackets" href="#kuncheva2014combining" id="id2">2</a>.</p>
+<p><dl class="footnote brackets">
+<dt class="label" id="kuncheva2014combining"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dd><p>Ludmila I Kuncheva. <em>Combining pattern classifiers: methods and algorithms</em>. John Wiley &amp; Sons, 2014.</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.q_statistic">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">q_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.q_statistic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Q statistic score for decision outputs of two classifiers according to Yule
+<a class="footnote-reference brackets" href="#udny1900association" id="id3">3</a>.</p>
+<p><dl class="footnote brackets">
+<dt class="label" id="udny1900association"><span class="brackets"><a class="fn-backref" href="#id3">3</a></span></dt>
+<dd><p>G Udny Yule. On the association of attributes in statistics: with illustrations from the material of the childhood society, &amp;c. <em>Philosophical Transactions of the Royal Society of London Series A</em>, 194:257–319, 1900.</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_correlation">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise correlation scores over all decision outputs according to Polikar
+<a class="footnote-reference brackets" href="#polikar2006ensemble" id="id4">4</a>.</p>
+<p><dl class="footnote brackets">
+<dt class="label" id="polikar2006ensemble"><span class="brackets">4</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id5">2</a>)</span></dt>
+<dd><p>Robi Polikar. Ensemble based systems in decision making. <em>IEEE Circuits and systems magazine</em>, 6(3):21–45, 2006.</p>
+</dd>
+</dl>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_q_statistic">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_q_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_q_statistic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise Q-statistic scores over all decision outputs according to Polikar
+<a class="footnote-reference brackets" href="#polikar2006ensemble" id="id5">4</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pusion.model.html" class="btn btn-neutral float-right" title="pusion.model package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.evaluation.evaluation.html" class="btn btn-neutral float-left" title="pusion.evaluation.evaluation module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

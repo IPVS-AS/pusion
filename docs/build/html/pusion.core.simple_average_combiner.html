@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.core.simple_average_combiner &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pusion.core.weighted_voting_combiner" href="pusion.core.weighted_voting_combiner.html" />
+    <link rel="prev" title="pusion.core.neural_network_combiner" href="pusion.core.neural_network_combiner.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.core.html">pusion.core package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.behaviour_knowledge_space_combiner.html">pusion.core.behaviour_knowledge_space_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.borda_count_combiner.html">pusion.core.borda_count_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.combiner.html">pusion.core.combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.cosine_similarity_combiner.html">pusion.core.cosine_similarity_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.decision_templates_combiner.html">pusion.core.decision_templates_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.decision_tree_combiner.html">pusion.core.decision_tree_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.dempster_shafer_combiner.html">pusion.core.dempster_shafer_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.macro_majority_vote_combiner.html">pusion.core.macro_majority_vote_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.maximum_likelihood_combiner.html">pusion.core.maximum_likelihood_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.micro_majority_vote_combiner.html">pusion.core.micro_majority_vote_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.naive_bayes_combiner.html">pusion.core.naive_bayes_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.neural_network_combiner.html">pusion.core.neural_network_combiner</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.core.simple_average_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.weighted_voting_combiner.html">pusion.core.weighted_voting_combiner</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.util.html">pusion.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.core.html">pusion.core package</a> &raquo;</li>
+        
+      <li>pusion.core.simple_average_combiner</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.core.simple_average_combiner.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.core.simple_average_combiner">
+<span id="pusion-core-simple-average-combiner"></span><span id="avg-cref"></span><h1>pusion.core.simple_average_combiner<a class="headerlink" href="#module-pusion.core.simple_average_combiner" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pusion.core.simple_average_combiner.SimpleAverageCombiner">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pusion.core.simple_average_combiner.</span></code><code class="sig-name descname"><span class="pre">SimpleAverageCombiner</span></code><a class="headerlink" href="#pusion.core.simple_average_combiner.SimpleAverageCombiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pusion.core.combiner.html#pusion.core.combiner.UtilityBasedCombiner" title="pusion.core.combiner.UtilityBasedCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pusion.core.combiner.UtilityBasedCombiner</span></code></a></p>
+<p>The <a class="reference internal" href="#pusion.core.simple_average_combiner.SimpleAverageCombiner" title="pusion.core.simple_average_combiner.SimpleAverageCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleAverageCombiner</span></code></a> (AVG) fuses decisions using the arithmetic mean rule.
+The mean is calculated between decision vectors obtained by multiple ensemble classifiers for a sample.
+The AVG combiner is unaware of the input problem (multiclass/multilabel) or the assignment type (crisp/continuous).</p>
+<dl class="py method">
+<dt id="pusion.core.simple_average_combiner.SimpleAverageCombiner.combine">
+<code class="sig-name descname"><span class="pre">combine</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.simple_average_combiner.SimpleAverageCombiner.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine decision outputs by averaging the class support of each classifier in the given ensemble.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A matrix (<cite>numpy.array</cite>) of crisp assignments which represents fused
+decisions obtained by the AVG method. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in <code class="docutils literal notranslate"><span class="pre">decision_tensor</span></code> input tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pusion.core.simple_average_combiner.CRSimpleAverageCombiner">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pusion.core.simple_average_combiner.</span></code><code class="sig-name descname"><span class="pre">CRSimpleAverageCombiner</span></code><a class="headerlink" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pusion.core.simple_average_combiner.SimpleAverageCombiner" title="pusion.core.simple_average_combiner.SimpleAverageCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pusion.core.simple_average_combiner.SimpleAverageCombiner</span></code></a></p>
+<p>The <a class="reference internal" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner" title="pusion.core.simple_average_combiner.CRSimpleAverageCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">CRSimpleAverageCombiner</span></code></a> is a modification of <a class="reference internal" href="#pusion.core.simple_average_combiner.SimpleAverageCombiner" title="pusion.core.simple_average_combiner.SimpleAverageCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">SimpleAverageCombiner</span></code></a> that
+also supports complementary-redundant decision outputs. Therefore the input is transformed to a unified
+tensor representation supporting undefined class assignments. The mean is calculated only for assignments which
+are defined. To call <a class="reference internal" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner.combine" title="pusion.core.simple_average_combiner.CRSimpleAverageCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first by the inherited <a class="reference internal" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner.set_coverage" title="pusion.core.simple_average_combiner.CRSimpleAverageCombiner.set_coverage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code></a> method.</p>
+<dl class="py method">
+<dt id="pusion.core.simple_average_combiner.CRSimpleAverageCombiner.set_coverage">
+<code class="sig-name descname"><span class="pre">set_coverage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner.set_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the coverage for complementary-redundant decisions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pusion.core.simple_average_combiner.CRSimpleAverageCombiner.combine">
+<code class="sig-name descname"><span class="pre">combine</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.simple_average_combiner.CRSimpleAverageCombiner.combine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combine decision outputs by averaging the defined class support of each classifier in the given ensemble.
+Undefined class supports are excluded from averaging.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_outputs</strong> – <cite>list</cite> of <cite>numpy.array</cite> matrices, each of shape <cite>(n_samples, n_classes’)</cite>,
+where <cite>n_classes’</cite> is classifier-specific and described by the coverage.
+Each matrix corresponds to one of <cite>n_classifiers</cite> classifiers and contains either crisp or continuous
+decision outputs per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A matrix (<cite>numpy.array</cite>) of crisp assignments which represents fused
+decisions obtained by the AVG method. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in <code class="docutils literal notranslate"><span class="pre">decision_tensor</span></code> input tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pusion.core.weighted_voting_combiner.html" class="btn btn-neutral float-right" title="pusion.core.weighted_voting_combiner" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.core.neural_network_combiner.html" class="btn btn-neutral float-left" title="pusion.core.neural_network_combiner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

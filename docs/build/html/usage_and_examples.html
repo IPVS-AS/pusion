@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Usage and Examples &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="License" href="license.html" />
+    <link rel="prev" title="pusion.util.transformer module" href="pusion.util.transformer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pusion.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage and Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-simple-example">A simple example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#a-richer-example">A richer example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#evaluation">Evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#auto-combiner">Auto Combiner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generic-combiner">Generic Combiner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cr-classification">CR classification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Usage and Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/usage_and_examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage-and-examples">
+<h1>Usage and Examples<a class="headerlink" href="#usage-and-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-example">
+<h2>A simple example<a class="headerlink" href="#a-simple-example" title="Permalink to this headline">¶</a></h2>
+<p>The following code shows an illustrative and simple example of using pusion for decision outputs of three classifiers.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pusion</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Create exemplary classification outputs (class assignments)</span>
+<span class="n">classifier_a</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="n">classifier_b</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+<span class="n">classifier_c</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
+
+<span class="c1"># Create a numpy tensor</span>
+<span class="n">ensemble_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">classifier_a</span><span class="p">,</span> <span class="n">classifier_b</span><span class="p">,</span> <span class="n">classifier_c</span><span class="p">])</span>
+
+<span class="c1"># Initialize the general framework interface</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">AUTO</span><span class="p">))</span>
+
+<span class="c1"># Fuse the ensemble classification outputs</span>
+<span class="n">fused_decisions</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ensemble_out</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fused_decisions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[[</span><span class="m">0</span> <span class="m">0</span> <span class="m">1</span><span class="o">]</span>
+ <span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">0</span><span class="o">]</span>
+ <span class="o">[</span><span class="m">0</span> <span class="m">1</span> <span class="m">0</span><span class="o">]]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-richer-example">
+<h2>A richer example<a class="headerlink" href="#a-richer-example" title="Permalink to this headline">¶</a></h2>
+<p>In this example, an ensemble is created using <cite>sklearn</cite>’s neural network classifiers.
+The 200 classification outputs are split up into validation and test datasets.
+<code class="docutils literal notranslate"><span class="pre">y_ensemble_valid</span></code> and <code class="docutils literal notranslate"><span class="pre">y_ensemble_test</span></code> holds the classification outputs of the whole ensemble, while
+<code class="docutils literal notranslate"><span class="pre">y_valid</span></code> and <code class="docutils literal notranslate"><span class="pre">y_test</span></code> are representing true labels.
+The validation datasets are used to train the <cite>DempsterShaferCombiner</cite> combiner (<a class="reference internal" href="pusion.core.dempster_shafer_combiner.html#ds-cref"><span class="std std-ref">DS</span></a>), while the
+final fusion is performed on the test dataset (without true labels).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pusion</span> <span class="k">as</span> <span class="nn">p</span>
+
+<span class="kn">import</span> <span class="nn">sklearn</span>
+
+<span class="c1"># Create an ensemble of 3 neural networks with different hyperparameters</span>
+<span class="n">classifiers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,)),</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
+<span class="p">]</span>
+
+<span class="c1"># Generate samples for the ensemble</span>
+<span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generate_multiclass_ensemble_classification_outputs</span><span class="p">(</span>
+    <span class="n">classifiers</span><span class="o">=</span><span class="n">classifiers</span><span class="p">,</span>
+    <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="c1"># User defined configuration</span>
+<span class="n">conf</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span>
+    <span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">DEMPSTER_SHAFER</span><span class="p">,</span>
+    <span class="n">problem</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Problem</span><span class="o">.</span><span class="n">MULTI_CLASS</span><span class="p">,</span>
+    <span class="n">assignment_type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">AssignmentType</span><span class="o">.</span><span class="n">CRISP</span><span class="p">,</span>
+    <span class="n">coverage_type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">CoverageType</span><span class="o">.</span><span class="n">REDUNDANT</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialize the general framework interface</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+
+<span class="c1"># Train the selected BehaviourKnowledgeSpace combiner with the validation dataset</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+
+<span class="c1"># Fuse the ensemble classification outputs (test dataset)</span>
+<span class="n">y_comb</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">y_ensemble_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="evaluation">
+<h2>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the previous example, we are able to evaluate both, the ensemble’s and the combiner’s classification
+performance using the evaluation methods provided by the framework.
+The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
+for the combiner as well as for the ensemble.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
+<span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">F1_SCORE</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">RECALL</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;============= Ensemble ===============&quot;</span><span class="p">)</span>
+<span class="n">eval_classifiers</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">classifiers</span><span class="p">)</span>
+<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_classifiers</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;============== Combiner ==============&quot;</span><span class="p">)</span>
+<span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=============</span> <span class="n">Ensemble</span> <span class="o">===============</span>
+                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>                       <span class="mf">0.810</span>  <span class="mf">0.810</span>      <span class="mf">0.810</span>   <span class="mf">0.810</span>
+<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>                       <span class="mf">0.800</span>  <span class="mf">0.800</span>      <span class="mf">0.800</span>   <span class="mf">0.800</span>
+<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>                       <span class="mf">0.792</span>  <span class="mf">0.792</span>      <span class="mf">0.792</span>   <span class="mf">0.792</span>
+<span class="o">==============</span> <span class="n">Combiner</span> <span class="o">==============</span>
+                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">DempsterShaferCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="auto-combiner">
+<h2>Auto Combiner<a class="headerlink" href="#auto-combiner" title="Permalink to this headline">¶</a></h2>
+<p>The following code shows an exemplary usage and evaluation of the <a class="reference internal" href="pusion.auto.auto_combiner.html#ac-cref"><span class="std std-ref">AutoCombiner</span></a> specified in
+the configuration.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">AUTO</span><span class="p">))</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+<span class="n">y_comb</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">y_ensemble_test</span><span class="p">)</span>
+
+<span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">AutoCombiner</span>                            <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generic-combiner">
+<h2>Generic Combiner<a class="headerlink" href="#generic-combiner" title="Permalink to this headline">¶</a></h2>
+<p>For the given data sets one could also use the <a class="reference internal" href="pusion.auto.generic_combiner.html#gc-cref"><span class="std std-ref">GenericCombiner</span></a> to gain an overview over applicable
+methods and their respective performances.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">GENERIC</span><span class="p">))</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">y_ensemble_test</span><span class="p">)</span>
+
+<span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiners</span><span class="p">())</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">get_multi_combiner_decision_output</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <cite>DecisionProcessor</cite> provides <code class="docutils literal notranslate"><span class="pre">get_multi_combiner_decision_output()</span></code> to retrieve fused decisions from each
+applicable combiner.</p>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">CosineSimilarityCombiner</span>                <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<span class="n">MacroMajorityVoteCombiner</span>               <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<span class="n">MicroMajorityVoteCombiner</span>               <span class="mf">0.812</span>  <span class="mf">0.819</span>      <span class="mf">0.825</span>   <span class="mf">0.812</span>
+<span class="n">SimpleAverageCombiner</span>                   <span class="mf">0.812</span>  <span class="mf">0.819</span>      <span class="mf">0.825</span>   <span class="mf">0.812</span>
+<span class="n">BehaviourKnowledgeSpaceCombiner</span>         <span class="mf">0.776</span>  <span class="mf">0.795</span>      <span class="mf">0.815</span>   <span class="mf">0.776</span>
+<span class="n">DecisionTemplatesCombiner</span>               <span class="mf">0.818</span>  <span class="mf">0.818</span>      <span class="mf">0.818</span>   <span class="mf">0.818</span>
+<span class="n">DecisionTreeCombiner</span>                    <span class="mf">0.786</span>  <span class="mf">0.805</span>      <span class="mf">0.824</span>   <span class="mf">0.786</span>
+<span class="n">DempsterShaferCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<span class="n">MaximumLikelihoodCombiner</span>               <span class="mf">0.810</span>  <span class="mf">0.810</span>      <span class="mf">0.810</span>   <span class="mf">0.810</span>
+<span class="n">NaiveBayesCombiner</span>                      <span class="mf">0.814</span>  <span class="mf">0.814</span>      <span class="mf">0.814</span>   <span class="mf">0.814</span>
+<span class="n">NeuralNetworkCombiner</span>                   <span class="mf">0.780</span>  <span class="mf">0.811</span>      <span class="mf">0.844</span>   <span class="mf">0.780</span>
+<span class="n">WeightedVotingCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cr-classification">
+<h2>CR classification<a class="headerlink" href="#cr-classification" title="Permalink to this headline">¶</a></h2>
+<p>In <cite>complementary-redundant</cite> classification (CR), ensemble classifiers are not able to make predictions for all
+available classes. They may complement each other or share some classes. In such cases, a <cite>coverage</cite> needs to be
+specified in order to use the framework properly. The coverage describes for each ensemble classifier, which classes
+it is able to make predictions for. In pusion, it can be defined by a simple 2D list, e.g., <code class="docutils literal notranslate"><span class="pre">[[0,1],</span> <span class="pre">[0,2,3]]</span></code>, where
+the first classifier is covering the classes <cite>0,1</cite> while the second one covers <cite>0,2,3</cite>.
+The following code example shows how to generate and combine such complementary-redundant classification outputs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pusion</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+
+<span class="c1"># Create an ensemble of 3 neural networks with different hyperparameters</span>
+<span class="n">classifiers</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,)),</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)),</span>
+    <span class="n">sklearn</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">MLPClassifier</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create a random complementary-redundant classification coverage with 60% overlap.</span>
+<span class="n">coverage</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generate_classification_coverage</span><span class="p">(</span><span class="n">n_classifiers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=.</span><span class="mi">6</span><span class="p">,</span> <span class="n">normal_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Generate samples for the complementary-redundant ensemble</span>
+<span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">generate_multilabel_cr_ensemble_classification_outputs</span><span class="p">(</span>
+    <span class="n">classifiers</span><span class="o">=</span><span class="n">classifiers</span><span class="p">,</span>
+    <span class="n">n_classes</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">n_samples</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+    <span class="n">coverage</span><span class="o">=</span><span class="n">coverage</span><span class="p">)</span>
+
+<span class="c1"># Initialize the general framework interface</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">AUTO</span><span class="p">))</span>
+
+<span class="c1"># Since we are dealing with a CR output, we need to propagate the coverage to the `DecisionProcessor`.</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">set_coverage</span><span class="p">(</span><span class="n">coverage</span><span class="p">)</span>
+
+<span class="c1"># Train the AutoCombiner with the validation dataset</span>
+<span class="n">dp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
+
+<span class="c1"># Fuse the ensemble classification outputs (test dataset)</span>
+<span class="n">y_comb</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">y_ensemble_test</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The framework provides also a specific evaluation methodology for complementary-redundant results.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
+<span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">F1_SCORE</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">RECALL</span>
+<span class="p">]</span>
+
+<span class="c1"># Evaluate ensemble classifiers</span>
+<span class="n">eval_classifiers</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="s2">&quot;Ensemble&quot;</span><span class="p">)</span>
+<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">evaluate_cr_ensemble</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_classifiers</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+
+<span class="c1"># Evaluate the fusion</span>
+<span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate_cr_combiner</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">Ensemble</span>                                <span class="mf">0.646</span>  <span class="mf">0.802</span>      <span class="mf">0.803</span>   <span class="mf">0.802</span>
+                                     <span class="n">accuracy</span>   <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
+<span class="n">AutoCombiner</span>                             <span class="mf">0.67</span>  <span class="mf">0.8</span>      <span class="mf">0.835</span>   <span class="mf">0.769</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Combiner’s output is always redundant, which means that all classes are covered for each sample.
+To make a reasonable comparison between the combiner and the ensemble use <code class="docutils literal notranslate"><span class="pre">evaluate_cr_*</span></code> methods for both.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="license.html" class="btn btn-neutral float-right" title="License" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.util.transformer.html" class="btn btn-neutral float-left" title="pusion.util.transformer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
