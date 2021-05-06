@@ -95,7 +95,7 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_cr_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
     """
     Generate random multiclass, crisp and complementary-redundant classification outputs (assignments) for the given
     ensemble of classifiers.
@@ -141,17 +141,17 @@ def generate_cr_multiclass_ensemble_classification_outputs(classifiers, n_classe
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
         print("Validate classifier: ", type(clf).__name__, "...")
-        pred = clf.predict(x_valid)
-        pred = transform_label_vector_to_class_assignment_matrix(pred, len(coverage[i]))
-        y_ensemble_valid.append(pred)
+        y_pred = clf.predict(x_valid)
+        y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
+        y_ensemble_valid.append(y_pred)
 
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
         print("Test classifier: ", type(clf).__name__, "...")
-        pred = clf.predict(x_test)
-        pred = transform_label_vector_to_class_assignment_matrix(pred, len(coverage[i]))
-        y_ensemble_test.append(pred)
+        y_pred = clf.predict(x_test)
+        y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
+        y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
@@ -160,10 +160,66 @@ def generate_cr_multiclass_ensemble_classification_outputs(classifiers, n_classe
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples):
     """
     Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
     the normal class included at index `0`.
+
+    :param classifiers: Classifiers used to generate classification outputs.
+            These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
+    :param n_classes: `integer`. Number of classes, predictions are made for with the normal class included.
+    :param n_samples: `integer`. Number of samples.
+    :return: `tuple` of:
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a validation dataset.
+            - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
+            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            as a test dataset.
+            - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
+    """
+    x, y = make_multilabel_classification(n_samples=n_samples,
+                                          n_classes=n_classes-1,  # -1, due to normal class
+                                          n_labels=2,
+                                          allow_unlabeled=True)
+
+    # Adapt y to address the normal class representation in case of an unlabeled output (prepend normal class)
+    y = intercept_normal_class(y, override=False)
+
+    x_train, x_meta, y_train, y_meta = train_test_split(x, y, test_size=.5)
+    x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
+
+    # Classifier training
+    for i, clf in enumerate(classifiers):
+        print("Train classifier: ", type(clf).__name__, "...")
+        clf.fit(x_train, y_train)
+
+    # Classifier validation to generate combiner training data
+    y_ensemble_valid = []
+    for i, clf in enumerate(classifiers):
+        print("Validate classifier: ", type(clf).__name__, "...")
+        y_pred = clf.predict(x_valid)
+        # y_pred = intercept_normal_class(y_pred, override=True)
+        y_ensemble_valid.append(y_pred)
+
+    # Classifier test
+    y_ensemble_test = []
+    for i, clf in enumerate(classifiers):
+        print("Test classifier: ", type(clf).__name__, "...")
+        y_pred = clf.predict(x_test)
+        # y_pred = intercept_normal_class(y_pred, override=True)
+        y_ensemble_test.append(y_pred)
+
+    # Transform to numpy tensors if possible
+    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
+    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+
+    return y_ensemble_valid, y_valid, y_ensemble_test, y_test
+
+
+def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+    """
+    Generate random multilabel, crisp and complementary-redundant classification outputs (assignments) for the given
+    ensemble of classifiers with the normal class included at index `0`.
 
     :param classifiers: Classifiers used to generate classification outputs.
             These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
@@ -185,8 +241,8 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
                                           n_labels=2,
                                           allow_unlabeled=True)
 
-    # Adapt y to address the normal class representation in case of an unlabeled output
-    y = intercept_normal_class(y)
+    # Adapt y to address the normal class representation in case of an unlabeled output (prepend normal class)
+    y = intercept_normal_class(y, override=False)
 
     x_train, x_meta, y_train, y_meta = train_test_split(x, y, test_size=.5)
     x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
@@ -194,25 +250,25 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
     # Classifier training
     for i, clf in enumerate(classifiers):
         print("Train classifier: ", type(clf).__name__, "...")
-        clf.fit(x_train, y_train)
+        y_train_ = y_train[:, coverage[i]]
+        y_train_ = intercept_normal_class(y_train_, override=True)
+        clf.fit(x_train, y_train_)
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
         print("Validate classifier: ", type(clf).__name__, "...")
         y_pred = clf.predict(x_valid)
-        y_ensemble_valid.append(intercept_normal_class(y_pred, override=True))
+        # y_pred = intercept_normal_class(y_pred, override=True)
+        y_ensemble_valid.append(y_pred)
 
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
         print("Test classifier: ", type(clf).__name__, "...")
         y_pred = clf.predict(x_test)
-        y_ensemble_test.append(intercept_normal_class(y_pred, override=True))
-
-    if coverage:
-        y_ensemble_valid = shrink_to_coverage(y_ensemble_valid, coverage)
-        y_ensemble_test = shrink_to_coverage(y_ensemble_test, coverage)
+        # y_pred = intercept_normal_class(y_pred, override=True)
+        y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
