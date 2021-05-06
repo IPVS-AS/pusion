@@ -219,7 +219,7 @@ The following code example shows how to generate and combine such complementary-
     coverage = p.generate_classification_coverage(n_classifiers=3, n_classes=5, overlap=.6, normal_class=True)
 
     # Generate samples for the complementary-redundant ensemble
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
+    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_cr_ensemble_classification_outputs(
         classifiers=classifiers,
         n_classes=5,
         n_samples=2000,
