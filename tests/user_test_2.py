@@ -5,7 +5,7 @@ from sklearn.neural_network import MLPClassifier
 import pusion as p
 from pusion.evaluation.evaluation import Evaluation
 
-warnings.filterwarnings('error')  # TODO delete
+warnings.filterwarnings('error')  # halt on error
 
 
 classifiers = [
@@ -24,7 +24,7 @@ eval_metrics = [
 coverage = p.generate_classification_coverage(n_classifiers=len(classifiers), n_classes=5, overlap=.6, normal_class=True)
 
 y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
-    classifiers, n_classes=5, n_samples=2000, coverage=coverage)
+    classifiers, n_classes=5, n_samples=2000)
 
 
 print("============= Ensemble ===============")

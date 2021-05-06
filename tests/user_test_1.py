@@ -1,8 +1,12 @@
+import time
+import warnings
+
 from sklearn.neural_network import MLPClassifier
 
 import pusion as p
 from pusion.evaluation.evaluation import Evaluation
-import time
+
+warnings.filterwarnings('error')  # halt on error
 
 
 # ---- Classifiers -----------------------------------------------------------------------------------------------------
@@ -12,7 +16,7 @@ classifiers = [
     MLPClassifier(max_iter=5000, hidden_layer_sizes=(10, 10, 10)),  # MLK
 ]
 
-y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_ensemble_classification_outputs(
+y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
     classifiers, n_classes=5, n_samples=10000)
 
 
