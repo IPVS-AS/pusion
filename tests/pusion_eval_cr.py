@@ -1,10 +1,14 @@
-import time
+import uuid
 import warnings
 
+import numpy as np
+
+import pusion as p
+
 import matplotlib.pyplot as plt
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
 from sklearn.linear_model import LogisticRegression
@@ -14,12 +18,12 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
-import pusion as p
 from pusion.evaluation.evaluation import Evaluation
 from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
+import time
 
-warnings.filterwarnings('error')  # halt on warning
+warnings.filterwarnings('error')  # TODO delete
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
@@ -27,7 +31,7 @@ n_runs = 50
 n_classes = 5
 n_samples = 1000
 
-np.random.seed(1)
+# np.random.seed(1)
 
 combiners_per_run = []
 classifiers_performance_run_tuples = []
@@ -39,22 +43,25 @@ classifier_max_scores = []
 classifier_max_mean_confidences = []
 combiners_max_scores = []
 
-ensemble_diversity_correlation_scores = []
-ensemble_diversity_q_statistic_scores = []
-ensemble_diversity_kappa_statistic = []
-ensemble_diversity_disagreement = []
-ensemble_diversity_double_fault = []
-
-ensemble_diversity_cohens_kappa_scores = []
-ensemble_pairwise_euclidean_distance = []
-
 combiners_runtime_run_matrices = []
+
+coverage_overlaps = [i/n_runs for i in range(n_runs)]
+coverage_list = []
+
+for i in range(n_runs):
+    coverage_list.append(p.generate_classification_coverage(n_classifiers=5,
+                                                            n_classes=n_classes,
+                                                            overlap=coverage_overlaps[i],
+                                                            normal_class=True))
 
 # plot properties
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 for i in range(n_runs):
     print(">>> ", i)
+
+    np.random.seed(1)
+
     classifiers = [
         # KNeighborsClassifier(1),
         # KNeighborsClassifier(3),
@@ -63,6 +70,9 @@ for i in range(n_runs):
         # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
+        # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100,)),  # MLK
+        # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100)),  # MLK
+        # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100, 100)),  # MLK
         MLPClassifier(max_iter=5000),  # MLK
         MLPClassifier(max_iter=5000),  # MLK
         MLPClassifier(max_iter=5000),  # MLK
@@ -100,32 +110,33 @@ for i in range(n_runs):
         # AdaBoostClassifier(n_estimators=50),
     ]
 
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
-        classifiers, n_classes=n_classes, n_samples=n_samples)
+    coverage = coverage_list[i]
+
+    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_cr_ensemble_classification_outputs(
+        classifiers, n_classes=n_classes, n_samples=n_samples, coverage=coverage)
 
     perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
     print("============== Ensemble ================")
     eval_classifiers = Evaluation()
     eval_classifiers.set_metrics(*perf_metrics)
-    eval_classifiers.set_instances(classifiers)
-
-    eval_classifiers.evaluate(y_test, y_ensemble_test)
+    eval_classifiers.set_instances("Ensemble")
+    eval_classifiers.evaluate_cr_ensemble(y_test, y_ensemble_test, coverage)
     print(eval_classifiers.get_report())
 
     print("=========== GenericCombiner ============")
     dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
+    dp.set_coverage(coverage)
     # dp.set_parallel(False)
-
     dp.train(y_ensemble_valid, y_valid)
-    y_comb = dp.combine(y_ensemble_test)
+    dp.combine(y_ensemble_test)
 
     combiners_per_run.append(dp.get_combiners())
 
     eval_combiner = Evaluation()
     eval_combiner.set_metrics(*perf_metrics)
     eval_combiner.set_instances(dp.get_combiners())
-    eval_combiner.evaluate(y_test, y_comb)
+    eval_combiner.evaluate_cr_combiners(y_test, dp.get_multi_combiner_decision_output(), coverage)
     print(eval_combiner.get_report())
     print("----------------------------------------")
     eval_combiner.set_runtimes(dp.get_multi_combiner_runtimes())
@@ -135,8 +146,7 @@ for i in range(n_runs):
     classifiers_performance_tuples = eval_classifiers.get_top_n_instances()
     classifiers_performance_run_tuples.append(classifiers_performance_tuples)
 
-    classifiers_mean_confidence_tuples = eval_classifiers.get_top_n_instances(
-        metric=p.PerformanceMetric.MEAN_CONFIDENCE)
+    classifiers_mean_confidence_tuples = eval_classifiers.get_top_n_instances(metric=p.PerformanceMetric.MEAN_CONFIDENCE)
     classifiers_mean_confidence_run_tuples.append(classifiers_mean_confidence_tuples)
 
     combiners_performance_tuples = eval_combiner.get_top_n_instances()
@@ -156,15 +166,6 @@ for i in range(n_runs):
 
     performance_improvement = combiners_max_score - classifier_max_score
     performance_improvements.append(performance_improvement)
-
-    ensemble_diversity_correlation_scores.append(pairwise_correlation(y_ensemble_test, y_test))
-    ensemble_diversity_q_statistic_scores.append(pairwise_q_statistic(y_ensemble_test, y_test))
-    ensemble_diversity_kappa_statistic.append(pairwise_kappa_statistic(y_ensemble_test, y_test))
-    ensemble_diversity_disagreement.append(pairwise_disagreement(y_ensemble_test, y_test))
-    ensemble_diversity_double_fault.append(pairwise_double_fault(y_ensemble_test, y_test))
-
-    ensemble_diversity_cohens_kappa_scores.append(pairwise_cohens_kappa(y_ensemble_test))
-    ensemble_pairwise_euclidean_distance.append(pairwise_euclidean_distance(y_ensemble_test))
 
     combiners_runtime_matrix = eval_combiner.get_runtime_matrix()
     combiners_runtime_run_matrices.append(combiners_runtime_matrix)
@@ -261,107 +262,14 @@ plt.tight_layout()
 save(plt, "031_box_plot_performance_improvement", eval_id)
 plt.close()
 
-# === Diversity -- Framework Performance ===============================================================================
 
-plt.plot(ensemble_diversity_kappa_statistic, combiners_max_scores, 'g^')
-plt.xlabel("Diversity (Kappa-statistic)", labelpad=15)
+# === Coverage -- Max. Performance =====================================================================================
+
+plt.plot(coverage_overlaps, combiners_max_scores, 'bx')
+plt.xlabel("Overlap percentage", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
-save(plt, "100_data_plot_00_div_cohens_kappa2__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_correlation_scores, combiners_max_scores, 'bs')
-plt.xlabel("Diversity (Correlation)", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_01_div_correlation__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_q_statistic_scores, combiners_max_scores, 'g^')
-plt.xlabel("Diversity (Q-statistic)", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_02_div_q_stat__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_disagreement, combiners_max_scores, 'mv')
-plt.xlabel("Diversity (Disagreement)", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_03_div_disagreement__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_double_fault, combiners_max_scores, 'rH')
-plt.xlabel("Diversity (Double Fault)", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_04_div_double_fault__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_cohens_kappa_scores, combiners_max_scores, 'ro')
-plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_05_div_cohens_kappa__framework_performance", eval_id)
-plt.close()
-
-plt.plot(ensemble_pairwise_euclidean_distance, combiners_max_scores, 'gD')
-plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
-plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "100_data_plot_06_euclidean_distance__framework_performance", eval_id)
-plt.close()
-
-
-# === Diversity -- Performance Improvement =============================================================================
-
-plt.plot(ensemble_diversity_kappa_statistic, performance_improvements, 'ro')
-plt.xlabel("Diversity (Kappa statistic)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_10_div_cohens_kappa2__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_correlation_scores, performance_improvements, 'bs')
-plt.xlabel("Diversity (Correlation)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_11_div_correlation__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_q_statistic_scores, performance_improvements, 'g^')
-plt.xlabel("Diversity (Q-statistic)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_12_div_q_stat__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_disagreement, performance_improvements, 'mv')
-plt.xlabel("Diversity (Disagreement)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_13_div_disagreement__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_double_fault, performance_improvements, 'rH')
-plt.xlabel("Diversity (Double Fault)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_14_div_double_fault__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_diversity_cohens_kappa_scores, performance_improvements, 'ro')
-plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_15_div_cohens_kappa__perf_improvement", eval_id)
-plt.close()
-
-plt.plot(ensemble_pairwise_euclidean_distance, performance_improvements, 'bD')
-plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
-plt.tight_layout()
-save(plt, "200_data_plot_16_euclidean_distance__perf_improvement", eval_id)
+save(plt, "040_data_plot_01_cr_overlap__framework_performance", eval_id)
 plt.close()
 
 
