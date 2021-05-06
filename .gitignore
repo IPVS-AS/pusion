@@ -154,3 +154,4 @@ run.py
 # Pusion
 tests/figs
 docs/build
+tests/test.py
