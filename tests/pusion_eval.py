@@ -173,8 +173,8 @@ for i in range(n_runs):
 # === Fusion methods comparison ========================================================================================
 
 reduced_combiners_performances = {}
-for run_tuple in combiners_performance_run_tuples:  # reduce
-    for t in run_tuple:
+for perf_tuples in combiners_performance_run_tuples:  # reduce
+    for t in perf_tuples:
         comb_index = type(t[0])
         if comb_index not in reduced_combiners_performances:  # create a score list if non-existent
             reduced_combiners_performances[comb_index] = []
@@ -208,8 +208,8 @@ plt.close()
 
 # --- Fusion methods mean confidence comparison ------------------------------------------------------------------------
 reduced_combiners_mean_confidences = {}
-for run_tuple in combiners_mean_confidence_run_tuples:  # reduce
-    for t in run_tuple:
+for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
+    for t in perf_tuples:
         comb_index = type(t[0])
         if comb_index not in reduced_combiners_mean_confidences:  # create a score list if non-existent
             reduced_combiners_mean_confidences[comb_index] = []
@@ -363,6 +363,32 @@ plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "200_data_plot_16_euclidean_distance__perf_improvement", eval_id)
 plt.close()
+
+
+# === Diversity - Framework Performance - Mean Ensemble Performance ====================================================
+
+mean_classifier_perf_per_run = []
+for perf_tuples in classifiers_performance_run_tuples:
+    mean_classifier_perf_per_run.append(np.mean([t[1] for t in perf_tuples]))
+
+fig, ax = plt.subplots()
+scatter = ax.scatter(mean_classifier_perf_per_run, combiners_max_scores, c=ensemble_diversity_correlation_scores)
+ax.set_xlabel('Ensemble Mean Performance (Accuracy)', labelpad=15)
+ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
+fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+plt.tight_layout()
+save(plt, "300_scatter_plot_cls_mean_acc__framework_performance__diversity_correlation", eval_id)
+
+
+# === Diversity - Performance Improvement - Mean Ensemble Performance ==================================================
+
+fig, ax = plt.subplots()
+scatter = ax.scatter(mean_classifier_perf_per_run, performance_improvements, c=ensemble_diversity_correlation_scores)
+ax.set_xlabel('Ensemble Mean Performance (Accuracy)', labelpad=15)
+ax.set_ylabel('Performance Improvement (Accuracy)', labelpad=15)
+fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+plt.tight_layout()
+save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
 
 
 # === Combiner runtimes ================================================================================================
