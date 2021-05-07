@@ -190,89 +190,6 @@ problems and coverage types.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_combiners">
-<code class="sig-name descname"><span class="pre">evaluate_cr_combiners</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_combiners" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate complementary-redundant decision outputs of multiple CR combiners with already set classification
-performance metrics.
-The evaluation results are averaged across complementary-redundant outputs obtained from each combiner
-for each coverage entry.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
-Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
-<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_combiners, n_samples, n_classes)</cite>.
-Tensor of crisp decision outputs by different combiners per sample.</p></li>
-<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
-for each set instance row-wise and each set performance metric column-wise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_combiner">
-<code class="sig-name descname"><span class="pre">evaluate_cr_combiner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_combiner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate complementary-redundant decision outputs of a single CR combiner with already set classification
-performance metrics.
-The evaluation results are averaged across complementary-redundant outputs obtained from the <code class="docutils literal notranslate"><span class="pre">decision_matrix</span></code>
-for each coverage entry.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This evaluation should be used only for CR combiners, in order to make a reasonable comparison between a
-CR ensemble (see <code class="docutils literal notranslate"><span class="pre">evaluate_cr_ensemble</span></code>) and a CR combiner.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
-Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
-<li><p><strong>decision_matrix</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
-Matrix of crisp class assignments (fusion result) obtained by a CR combiner.</p></li>
-<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
-for each set instance row-wise and each set performance metric column-wise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_ensemble">
-<code class="sig-name descname"><span class="pre">evaluate_cr_ensemble</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cr_decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_ensemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate complementary-redundant decision outputs with already set classification performance metrics.
-The evaluation results are averaged across complementary-redundant classifiers.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This evaluation is only applicable on complementary-redundant ensemble classifier outputs.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
-Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
-<li><p><strong>cr_decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
-<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
-due to the coverage.</p></li>
-<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
-for each set instance row-wise and each set performance metric column-wise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="pusion.evaluation.evaluation.Evaluation.evaluate">
 <code class="sig-name descname"><span class="pre">evaluate</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the decision outputs with already set classification performance metrics.</p>
@@ -294,6 +211,67 @@ Tensor of crisp decision outputs by different classifiers per sample.</p></li>
 for each set instance row-wise and each set performance metric column-wise.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs">
+<code class="sig-name descname"><span class="pre">evaluate_cr_decision_outputs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate complementary-redundant decision outputs with already set classification performance metrics.
+TODO: doc… Class-wise mean score for binary classification metrics.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This evaluation is only applicable on complementary-redundant ensemble classifier outputs.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_multi_combiner_decision_outputs">
+<code class="sig-name descname"><span class="pre">evaluate_cr_multi_combiner_decision_outputs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_multi_combiner_decision_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate decision outputs of multiple CR combiners with already set classification performance metrics.
+The evaluation is performed by <a class="reference internal" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs" title="pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs"><code class="xref py py-func docutils literal notranslate"><span class="pre">evaluate_cr_decision_outputs()</span></code></a> for each combiner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_combiners, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different combiners per sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pusion.evaluation.evaluation.Evaluation.class_wise_mean_score">
+<code class="sig-name descname"><span class="pre">class_wise_mean_score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.class_wise_mean_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: Doc.
+:param true_assignments:
+:param decision_outputs:
+:param coverage:
+:param metric:
+:return:</p>
 </dd></dl>
 
 <dl class="py method">

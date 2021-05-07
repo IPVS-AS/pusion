@@ -89,7 +89,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Install Pusion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-requirements">General requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#package-requirements">Package requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#preparation">Preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 </ul>
@@ -167,8 +168,14 @@
             
   <div class="section" id="install-pusion">
 <h1>Install Pusion<a class="headerlink" href="#install-pusion" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="general-requirements">
+<h2>General requirements<a class="headerlink" href="#general-requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Python &gt;= 3.7</p></li>
+</ul>
+</div>
+<div class="section" id="package-requirements">
+<h2>Package requirements<a class="headerlink" href="#package-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>numpy &gt;= 1.20.2</p></li>
 <li><p>scipy &gt;= 1.6.2</p></li>
@@ -181,20 +188,20 @@
 <div class="section" id="preparation">
 <h2>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h2>
 <p>In order to generate a python wheel package for <cite>pusion</cite>, the package <cite>setuptools</cite> needs to be installed in your Python
-environment before.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install setuptools
+3 environment before.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install setuptools
 </pre></div>
 </div>
 <p>After cloning <cite>pusion</cite> to your local disc, enter the project and generate the package using with the following command.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python setup.py bdist_wheel
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 setup.py bdist_wheel
 </pre></div>
 </div>
 <p>Once generated, the wheel will be moved to the <code class="docutils literal notranslate"><span class="pre">dist/</span></code> directory within project’s root.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The generated wheel can be installed using the <code class="docutils literal notranslate"><span class="pre">pip</span></code> command, which also installs all required packages for <cite>pusion</cite>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install dist/pusion-&lt;version&gt;-py3-none-any.whl
+<p>The generated wheel can be installed using the <code class="docutils literal notranslate"><span class="pre">pip3</span></code> command, which also installs all required packages for <cite>pusion</cite>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install dist/pusion-&lt;version&gt;-py3-none-any.whl
 </pre></div>
 </div>
 </div>

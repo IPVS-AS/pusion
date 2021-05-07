@@ -1,8 +1,12 @@
 Install Pusion
 ==============
 
-Requirements
-------------
+General requirements
+--------------------
+- Python >= 3.7
+
+Package requirements
+--------------------
 - numpy >= 1.20.2
 - scipy >= 1.6.2
 - scikit-learn >= 0.24.1
@@ -13,25 +17,25 @@ Requirements
 Preparation
 -----------
 In order to generate a python wheel package for `pusion`, the package `setuptools` needs to be installed in your Python
-environment before.
+3 environment before.
 
 .. code:: bash
 
-    pip install setuptools
+    pip3 install setuptools
 
 After cloning `pusion` to your local disc, enter the project and generate the package using with the following command.
 
 .. code:: bash
 
-    python setup.py bdist_wheel
+    python3 setup.py bdist_wheel
 
 Once generated, the wheel will be moved to the ``dist/`` directory within project's root.
 
 Installation
 ------------
 
-The generated wheel can be installed using the ``pip`` command, which also installs all required packages for `pusion`.
+The generated wheel can be installed using the ``pip3`` command, which also installs all required packages for `pusion`.
 
 .. code:: bash
 
-    pip install dist/pusion-<version>-py3-none-any.whl
+    pip3 install dist/pusion-<version>-py3-none-any.whl
