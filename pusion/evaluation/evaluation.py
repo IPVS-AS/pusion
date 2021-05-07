@@ -72,6 +72,10 @@ class Evaluation:
                 for each set instance row-wise and each set performance metric column-wise.
         """
         self.__check()
+        # generalize to 3-dimensional decision_outputs if a matrix is given
+        if type(decision_outputs) == np.ndarray and decision_outputs.ndim < 3:
+            decision_outputs = np.expand_dims(decision_outputs, axis=0)
+
         if coverage is None:
             coverage = [np.arange(true_assignments.shape[1], dtype=int) for _ in range(len(decision_outputs))]
 

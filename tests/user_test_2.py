@@ -42,7 +42,7 @@ y_comb = dp.combine(y_ensemble_test)
 
 eval_combiner = Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_decision_outputs(y_test, [y_comb])
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
 print(eval_combiner.get_report())
 print("Selected:", type(dp.get_optimal_combiner()).__name__)
 
