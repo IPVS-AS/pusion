@@ -418,5 +418,5 @@ plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
 plt.close()
 
-
+save_evaluator(__file__, eval_id)
 print("Evaluation", eval_id, "done.")

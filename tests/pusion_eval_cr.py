@@ -27,7 +27,7 @@ warnings.filterwarnings('error')  # TODO delete
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 50
+n_runs = 1
 n_classes = 5
 n_samples = 1000
 
@@ -112,7 +112,7 @@ for i in range(n_runs):
 
     coverage = coverage_list[i]
 
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_cr_ensemble_classification_outputs(
+    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_cr_ensemble_classification_outputs(
         classifiers, n_classes=n_classes, n_samples=n_samples, coverage=coverage)
 
     perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
@@ -263,13 +263,22 @@ save(plt, "031_box_plot_performance_improvement", eval_id)
 plt.close()
 
 
-# === Coverage -- Max. Performance =====================================================================================
+# === Coverage =========================================================================================================
 
+# --- Coverage - Max. scores -------------------------------------------------------------------------------------------
 plt.plot(coverage_overlaps, combiners_max_scores, 'bx')
 plt.xlabel("Overlap percentage", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "040_data_plot_01_cr_overlap__framework_performance", eval_id)
+plt.close()
+
+# --- Coverage - Improvement -------------------------------------------------------------------------------------------
+plt.plot(coverage_overlaps, performance_improvements, 'rx')
+plt.xlabel("Overlap percentage", labelpad=15)
+plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+plt.tight_layout()
+save(plt, "041_data_plot_01_cr_overlap__framework_imp", eval_id)
 plt.close()
 
 
@@ -326,5 +335,5 @@ plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
 plt.close()
 
-
+save_evaluator(__file__, eval_id)
 print("Evaluation", eval_id, "done.")

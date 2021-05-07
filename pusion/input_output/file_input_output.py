@@ -1,5 +1,7 @@
 import pickle
+import shutil
 from pathlib import Path
+import ntpath
 
 
 def load_native_files_as_data(file_paths):
@@ -19,3 +21,9 @@ def save(plot_instance, name, identifier):
     directory = "figs/eval_" + identifier
     Path(directory).mkdir(parents=True, exist_ok=True)
     plot_instance.savefig(directory + "/" + name + ".svg")
+
+
+def save_evaluator(file, identifier):
+    directory = "figs/eval_" + identifier
+    Path(directory).mkdir(parents=True, exist_ok=True)
+    shutil.copy(file, directory + "/" + ntpath.basename(file) + ".txt")
