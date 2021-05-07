@@ -1,3 +1,5 @@
+import numpy as np
+
 from pusion.model.report import Report
 from pusion.util.generator import *
 
@@ -15,96 +17,6 @@ class Evaluation:
         self.performance_matrix = None
         self.runtime_matrix = None
         self.set_metrics(*argv)
-
-    def evaluate_cr_combiners(self, true_assignments, decision_tensor, coverage):
-        """
-        Evaluate complementary-redundant decision outputs of multiple CR combiners with already set classification
-        performance metrics.
-        The evaluation results are averaged across complementary-redundant outputs obtained from each combiner
-        for each coverage entry.
-
-        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp class assignments which are considered true for the evaluation.
-        :param decision_tensor: `numpy.array` of shape `(n_combiners, n_samples, n_classes)`.
-                Tensor of crisp decision outputs by different combiners per sample.
-        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
-                classifier, which is identified by the positional index of the respective list.
-        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
-                for each set instance row-wise and each set performance metric column-wise.
-        """
-        self.__check()
-        if len(self.instances) != len(decision_tensor):
-            raise TypeError("`decision_tensor` is not aligned with the number of instances.")
-        performance_matrix = np.full((len(decision_tensor), len(self.metrics)), np.nan)
-        for i in range(len(decision_tensor)):
-            pm = self.evaluate_cr_combiner(true_assignments, decision_tensor[i], coverage)
-            performance_matrix[i] = np.squeeze(pm)
-        self.performance_matrix = performance_matrix
-        return performance_matrix
-
-    def evaluate_cr_combiner(self, true_assignments, decision_matrix, coverage):
-        """
-        Evaluate complementary-redundant decision outputs of a single CR combiner with already set classification
-        performance metrics.
-        The evaluation results are averaged across complementary-redundant outputs obtained from the ``decision_matrix``
-        for each coverage entry.
-
-        .. warning::
-
-            This evaluation should be used only for CR combiners, in order to make a reasonable comparison between a
-            CR ensemble (see ``evaluate_cr_ensemble``) and a CR combiner.
-
-        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp class assignments which are considered true for the evaluation.
-        :param decision_matrix: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp class assignments (fusion result) obtained by a CR combiner.
-        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
-                classifier, which is identified by the positional index of the respective list.
-        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
-                for each set instance row-wise and each set performance metric column-wise.
-        """
-        self.__check()
-        cr_decision_outputs = []
-        for i, cov in enumerate(coverage):
-            cr_decision_outputs.append(decision_matrix[:, cov])
-        performance_matrix = self.evaluate_cr_ensemble(true_assignments, cr_decision_outputs, coverage)
-        self.performance_matrix = performance_matrix
-        return performance_matrix
-
-    def evaluate_cr_ensemble(self, true_assignments, cr_decision_outputs, coverage):
-        """
-        Evaluate complementary-redundant decision outputs with already set classification performance metrics.
-        The evaluation results are averaged across complementary-redundant classifiers.
-
-        .. warning::
-
-            This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
-
-        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
-                Matrix of crisp class assignments which are considered true for the evaluation.
-        :param cr_decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
-                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
-                due to the coverage.
-        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
-                classifier, which is identified by the positional index of the respective list.
-        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
-                for each set instance row-wise and each set performance metric column-wise.
-        """
-        self.__check()
-        if len(cr_decision_outputs) != len(coverage):
-            raise TypeError("`cr_decision_outputs` is not aligned to `coverage`.")
-
-        performance_matrix = np.full((1, len(self.metrics)), np.nan)
-        for i, metric in enumerate(self.metrics):
-            score = 0.0
-            for j, cr_do in enumerate(cr_decision_outputs):
-                ta = intercept_normal_class(true_assignments[:, coverage[j]], override=True)
-                do = intercept_normal_class(cr_do, override=True)
-                score += metric(ta, do)
-            avg_score = score / len(cr_decision_outputs)
-            performance_matrix[0, i] = avg_score
-        self.performance_matrix = performance_matrix
-        return performance_matrix
 
     def evaluate(self, true_assignments, decision_tensor):
         """
@@ -138,6 +50,86 @@ class Evaluation:
                 performance_matrix[i, j] = score
         self.performance_matrix = performance_matrix
         return performance_matrix
+
+    def evaluate_cr_decision_outputs(self, true_assignments, decision_outputs, coverage):
+        """
+        Evaluate complementary-redundant decision outputs with already set classification performance metrics.
+        TODO: doc... Class-wise mean score for binary classification metrics.
+
+        .. warning::
+
+            This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
+
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp class assignments which are considered true for the evaluation.
+        :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
+                classifier, which is identified by the positional index of the respective list.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
+        self.__check()
+        if len(decision_outputs) != len(coverage):
+            raise TypeError("`decision_outputs` is not aligned to `coverage`.")
+
+        perf_matrix = np.full((1, len(self.metrics)), np.nan)
+        for i, metric in enumerate(self.metrics):
+            class_wise_mean_score = self.class_wise_mean_score(true_assignments, decision_outputs, coverage, metric)
+            perf_matrix[0, i] = np.mean(class_wise_mean_score)
+
+        self.performance_matrix = perf_matrix
+        return perf_matrix
+
+    def evaluate_cr_multi_combiner_decision_outputs(self, true_assignments, decision_tensor):
+        """
+        Evaluate decision outputs of multiple CR combiners with already set classification performance metrics.
+        The evaluation is performed by :func:`evaluate_cr_decision_outputs` for each combiner.
+
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp class assignments which are considered true for the evaluation.
+        :param decision_tensor: `numpy.array` of shape `(n_combiners, n_samples, n_classes)`.
+                Tensor of crisp decision outputs by different combiners per sample.
+        :return: `numpy.array` of shape `(n_instances, n_metrics)`. Performance matrix containing performance values
+                for each set instance row-wise and each set performance metric column-wise.
+        """
+        self.__check()
+        if len(self.instances) != len(decision_tensor):
+            raise TypeError("`decision_tensor` is not aligned with the number of instances.")
+
+        coverage = [np.arange(true_assignments.shape[1], dtype=int)]
+        performance_matrix = np.full((len(decision_tensor), len(self.metrics)), np.nan)
+        for i in range(len(decision_tensor)):
+            dt = np.expand_dims(decision_tensor[i], axis=0)
+            pm = self.evaluate_cr_decision_outputs(true_assignments, dt, coverage)
+            performance_matrix[i] = np.squeeze(pm)
+        self.performance_matrix = performance_matrix
+        return performance_matrix
+
+    def class_wise_mean_score(self, true_assignments, decision_outputs, coverage, metric):
+        """
+        TODO: Doc.
+        :param true_assignments:
+        :param decision_outputs:
+        :param coverage:
+        :param metric:
+        :return:
+        """
+        self.__check()
+        if len(decision_outputs) != len(coverage):
+            raise TypeError("`decision_outputs` is not aligned to `coverage`.")
+
+        true_assignments_per_coverage = [intercept_normal_class(true_assignments[:, cov], True) for cov in coverage]
+        classifier_class_score_matrix = np.full((len(decision_outputs), true_assignments.shape[1]), np.nan)
+        for i in range(len(decision_outputs)):
+            for ci, j in enumerate(coverage[i]):
+                decision_matrix = np.array(decision_outputs[i])
+                pred_decision_vector = decision_matrix[:, ci]
+                true_decision_vector = true_assignments_per_coverage[i][:, ci]
+                classifier_class_score_matrix[i, j] = metric(true_decision_vector, pred_decision_vector)
+
+        return np.nanmean(classifier_class_score_matrix, axis=0)
 
     def get_report(self):
         """
