@@ -121,7 +121,7 @@ for i in range(n_runs):
     eval_classifiers = Evaluation()
     eval_classifiers.set_metrics(*perf_metrics)
     eval_classifiers.set_instances("Ensemble")
-    eval_classifiers.evaluate_cr_ensemble(y_test, y_ensemble_test, coverage)
+    eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
     print(eval_classifiers.get_report())
 
     print("=========== GenericCombiner ============")
@@ -136,7 +136,7 @@ for i in range(n_runs):
     eval_combiner = Evaluation()
     eval_combiner.set_metrics(*perf_metrics)
     eval_combiner.set_instances(dp.get_combiners())
-    eval_combiner.evaluate_cr_combiners(y_test, dp.get_multi_combiner_decision_output(), coverage)
+    eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, dp.get_multi_combiner_decision_output())
     print(eval_combiner.get_report())
     print("----------------------------------------")
     eval_combiner.set_runtimes(dp.get_multi_combiner_runtimes())
