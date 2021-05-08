@@ -23,7 +23,7 @@ class NeuralNetworkCombiner(TrainableCombiner):
 
     def __init__(self):
         TrainableCombiner.__init__(self)
-        self.classifier = MLPClassifier(alpha=1, max_iter=5000)
+        self.classifier = MLPClassifier(max_iter=5000)
 
     def train(self, decision_tensor, true_assignments):
         """
