@@ -30,8 +30,8 @@ eval_id = time.strftime("%Y%m%d-%H%M%S")
 n_runs = 1
 n_classes = 5
 n_samples = 1000
+random_state = None
 
-# np.random.seed(1)
 
 combiners_per_run = []
 classifiers_performance_run_tuples = []
@@ -46,21 +46,21 @@ combiners_max_scores = []
 combiners_runtime_run_matrices = []
 
 coverage_overlaps = [i/n_runs for i in range(n_runs)]
-coverage_list = []
 
+np.random.seed(random_state)
+
+
+coverage_list = []
 for i in range(n_runs):
     coverage_list.append(p.generate_classification_coverage(n_classifiers=5,
                                                             n_classes=n_classes,
                                                             overlap=coverage_overlaps[i],
                                                             normal_class=True))
 
-# plot properties
-meanprops = dict(markerfacecolor='black', markeredgecolor='white')
-
 for i in range(n_runs):
     print(">>> ", i)
 
-    np.random.seed(1)
+    np.random.seed(random_state)
 
     classifiers = [
         # KNeighborsClassifier(1),
@@ -73,11 +73,11 @@ for i in range(n_runs):
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100,)),  # MLK
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100)),  # MLK
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100, 100)),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+1)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+2)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+3)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+4)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+5)),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
@@ -169,6 +169,10 @@ for i in range(n_runs):
 
     combiners_runtime_matrix = eval_combiner.get_runtime_matrix()
     combiners_runtime_run_matrices.append(combiners_runtime_matrix)
+
+
+# === Plot properties ==================================================================================================
+meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 
 # === Fusion methods comparison ========================================================================================

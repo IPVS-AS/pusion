@@ -23,11 +23,10 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 50
+n_runs = 1
 n_classes = 5
 n_samples = 1000
-
-np.random.seed(1)
+random_state = 0
 
 combiners_per_run = []
 classifiers_performance_run_tuples = []
@@ -50,8 +49,7 @@ ensemble_pairwise_euclidean_distance = []
 
 combiners_runtime_run_matrices = []
 
-# plot properties
-meanprops = dict(markerfacecolor='black', markeredgecolor='white')
+np.random.seed(random_state)
 
 for i in range(n_runs):
     print(">>> ", i)
@@ -63,11 +61,11 @@ for i in range(n_runs):
         # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
-        MLPClassifier(max_iter=5000),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+1)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+2)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+3)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+4)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=(i+5)),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
@@ -168,6 +166,10 @@ for i in range(n_runs):
 
     combiners_runtime_matrix = eval_combiner.get_runtime_matrix()
     combiners_runtime_run_matrices.append(combiners_runtime_matrix)
+
+
+# === Plot properties ==================================================================================================
+meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 
 # === Fusion methods comparison ========================================================================================
