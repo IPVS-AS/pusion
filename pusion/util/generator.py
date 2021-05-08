@@ -1,6 +1,9 @@
+import multiprocessing as mp
+
 from sklearn.datasets import make_classification, make_multilabel_classification
 from sklearn.model_selection import train_test_split
 
+from pusion.util.precesses import p_fit
 from pusion.util.transformer import *
 
 
@@ -39,7 +42,7 @@ def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_c
     return class_index_list
 
 
-def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples):
+def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, parallelize=True):
     """
     Generate random multiclass, crisp and redundant classification outputs (assignments) for the given ensemble of
     classifiers.
@@ -48,6 +51,7 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
             These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
     :param n_classes: `integer`. Number of classes, predictions are made for.
     :param n_samples: `integer`. Number of samples.
+    :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
@@ -66,20 +70,36 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
 
     # Classifier training
-    for i, clf in enumerate(classifiers):
-        print("Train classifier: ", type(clf).__name__, "...")
-        clf.fit(x_train, y_train)
+    if parallelize:
+        # Parallelized classifier training
+        # Create a thread-safe queue for classifiers
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, clf in enumerate(classifiers):
+            processes.append(mp.Process(target=p_fit, args=(i, clf, x_train, y_train, queue)))
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        while not queue.empty():
+            i, clf = queue.get()
+            classifiers[i] = clf
+    else:
+        # Sequential classifier training
+        for i, clf in enumerate(classifiers):
+            print("Train classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            clf.fit(x_train, y_train)
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, "...")
+        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_ensemble_valid.append(clf.predict(x_valid))
 
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, "...")
+        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_ensemble_test.append(clf.predict(x_test))
 
     # Transform to matrix representation
@@ -95,7 +115,8 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None,
+                                                           parallelize=True):
     """
     Generate random multiclass, crisp and complementary-redundant classification outputs (assignments) for the given
     ensemble of classifiers.
@@ -107,6 +128,7 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.
             If unset, redundant classification outputs are retrieved.
+    :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
@@ -130,17 +152,36 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     y_test = transform_label_vector_to_class_assignment_matrix(y_test, n_classes)
 
     # Classifier training
-    for i, clf in enumerate(classifiers):
-        print("Train classifier: ", type(clf).__name__, "...")
-        y_train_ = y_train[:, coverage[i]]
-        y_train_ = intercept_normal_class(y_train_, override=True)
-        y_train_ = multiclass_assignments_to_labels(y_train_)
-        clf.fit(x_train, y_train_)
+    if parallelize:
+        # Parallelized classifier training
+        # Create a thread-safe queue for classifiers
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, clf in enumerate(classifiers):
+            y_train_ = y_train[:, coverage[i]]
+            y_train_ = intercept_normal_class(y_train_, override=True)
+            y_train_ = multiclass_assignments_to_labels(y_train_)
+            processes.append(mp.Process(target=p_fit, args=(i, clf, x_train, y_train_, queue)))
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        while not queue.empty():
+            i, clf = queue.get()
+            classifiers[i] = clf
+    else:
+        # Sequential classifier training
+        for i, clf in enumerate(classifiers):
+            print("Train classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_train_ = y_train[:, coverage[i]]
+            y_train_ = intercept_normal_class(y_train_, override=True)
+            y_train_ = multiclass_assignments_to_labels(y_train_)
+            clf.fit(x_train, y_train_)
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, "...")
+        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_valid)
         y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
         y_ensemble_valid.append(y_pred)
@@ -148,7 +189,7 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, "...")
+        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_test)
         y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
         y_ensemble_test.append(y_pred)
@@ -160,7 +201,7 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples):
+def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples, parallelize=True):
     """
     Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
     the normal class included at index `0`.
@@ -169,6 +210,7 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
             These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
     :param n_classes: `integer`. Number of classes, predictions are made for with the normal class included.
     :param n_samples: `integer`. Number of samples.
+    :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
@@ -189,14 +231,30 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
     x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
 
     # Classifier training
-    for i, clf in enumerate(classifiers):
-        print("Train classifier: ", type(clf).__name__, "...")
-        clf.fit(x_train, y_train)
+    if parallelize:
+        # Parallelized classifier training
+        # Create a thread-safe queue for classifiers
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, clf in enumerate(classifiers):
+            processes.append(mp.Process(target=p_fit, args=(i, clf, x_train, y_train, queue)))
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        while not queue.empty():
+            i, clf = queue.get()
+            classifiers[i] = clf
+    else:
+        # Sequential classifier training
+        for i, clf in enumerate(classifiers):
+            print("Train classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            clf.fit(x_train, y_train)
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, "...")
+        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_valid)
         # y_pred = intercept_normal_class(y_pred, override=True)
         y_ensemble_valid.append(y_pred)
@@ -204,7 +262,7 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, "...")
+        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_test)
         # y_pred = intercept_normal_class(y_pred, override=True)
         y_ensemble_test.append(y_pred)
@@ -216,7 +274,8 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None):
+def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None,
+                                                           parallelize=True):
     """
     Generate random multilabel, crisp and complementary-redundant classification outputs (assignments) for the given
     ensemble of classifiers with the normal class included at index `0`.
@@ -228,6 +287,7 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.
             If unset, redundant classification outputs are retrieved.
+    :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
@@ -248,16 +308,34 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
     x_valid, x_test, y_valid, y_test = train_test_split(x_meta, y_meta, test_size=.5)
 
     # Classifier training
-    for i, clf in enumerate(classifiers):
-        print("Train classifier: ", type(clf).__name__, "...")
-        y_train_ = y_train[:, coverage[i]]
-        y_train_ = intercept_normal_class(y_train_, override=True)
-        clf.fit(x_train, y_train_)
+    if parallelize:
+        # Parallelized classifier training
+        # Create a thread-safe queue for classifiers
+        queue = mp.Manager().Queue()
+        processes = []
+        for i, clf in enumerate(classifiers):
+            y_train_ = y_train[:, coverage[i]]
+            y_train_ = intercept_normal_class(y_train_, override=True)
+            processes.append(mp.Process(target=p_fit, args=(i, clf, x_train, y_train_, queue)))
+        for p in processes:
+            p.start()
+        for p in processes:
+            p.join()
+        while not queue.empty():
+            i, clf = queue.get()
+            classifiers[i] = clf
+    else:
+        # Sequential classifier training
+        for i, clf in enumerate(classifiers):
+            print("Train classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_train_ = y_train[:, coverage[i]]
+            y_train_ = intercept_normal_class(y_train_, override=True)
+            clf.fit(x_train, y_train_)
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
     for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, "...")
+        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_valid)
         # y_pred = intercept_normal_class(y_pred, override=True)
         y_ensemble_valid.append(y_pred)
@@ -265,7 +343,7 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
     # Classifier test
     y_ensemble_test = []
     for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, "...")
+        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
         y_pred = clf.predict(x_test)
         # y_pred = intercept_normal_class(y_pred, override=True)
         y_ensemble_test.append(y_pred)
