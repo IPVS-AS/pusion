@@ -372,10 +372,10 @@ for perf_tuples in classifiers_performance_run_tuples:
     mean_classifier_perf_per_run.append(np.mean([t[1] for t in perf_tuples]))
 
 fig, ax = plt.subplots()
-scatter = ax.scatter(mean_classifier_perf_per_run, combiners_max_scores, c=ensemble_diversity_correlation_scores)
-ax.set_xlabel('Ensemble Mean Performance (Accuracy)', labelpad=15)
+scatter = ax.scatter(ensemble_diversity_correlation_scores, combiners_max_scores, c=mean_classifier_perf_per_run)
+ax.set_xlabel('Diversity (Correlation)', labelpad=15)
 ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
-fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "300_scatter_plot_cls_mean_acc__framework_performance__diversity_correlation", eval_id)
 
@@ -383,10 +383,10 @@ save(plt, "300_scatter_plot_cls_mean_acc__framework_performance__diversity_corre
 # === Diversity - Performance Improvement - Mean Ensemble Performance ==================================================
 
 fig, ax = plt.subplots()
-scatter = ax.scatter(mean_classifier_perf_per_run, performance_improvements, c=ensemble_diversity_correlation_scores)
-ax.set_xlabel('Ensemble Mean Performance (Accuracy)', labelpad=15)
+scatter = ax.scatter(ensemble_diversity_correlation_scores, performance_improvements, c=mean_classifier_perf_per_run)
+ax.set_xlabel('Diversity (Correlation)', labelpad=15)
 ax.set_ylabel('Performance Improvement (Accuracy)', labelpad=15)
-fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
 
