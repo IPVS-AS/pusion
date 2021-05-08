@@ -2,7 +2,7 @@ import multiprocessing as mp
 
 from pusion.auto.detector import *
 from pusion.core.combiner import *
-from pusion.util.precesses import *
+from pusion.util.processes import *
 
 
 class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner):

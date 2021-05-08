@@ -3,7 +3,7 @@ import multiprocessing as mp
 from sklearn.datasets import make_classification, make_multilabel_classification
 from sklearn.model_selection import train_test_split
 
-from pusion.util.precesses import p_fit
+from pusion.util.processes import p_fit
 from pusion.util.transformer import *
 
 
