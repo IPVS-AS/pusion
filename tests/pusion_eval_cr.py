@@ -27,10 +27,10 @@ warnings.filterwarnings('error')  # TODO delete
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 1
-n_classes = 5
-n_samples = 1000
-random_state = None
+n_runs = 50
+n_classes = 8
+n_samples = 5000
+random_state = 1
 
 
 combiners_per_run = []
@@ -73,11 +73,11 @@ for i in range(n_runs):
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100,)),  # MLK
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100)),  # MLK
         # MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 100, 100)),  # MLK
-        MLPClassifier(max_iter=5000, random_state=(i+1)),  # MLK
-        MLPClassifier(max_iter=5000, random_state=(i+2)),  # MLK
-        MLPClassifier(max_iter=5000, random_state=(i+3)),  # MLK
-        MLPClassifier(max_iter=5000, random_state=(i+4)),  # MLK
-        MLPClassifier(max_iter=5000, random_state=(i+5)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=1),  # MLK
+        MLPClassifier(max_iter=5000, random_state=2),  # MLK
+        MLPClassifier(max_iter=5000, random_state=3),  # MLK
+        MLPClassifier(max_iter=5000, random_state=4),  # MLK
+        MLPClassifier(max_iter=5000, random_state=5),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
