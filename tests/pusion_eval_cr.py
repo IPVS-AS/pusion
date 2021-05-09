@@ -28,8 +28,8 @@ warnings.filterwarnings('error')  # TODO delete
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
 n_runs = 50
-n_classes = 8
-n_samples = 5000
+n_classes = 5
+n_samples = 2000
 random_state = 1
 
 
