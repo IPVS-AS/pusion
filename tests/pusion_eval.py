@@ -23,7 +23,7 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 50
+n_runs = 3
 n_classes = 5
 n_samples = 2000
 random_state = 1
@@ -37,6 +37,7 @@ performance_improvements = []
 classifier_max_scores = []
 classifier_max_mean_confidences = []
 combiners_max_scores = []
+classifier_score_stds = []
 
 ensemble_diversity_correlation_scores = []
 ensemble_diversity_q_statistic_scores = []
@@ -98,7 +99,7 @@ for i in range(n_runs):
         # AdaBoostClassifier(n_estimators=50),
     ]
 
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
+    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_ensemble_classification_outputs(
         classifiers, n_classes=n_classes, n_samples=n_samples)
 
     perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
@@ -154,6 +155,9 @@ for i in range(n_runs):
 
     performance_improvement = combiners_max_score - classifier_max_score
     performance_improvements.append(performance_improvement)
+
+    classifier_score_std = np.std([t[1] for t in classifiers_performance_tuples])
+    classifier_score_stds.append(classifier_score_std)
 
     ensemble_diversity_correlation_scores.append(pairwise_correlation(y_ensemble_test, y_test))
     ensemble_diversity_q_statistic_scores.append(pairwise_q_statistic(y_ensemble_test, y_test))
@@ -392,6 +396,14 @@ fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad
 plt.tight_layout()
 save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
 
+# === Ensemble Standard Deviation (Scatter-Plot) =======================================================================
+fig, ax = plt.subplots()
+scatter = ax.scatter(classifier_score_stds, combiners_max_scores, c=ensemble_diversity_correlation_scores)
+ax.set_xlabel('Ensemble Standard Deviation (Accuracy)', labelpad=15)
+ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
+fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+plt.tight_layout()
+save(plt, "310_scatter_plot_ensemble_std__performance__diversity_correlation", eval_id)
 
 # === Combiner runtimes ================================================================================================
 
