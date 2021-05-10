@@ -23,7 +23,7 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 3
+n_runs = 50
 n_classes = 5
 n_samples = 2000
 random_state = 1
@@ -384,7 +384,7 @@ ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
 fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "300_scatter_plot_cls_mean_acc__framework_performance__diversity_correlation", eval_id)
-
+plt.close()
 
 # === Diversity - Performance Improvement - Mean Ensemble Performance ==================================================
 
@@ -395,15 +395,47 @@ ax.set_ylabel('Performance Improvement (Accuracy)', labelpad=15)
 fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
+plt.close()
 
-# === Ensemble Standard Deviation (Scatter-Plot) =======================================================================
-fig, ax = plt.subplots()
-scatter = ax.scatter(classifier_score_stds, combiners_max_scores, c=ensemble_diversity_correlation_scores)
-ax.set_xlabel('Ensemble Standard Deviation (Accuracy)', labelpad=15)
-ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
-fig.colorbar(scatter).set_label("Diversity (Correlation)", labelpad=15)
+
+# === Ensemble STD =====================================================================================================
+
+# --- Ensemble STD - Framework Performance -----------------------------------------------------------------------------
+plt.plot(classifier_score_stds, combiners_max_scores, 'bx')
+plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
+plt.ylabel('Framework Performance (Accuracy)', labelpad=15)
 plt.tight_layout()
-save(plt, "310_scatter_plot_ensemble_std__performance__diversity_correlation", eval_id)
+save(plt, "310_scatter_plot_ensemble_std__performance", eval_id)
+plt.close()
+
+# --- Ensemble STD - Performance Improvement ---------------------------------------------------------------------------
+plt.plot(classifier_score_stds, performance_improvements, 'rx')
+plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
+plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+plt.tight_layout()
+save(plt, "311_scatter_plot_ensemble_std__performance_imp", eval_id)
+plt.close()
+
+# --- Ensemble STD - Framework Performance - Mean Ensemble Performance -------------------------------------------------
+fig, ax = plt.subplots()
+scatter = ax.scatter(classifier_score_stds, combiners_max_scores, c=mean_classifier_perf_per_run)
+ax.set_xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
+ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+plt.tight_layout()
+save(plt, "320_scatter_plot_ensemble_std__performance__mean_ensemble_performance", eval_id)
+plt.close()
+
+# --- Ensemble STD - Performance Improvement - Mean Ensemble Performance -----------------------------------------------
+fig, ax = plt.subplots()
+scatter = ax.scatter(classifier_score_stds, performance_improvements, c=mean_classifier_perf_per_run)
+ax.set_xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
+ax.set_ylabel("Performance Improvement (Accuracy)", labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+plt.tight_layout()
+save(plt, "321_scatter_plot_ensemble_std__performance_imp__mean_ensemble_performance", eval_id)
+plt.close()
+
 
 # === Combiner runtimes ================================================================================================
 
