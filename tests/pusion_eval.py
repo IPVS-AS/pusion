@@ -62,11 +62,11 @@ for i in range(n_runs):
         # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=2),  # MLK
-        MLPClassifier(max_iter=5000, random_state=3),  # MLK
-        MLPClassifier(max_iter=5000, random_state=4),  # MLK
-        MLPClassifier(max_iter=5000, random_state=5),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=1),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=2),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=3),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=4),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=5),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
@@ -82,11 +82,11 @@ for i in range(n_runs):
         # DecisionTreeClassifier(max_depth=3),
         # DecisionTreeClassifier(max_depth=4),
         # DecisionTreeClassifier(max_depth=5),
-        # RandomForestClassifier(max_depth=1, n_estimators=10, max_features=1),
-        # RandomForestClassifier(max_depth=3, n_estimators=9, max_features=1),
-        # RandomForestClassifier(max_depth=5, n_estimators=8, max_features=1),
-        # RandomForestClassifier(max_depth=7, n_estimators=7, max_features=1),
-        # RandomForestClassifier(max_depth=10, n_estimators=6, max_features=1),
+        RandomForestClassifier(max_depth=1, n_estimators=10),
+        RandomForestClassifier(max_depth=3, n_estimators=9),
+        RandomForestClassifier(max_depth=5, n_estimators=8),
+        RandomForestClassifier(max_depth=7, n_estimators=7),
+        RandomForestClassifier(max_depth=10, n_estimators=6),
         # AdaBoostClassifier(),
         # GaussianNB(),
         # QuadraticDiscriminantAnalysis(),
@@ -99,8 +99,10 @@ for i in range(n_runs):
         # AdaBoostClassifier(n_estimators=50),
     ]
 
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_ensemble_classification_outputs(
-        classifiers, n_classes=n_classes, n_samples=n_samples)
+    y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
+        p.generate_multiclass_ensemble_classification_outputs(classifiers=classifiers,
+                                                              n_classes=n_classes,
+                                                              n_samples=n_samples)
 
     perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
