@@ -315,6 +315,9 @@ for k, comb in enumerate(combiners):
 for k in range(len(combiners), n_x_cells * n_y_cells):
     fig.delaxes(axs[int(k / n_x_cells), k % n_x_cells])
 
+plt.setp(axs[-1, :], xlabel='Trefferquote (Ensemble)')
+plt.setp(axs[:, 0], ylabel='Trefferquote (Fusion)')
+
 plt.tight_layout()
 save(plt, "040_performance_profiles", eval_id)
 plt.close()
