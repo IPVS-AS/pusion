@@ -156,7 +156,7 @@ for i in range(n_runs):
     classifier_max_mean_confidence = classifiers_mean_confidence_tuples[0][1]
     classifier_max_mean_confidences.append(classifier_max_mean_confidence)
 
-    combiners_max_score = combiners_performance_tuples[0][1]
+    combiners_max_score = eval_combiner.get_top_n_instances()[0][1]
     combiners_max_scores.append(combiners_max_score)
 
     performance_improvement = combiners_max_score - classifier_max_score
@@ -165,7 +165,7 @@ for i in range(n_runs):
     classifier_score_std = np.std([t[1] for t in classifiers_performance_tuples])
     classifier_score_stds.append(classifier_score_std)
 
-    best_combiners_per_run.append(combiners_performance_tuples[0][0])
+    best_combiners_per_run.append(eval_combiner.get_top_n_instances()[0][0])
 
     ensemble_diversity_correlation_scores.append(pairwise_correlation(y_ensemble_test, y_test))
     ensemble_diversity_q_statistic_scores.append(pairwise_q_statistic(y_ensemble_test, y_test))
@@ -198,23 +198,14 @@ combiners = [comb for comb in reduced_combiners_performances.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performances = [reduced_combiners_performances[c] for c in combiners]
 
-plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
-plt.title("Fusion methods comparison (" + str(n_runs) + " runs)")
-plt.ylabel("Accuracy", labelpad=15)
-plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
-plt.tight_layout()
-save(plt, "000_box_plot_combiner_comparison", eval_id)
-plt.close()
-
-# --- Fusion methods comparison (with control) -------------------------------------------------------------------------
-combiners_performances.append(classifier_max_scores)
-combiners_names.append('Control')
+# Add control (best classifier performance)
+combiners_performances.insert(0, classifier_max_scores)
+combiners_names.insert(0, 'Kontrolle')
 
 plt.figure(figsize=(10, 4.8))
 plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
-plt.title("Framework control comparison (" + str(n_runs) + " runs)")
-plt.ylabel("Accuracy", labelpad=15)
+# plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Trefferquote", labelpad=15)
 plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
 plt.tight_layout()
 save(plt, "010_box_plot_combiner_control_comparison", eval_id)
@@ -233,23 +224,14 @@ combiners = [comb for comb in reduced_combiners_mean_confidences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performances = [reduced_combiners_mean_confidences[c] for c in combiners]
 
-plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
-plt.title("Fusion methods comparison (" + str(n_runs) + " runs)")
-plt.ylabel("Mean confidence", labelpad=15)
-plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
-plt.tight_layout()
-save(plt, "020_box_plot_combiner_comparison_mean_confidence", eval_id)
-plt.close()
-
-# --- Fusion methods mean confidence comparison (with control) ---------------------------------------------------------
-combiners_performances.append(classifier_max_mean_confidences)
-combiners_names.append('Control')
+# Add control (best classifier confidence)
+combiners_performances.insert(0, classifier_max_mean_confidences)
+combiners_names.insert(0, 'Kontrolle')
 
 plt.figure(figsize=(10, 4.8))
 plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
-plt.title("Framework control comparison (" + str(n_runs) + " runs)")
-plt.ylabel("Mean confidence", labelpad=15)
+# plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Mittlere Konfidenz", labelpad=15)
 plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
 plt.tight_layout()
 save(plt, "021_box_plot_combiner_control_comparison_mean_confidence", eval_id)
@@ -259,8 +241,8 @@ plt.close()
 # === Performance comparison (Ensemble/Framework) ======================================================================
 
 plt.boxplot([classifier_max_scores, combiners_max_scores], showmeans=True, meanprops=meanprops)
-plt.title("Performance comparison (" + str(n_runs) + " runs)")
-plt.ylabel("Max. Accuracy", labelpad=15)
+# plt.title("Performanzvergleich (" + str(n_runs) + " runs)")
+plt.ylabel("Max. Trefferquote", labelpad=15)
 plt.xticks([1, 2], ['Ensemble', 'Framework'])
 plt.tight_layout()
 save(plt, "030_box_plot_max_performance_comparison", eval_id)
@@ -268,8 +250,8 @@ plt.close()
 
 # --- Performance improvement by Framework -----------------------------------------------------------------------------
 plt.boxplot(performance_improvements, showmeans=True, meanprops=meanprops)
-plt.title("Performance improvement (" + str(n_runs) + " runs)")
-plt.ylabel("Accuracy (difference)", labelpad=15)
+# plt.title("Performanzverbesserung (" + str(n_runs) + " runs)")
+plt.ylabel("Trefferquote (Differenz)", labelpad=15)
 plt.xticks([1], ['Framework'])
 plt.tight_layout()
 save(plt, "031_box_plot_performance_improvement", eval_id)
