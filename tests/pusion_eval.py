@@ -25,9 +25,9 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 5
+n_runs = 50
 n_classes = 5
-n_samples = 500
+n_samples = 2000
 random_state = 1
 
 combiners_per_run = []
@@ -106,7 +106,8 @@ for i in range(n_runs):
     y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
         p.generate_multiclass_ensemble_classification_outputs(classifiers=classifiers,
                                                               n_classes=n_classes,
-                                                              n_samples=n_samples)
+                                                              n_samples=n_samples,
+                                                              parallelize=True)
 
     perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
@@ -120,7 +121,7 @@ for i in range(n_runs):
 
     print("=========== GenericCombiner ============")
     dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
-    # dp.set_parallel(False)
+    dp.set_parallel(True)
 
     dp.train(y_ensemble_valid, y_valid)
     y_comb = dp.combine(y_ensemble_test)
@@ -189,10 +190,10 @@ meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 reduced_combiners_performances = {}
 for perf_tuples in combiners_performance_run_tuples:  # reduce
     for t in perf_tuples:
-        comb_index = type(t[0])
-        if comb_index not in reduced_combiners_performances:  # create a score list if non-existent
-            reduced_combiners_performances[comb_index] = []
-        reduced_combiners_performances[comb_index].append(t[1])
+        combiner = type(t[0])
+        if combiner not in reduced_combiners_performances:  # create a score list if non-existent
+            reduced_combiners_performances[combiner] = []
+        reduced_combiners_performances[combiner].append(t[1])
 
 combiners = [comb for comb in reduced_combiners_performances.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
@@ -215,10 +216,10 @@ plt.close()
 reduced_combiners_mean_confidences = {}
 for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
     for t in perf_tuples:
-        comb_index = type(t[0])
-        if comb_index not in reduced_combiners_mean_confidences:  # create a score list if non-existent
-            reduced_combiners_mean_confidences[comb_index] = []
-        reduced_combiners_mean_confidences[comb_index].append(t[1])
+        combiner = type(t[0])
+        if combiner not in reduced_combiners_mean_confidences:  # create a score list if non-existent
+            reduced_combiners_mean_confidences[combiner] = []
+        reduced_combiners_mean_confidences[combiner].append(t[1])
 
 combiners = [comb for comb in reduced_combiners_mean_confidences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
@@ -256,6 +257,10 @@ plt.xticks([1], ['Framework'])
 plt.tight_layout()
 save(plt, "031_box_plot_performance_improvement", eval_id)
 plt.close()
+
+# --- Performance improvement by each fusion method --------------------------------------------------------------------
+
+
 
 # === Diversity -- Framework Performance ===============================================================================
 
