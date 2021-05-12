@@ -308,7 +308,8 @@ fig, axs = plt.subplots(n_y_cells, n_x_cells, sharex='all', sharey='all', figsiz
 for k, comb in enumerate(combiners):
     i = int(k / 3)
     j = k % 3
-    axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb], s=20, c='black', marker="x")
+    axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb], s=20, c='black', marker="x",
+                      linewidth=1)
     axs[i, j].plot([0, 1], [0, 1], linewidth=1, linestyle='--', c='#cccccc')
     axs[i, j].set_title(combiners_names[k])
 
