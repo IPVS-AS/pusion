@@ -242,6 +242,7 @@ plt.close()
 
 # === Performance comparison (Ensemble/Framework) ======================================================================
 
+plt.figure()
 plt.boxplot([classifier_max_scores, combiners_max_scores], showmeans=True, meanprops=meanprops)
 # plt.title("Performanzvergleich (" + str(n_runs) + " runs)")
 plt.ylabel("Max. Trefferquote", labelpad=15)
@@ -251,6 +252,7 @@ save(plt, "030_box_plot_max_performance_comparison", eval_id)
 plt.close()
 
 # --- Performance improvement by Framework -----------------------------------------------------------------------------
+plt.figure()
 plt.boxplot(performance_improvements, showmeans=True, meanprops=meanprops)
 # plt.title("Performanzverbesserung (" + str(n_runs) + " runs)")
 plt.ylabel("Trefferquote (Differenz)", labelpad=15)
@@ -260,11 +262,66 @@ save(plt, "031_box_plot_performance_improvement", eval_id)
 plt.close()
 
 # --- Performance improvement by each fusion method --------------------------------------------------------------------
+reduced_combiners_performance_differences = {}
+for perf_tuples, cls_max_score in zip(combiners_performance_run_tuples, classifier_max_scores):  # reduce
+    for t in perf_tuples:
+        combiner = type(t[0])
+        combiner_score = t[1]
+        if combiner not in reduced_combiners_performance_differences:  # create a score list if non-existent
+            reduced_combiners_performance_differences[combiner] = []
+        reduced_combiners_performance_differences[combiner].append(combiner_score - cls_max_score)
 
+combiners = [comb for comb in reduced_combiners_performance_differences.keys()]
+combiners_names = [c.SHORT_NAME for c in combiners]
+combiners_performance_improvements = [np.mean(reduced_combiners_performance_differences[c]) for c in combiners]
+combiners_performance_improvements_stds = [np.std(reduced_combiners_performance_differences[c]) for c in combiners]
+
+plt.figure(figsize=(10, 4.8))
+fig, ax = plt.subplots()
+ax.axhline(0, color='grey', linewidth=0.8)
+p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
+ax.bar_label(p)
+plt.ylabel("Mittlere Performanzdifferenz", labelpad=15)
+plt.tight_layout()
+save(plt, "032_mean_performance_difference_per_fusion_method", eval_id)
+plt.close()
+
+# === Performance Profiles =============================================================================================
+reduced_combiners_performances = {}
+for perf_tuples in combiners_performance_run_tuples:  # reduce
+    for t in perf_tuples:
+        combiner = type(t[0])
+        if combiner not in reduced_combiners_performances:  # create a score list if non-existent
+            reduced_combiners_performances[combiner] = []
+        reduced_combiners_performances[combiner].append(t[1])
+
+combiners = [comb for comb in reduced_combiners_performances.keys()]
+combiners_names = [c.SHORT_NAME for c in combiners]
+# combiners_performances = [reduced_combiners_performances[c] for c in combiners]
+
+plt.figure(figsize=(10, 4.8))
+
+n_x_cells = 3
+n_y_cells = int(len(combiners)/n_x_cells) if len(combiners) % n_x_cells == 0 else int(len(combiners)/n_x_cells) + 1
+fig, axs = plt.subplots(n_y_cells, n_x_cells, sharex='all', sharey='all', figsize=(10, 10))
+
+for k, comb in enumerate(combiners):
+    i = int(k / 3)
+    j = k % 3
+    axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb], s=20, c='black', marker="x")
+    axs[i, j].plot([0, 1], [0, 1], linewidth=1, linestyle='--', c='#cccccc')
+    axs[i, j].set_title(combiners_names[k])
+
+for k in range(len(combiners), n_x_cells * n_y_cells):
+    fig.delaxes(axs[int(k / n_x_cells), k % n_x_cells])
+
+plt.tight_layout()
+save(plt, "040_performance_profiles", eval_id)
+plt.close()
 
 
 # === Diversity -- Framework Performance ===============================================================================
-
+plt.figure()
 plt.plot(ensemble_diversity_kappa_statistic, combiners_max_scores, 'g^')
 plt.xlabel("Diversity (Kappa-statistic)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -272,6 +329,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_00_div_cohens_kappa2__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_correlation_scores, combiners_max_scores, 'bs')
 plt.xlabel("Diversity (Correlation)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -279,6 +337,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_01_div_correlation__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_q_statistic_scores, combiners_max_scores, 'g^')
 plt.xlabel("Diversity (Q-statistic)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -286,6 +345,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_02_div_q_stat__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_disagreement, combiners_max_scores, 'mv')
 plt.xlabel("Diversity (Disagreement)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -293,6 +353,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_03_div_disagreement__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_double_fault, combiners_max_scores, 'rH')
 plt.xlabel("Diversity (Double Fault)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -300,6 +361,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_04_div_double_fault__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_cohens_kappa_scores, combiners_max_scores, 'ro')
 plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -307,6 +369,7 @@ plt.tight_layout()
 save(plt, "100_data_plot_05_div_cohens_kappa__framework_performance", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_pairwise_euclidean_distance, combiners_max_scores, 'gD')
 plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
 plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
@@ -317,6 +380,7 @@ plt.close()
 
 # === Diversity -- Performance Improvement =============================================================================
 
+plt.figure()
 plt.plot(ensemble_diversity_kappa_statistic, performance_improvements, 'ro')
 plt.xlabel("Diversity (Kappa statistic)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -324,6 +388,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_10_div_cohens_kappa2__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_correlation_scores, performance_improvements, 'bs')
 plt.xlabel("Diversity (Correlation)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -331,6 +396,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_11_div_correlation__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_q_statistic_scores, performance_improvements, 'g^')
 plt.xlabel("Diversity (Q-statistic)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -338,6 +404,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_12_div_q_stat__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_disagreement, performance_improvements, 'mv')
 plt.xlabel("Diversity (Disagreement)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -345,6 +412,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_13_div_disagreement__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_double_fault, performance_improvements, 'rH')
 plt.xlabel("Diversity (Double Fault)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -352,6 +420,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_14_div_double_fault__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_diversity_cohens_kappa_scores, performance_improvements, 'ro')
 plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -359,6 +428,7 @@ plt.tight_layout()
 save(plt, "200_data_plot_15_div_cohens_kappa__perf_improvement", eval_id)
 plt.close()
 
+plt.figure()
 plt.plot(ensemble_pairwise_euclidean_distance, performance_improvements, 'bD')
 plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
@@ -417,6 +487,7 @@ plt.close()
 # === Ensemble STD =====================================================================================================
 
 # --- Ensemble STD - Framework Performance -----------------------------------------------------------------------------
+plt.figure()
 plt.plot(classifier_score_stds, combiners_max_scores, 'bx')
 plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
 plt.ylabel('Framework Performance (Accuracy)', labelpad=15)
@@ -425,6 +496,7 @@ save(plt, "310_scatter_plot_ensemble_std__performance", eval_id)
 plt.close()
 
 # --- Ensemble STD - Performance Improvement ---------------------------------------------------------------------------
+plt.figure()
 plt.plot(classifier_score_stds, performance_improvements, 'rx')
 plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
 plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
