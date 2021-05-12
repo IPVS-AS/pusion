@@ -3,6 +3,7 @@ import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
@@ -400,11 +401,13 @@ combiners_names = unique_best_combiners[0]
 combiners_frequency = unique_best_combiners[1]
 
 # --- Frequencies of all combiners -------------------------------------------------------------------------------------
+df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_frequency': combiners_frequency})
+df_sorted = df.sort_values('combiners_frequency')
+
 plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_names, combiners_frequency, color='gray')
+# plt.bar(combiners_names, combiners_frequency, color='gray')
+plt.bar('combiners_names', 'combiners_frequency', data=df_sorted, color='gray')
 plt.title("Auftrittshäufigkeit der besten Fusionsmethoden (" + str(n_runs) + " Läufe)")
-if combiners_frequency.size > 0:
-    plt.yticks(np.arange(max(combiners_frequency) + 1))
 plt.ylabel("Auftrittsfrequenz", labelpad=15)
 plt.tight_layout()
 save(plt, "400_combiner_frequency", eval_id)
@@ -474,8 +477,12 @@ max_index = np.argmax(combiners_train_mean_non_zero_runtimes)
 combiners_train_mean_non_zero_runtimes = np.delete(combiners_train_mean_non_zero_runtimes, max_index)
 del combiners_non_zero_names[max_index]
 
+df = pd.DataFrame({'combiners_non_zero_names': combiners_non_zero_names,
+                   'combiners_train_mean_non_zero_runtimes': combiners_train_mean_non_zero_runtimes})
+df_sorted = df.sort_values('combiners_train_mean_non_zero_runtimes')
 plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_non_zero_names, combiners_train_mean_non_zero_runtimes, color='#93c6ed')
+# plt.bar(combiners_non_zero_names, combiners_train_mean_non_zero_runtimes, color='#93c6ed')
+plt.bar('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtimes', data=df_sorted, color='#93c6ed')
 plt.title("Mittlere Trainingslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Laufzeit (s)", labelpad=15)
 plt.tight_layout()
@@ -483,8 +490,13 @@ save(plt, "z91z_train_runtime_comparison", eval_id)
 plt.close()
 
 # --- Mean combine runtimes --------------------------------------------------------------------------------------------
+
+df = pd.DataFrame({'combiners_names': combiners_names,
+                   'combiners_combine_mean_runtimes': combiners_combine_mean_runtimes})
+df_sorted = df.sort_values('combiners_combine_mean_runtimes')
 plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
+# plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
+plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#006aba')
 plt.title("Mittlere Fusionslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Laufzeit (s)", labelpad=15)
 plt.tight_layout()
