@@ -410,39 +410,6 @@ plt.tight_layout()
 save(plt, "400_combiner_frequency", eval_id)
 plt.close()
 
-# --- Frequencies of trainable combiners -------------------------------------------------------------------------------
-best_trainable_combiners_instances = [c.SHORT_NAME for c in best_combiners_per_run if isinstance(c, TrainableCombiner)]
-unique_best_trainable_combiners = np.unique(best_trainable_combiners_instances, return_counts=True)
-combiners_names = unique_best_trainable_combiners[0]
-combiners_frequency = unique_best_trainable_combiners[1]
-
-plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_names, combiners_frequency, color='gray')
-plt.title("Auftrittshäufigkeit der besten lernenden Fusionsmethoden (" + str(n_runs) + " Läufe)")
-if combiners_frequency.size > 0:
-    plt.yticks(np.arange(max(combiners_frequency) + 1))
-plt.ylabel("Auftrittsfrequenz", labelpad=15)
-plt.tight_layout()
-save(plt, "401_trainable_combiner_frequency", eval_id)
-plt.close()
-
-
-# --- Frequencies of utility-based combiners ---------------------------------------------------------------------------
-best_utility_combiners_instances = [c.SHORT_NAME for c in best_combiners_per_run if isinstance(c, UtilityBasedCombiner)]
-unique_best_utility_combiners = np.unique(best_utility_combiners_instances, return_counts=True)
-combiners_names = unique_best_utility_combiners[0]
-combiners_frequency = unique_best_utility_combiners[1]
-
-plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_names, combiners_frequency, color='gray')
-plt.title("Auftrittshäufigkeit der besten Utility-basierten Fusionsmethoden (" + str(n_runs) + " Läufe)")
-if combiners_frequency.size > 0:
-    plt.yticks(np.arange(max(combiners_frequency) + 1))
-plt.ylabel("Auftrittsfrequenz", labelpad=15)
-plt.tight_layout()
-save(plt, "402_utility_combiner_frequency", eval_id)
-plt.close()
-
 
 # === Ensemble STD =====================================================================================================
 
