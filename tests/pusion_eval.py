@@ -2,6 +2,7 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
@@ -15,6 +16,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 
 import pusion as p
+from pusion.core.combiner import UtilityBasedCombiner, TrainableCombiner
 from pusion.evaluation.evaluation import Evaluation
 from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
@@ -23,9 +25,9 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 50
+n_runs = 5
 n_classes = 5
-n_samples = 2000
+n_samples = 500
 random_state = 1
 
 combiners_per_run = []
@@ -38,6 +40,8 @@ classifier_max_scores = []
 classifier_max_mean_confidences = []
 combiners_max_scores = []
 classifier_score_stds = []
+
+best_combiners_per_run = []
 
 ensemble_diversity_correlation_scores = []
 ensemble_diversity_q_statistic_scores = []
@@ -82,11 +86,11 @@ for i in range(n_runs):
         # DecisionTreeClassifier(max_depth=3),
         # DecisionTreeClassifier(max_depth=4),
         # DecisionTreeClassifier(max_depth=5),
-        RandomForestClassifier(max_depth=1, n_estimators=10),
-        RandomForestClassifier(max_depth=3, n_estimators=9),
-        RandomForestClassifier(max_depth=5, n_estimators=8),
-        RandomForestClassifier(max_depth=7, n_estimators=7),
-        RandomForestClassifier(max_depth=10, n_estimators=6),
+        RandomForestClassifier(max_depth=1, n_estimators=10, random_state=1),
+        RandomForestClassifier(max_depth=3, n_estimators=9, random_state=1),
+        RandomForestClassifier(max_depth=5, n_estimators=8, random_state=1),
+        RandomForestClassifier(max_depth=7, n_estimators=7, random_state=1),
+        RandomForestClassifier(max_depth=10, n_estimators=6, random_state=1),
         # AdaBoostClassifier(),
         # GaussianNB(),
         # QuadraticDiscriminantAnalysis(),
@@ -160,6 +164,8 @@ for i in range(n_runs):
 
     classifier_score_std = np.std([t[1] for t in classifiers_performance_tuples])
     classifier_score_stds.append(classifier_score_std)
+
+    best_combiners_per_run.append(combiners_performance_tuples[0][0])
 
     ensemble_diversity_correlation_scores.append(pairwise_correlation(y_ensemble_test, y_test))
     ensemble_diversity_q_statistic_scores.append(pairwise_q_statistic(y_ensemble_test, y_test))
@@ -397,6 +403,57 @@ ax.set_ylabel('Performance Improvement (Accuracy)', labelpad=15)
 fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
 plt.tight_layout()
 save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
+plt.close()
+
+# === Combiner Frequencies =============================================================================================
+
+best_combiners__short_names = [c.SHORT_NAME for c in best_combiners_per_run]
+unique_best_combiners = np.unique(best_combiners__short_names, return_counts=True)
+combiners_names = unique_best_combiners[0]
+combiners_frequency = unique_best_combiners[1]
+
+# --- Frequencies of all combiners -------------------------------------------------------------------------------------
+plt.figure(figsize=(10, 4.8))
+plt.bar(combiners_names, combiners_frequency, color='gray')
+plt.title("Auftrittshäufigkeit der besten Fusionsmethoden (" + str(n_runs) + " Läufe)")
+if combiners_frequency.size > 0:
+    plt.yticks(np.arange(max(combiners_frequency) + 1))
+plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.tight_layout()
+save(plt, "400_combiner_frequency", eval_id)
+plt.close()
+
+# --- Frequencies of trainable combiners -------------------------------------------------------------------------------
+best_trainable_combiners_instances = [c.SHORT_NAME for c in best_combiners_per_run if isinstance(c, TrainableCombiner)]
+unique_best_trainable_combiners = np.unique(best_trainable_combiners_instances, return_counts=True)
+combiners_names = unique_best_trainable_combiners[0]
+combiners_frequency = unique_best_trainable_combiners[1]
+
+plt.figure(figsize=(10, 4.8))
+plt.bar(combiners_names, combiners_frequency, color='gray')
+plt.title("Auftrittshäufigkeit der besten lernenden Fusionsmethoden (" + str(n_runs) + " Läufe)")
+if combiners_frequency.size > 0:
+    plt.yticks(np.arange(max(combiners_frequency) + 1))
+plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.tight_layout()
+save(plt, "401_trainable_combiner_frequency", eval_id)
+plt.close()
+
+
+# --- Frequencies of utility-based combiners ---------------------------------------------------------------------------
+best_utility_combiners_instances = [c.SHORT_NAME for c in best_combiners_per_run if isinstance(c, UtilityBasedCombiner)]
+unique_best_utility_combiners = np.unique(best_utility_combiners_instances, return_counts=True)
+combiners_names = unique_best_utility_combiners[0]
+combiners_frequency = unique_best_utility_combiners[1]
+
+plt.figure(figsize=(10, 4.8))
+plt.bar(combiners_names, combiners_frequency, color='gray')
+plt.title("Auftrittshäufigkeit der besten Utility-basierten Fusionsmethoden (" + str(n_runs) + " Läufe)")
+if combiners_frequency.size > 0:
+    plt.yticks(np.arange(max(combiners_frequency) + 1))
+plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.tight_layout()
+save(plt, "402_utility_combiner_frequency", eval_id)
 plt.close()
 
 

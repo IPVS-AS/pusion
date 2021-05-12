@@ -53,6 +53,9 @@ class Combiner:
     # List of all combiner classes recognized by the framework.
     _ALL_COMBINERS = []
 
+    # A shortname identifying the combiner.
+    SHORT_NAME = None
+
     def __init__(self):
         self.pac = None
         self.coverage = None
