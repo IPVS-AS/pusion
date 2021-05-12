@@ -510,18 +510,6 @@ combiners_train_mean_runtimes = mean_runtime_matrix[:, 0]
 combiners_combine_mean_runtimes = mean_runtime_matrix[:, 1]
 combiners_names = [c.SHORT_NAME for c in combiners_per_run[0]]
 
-# --- Stacked mean train and combine runtimes --------------------------------------------------------------------------
-plt.figure(figsize=(10, 4.8))
-plt.bar(combiners_names, combiners_train_mean_runtimes, color='#93c6ed', label="Training")
-plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba', bottom=combiners_train_mean_runtimes,
-        label="Fusion")
-plt.title("Mittlere Laufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Laufzeit (s)", labelpad=15)
-plt.legend(loc="upper left")
-plt.tight_layout()
-save(plt, "z90_stacked_bars_runtime_comparison", eval_id)
-plt.close()
-
 # --- Mean train runtimes ----------------------------------------------------------------------------------------------
 non_zero_indexes = np.nonzero(combiners_train_mean_runtimes)[0]
 combiners_train_mean_non_zero_runtimes = combiners_train_mean_runtimes[non_zero_indexes]
