@@ -194,9 +194,26 @@ class Evaluation:
             metric = self.metrics[0]
 
         metric_index = self.metrics.index(metric)
-        instance_indices = self.performance_matrix[:, metric_index]
-        top_n_instance_indices = instance_indices.argsort()[-n:][::-1]
+        performance_values = self.performance_matrix[:, metric_index]
+        top_n_instance_indices = performance_values.argsort()[-n:][::-1]
         return [(self.instances[i], self.performance_matrix[i, metric_index]) for i in top_n_instance_indices]
+
+    def get_instance_performance_tuples(self, metric=None):
+        """
+        Retrieve (instance, performance) tuples created for to the given `metric`.
+
+        :param metric: The metric all instances are evaluated by. If unset, the first set metric is used.
+        :return: `list` of (instance, performance) tuples.
+        """
+        self.__check()
+        if self.performance_matrix is None:
+            raise TypeError("No evaluation performed.")
+        # set default parameter values
+        if metric is None:
+            metric = self.metrics[0]
+
+        metric_index = self.metrics.index(metric)
+        return [(self.instances[i], self.performance_matrix[i, metric_index]) for i in range(len(self.instances))]
 
     def set_metrics(self, *argv):
         """
