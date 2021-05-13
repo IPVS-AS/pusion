@@ -72,12 +72,27 @@ def multiclass_predictions_to_decisions(predictions):
     """
     Transform a continuously valued matrix of multiclass decisions to crisp decision outputs.
 
-    :param predictions: `numpy.array` of shape `(n_classifiers, n_classes)`. Continuous predictions.
+    :param predictions: `numpy.array` of shape `(n_samples, n_classes)`. Continuous predictions.
     :return: `numpy.array` of the same shape as ``predictions``. Crisp decision outputs.
     """
     decisions = np.zeros_like(predictions)
     decisions[np.arange(len(decisions)), predictions.argmax(axis=1)] = 1
     return decisions
+
+
+def multiclass_prediction_tensor_to_decision_tensor(predictions):
+    """
+    Transform a continuously valued tensor of multiclass decisions to crisp decision outputs.
+
+    :param predictions: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`. Continuous predictions.
+    :return: `numpy.array` of the same shape as ``predictions``. Crisp decision outputs.
+    """
+    # decision_tensor = np.zeros_like(predictions)
+    decision_outputs = []
+    for i, pred_matrix in enumerate(predictions):
+        # decision_tensor[i] = multiclass_predictions_to_decisions(pred_matrix)
+        decision_outputs.append(multiclass_predictions_to_decisions(pred_matrix))
+    return decision_outputs
 
 
 def decision_tensor_to_configs(decision_outputs):
