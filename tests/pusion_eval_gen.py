@@ -57,12 +57,8 @@ for i in multi_ensemble_data['ensembles']:
     ensemble = multi_ensemble_data['ensembles'][i]
     classifiers = ensemble['classifiers']
     np.random.seed(random_state)
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = generate_multiclass_ensemble_classification_outputs(
-        classifiers, n_classes, n_samples)
-    ensemble['y_ensemble_valid'] = y_ensemble_valid
-    ensemble['y_valid'] = y_valid
-    ensemble['y_ensemble_test'] = y_ensemble_test
-    ensemble['y_test'] = y_test
+    ensemble['y_ensemble_valid'], ensemble['y_valid'], ensemble['y_ensemble_test'], ensemble['y_test'] = \
+        generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples)
 
 dump_pusion_data(multi_ensemble_data, 'datasets/ensembles_generated_multiclass_classification.pickle')
 
@@ -72,12 +68,8 @@ for i in multi_ensemble_data['ensembles']:
     ensemble = multi_ensemble_data['ensembles'][i]
     classifiers = ensemble['classifiers']
     np.random.seed(random_state)
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = generate_multilabel_ensemble_classification_outputs(
-        classifiers, n_classes, n_samples)
-    ensemble['y_ensemble_valid'] = y_ensemble_valid
-    ensemble['y_valid'] = y_valid
-    ensemble['y_ensemble_test'] = y_ensemble_test
-    ensemble['y_test'] = y_test
+    ensemble['y_ensemble_valid'], ensemble['y_valid'], ensemble['y_ensemble_test'], ensemble['y_test'] = \
+        generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples)
 
 dump_pusion_data(multi_ensemble_data, 'datasets/ensembles_generated_multilabel_classification.pickle')
 
@@ -89,12 +81,8 @@ for i in multi_ensemble_data['ensembles']:
     np.random.seed(random_state)
     coverage = generate_classification_coverage(len(classifiers), n_classes, .7, True)
     np.random.seed(random_state)
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = generate_multiclass_cr_ensemble_classification_outputs(
-        classifiers, n_classes, n_samples, coverage)
-    ensemble['y_ensemble_valid'] = y_ensemble_valid
-    ensemble['y_valid'] = y_valid
-    ensemble['y_ensemble_test'] = y_ensemble_test
-    ensemble['y_test'] = y_test
+    ensemble['y_ensemble_valid'], ensemble['y_valid'], ensemble['y_ensemble_test'], ensemble['y_test'] = \
+        generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage)
     ensemble['coverage'] = coverage
 
 dump_pusion_data(multi_ensemble_data, 'datasets/ensembles_generated_cr_multiclass_classification.pickle')
@@ -107,12 +95,8 @@ for i in multi_ensemble_data['ensembles']:
     np.random.seed(random_state)
     coverage = generate_classification_coverage(len(classifiers), n_classes, .7, True)
     np.random.seed(random_state)
-    y_ensemble_valid, y_valid, y_ensemble_test, y_test = generate_multilabel_cr_ensemble_classification_outputs(
-        classifiers, n_classes, n_samples, coverage)
-    ensemble['y_ensemble_valid'] = y_ensemble_valid
-    ensemble['y_valid'] = y_valid
-    ensemble['y_ensemble_test'] = y_ensemble_test
-    ensemble['y_test'] = y_test
+    ensemble['y_ensemble_valid'], ensemble['y_valid'], ensemble['y_ensemble_test'], ensemble['y_test'] = \
+        generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage)
     ensemble['coverage'] = coverage
 
 dump_pusion_data(multi_ensemble_data, 'datasets/ensembles_generated_cr_multilabel_classification.pickle')
