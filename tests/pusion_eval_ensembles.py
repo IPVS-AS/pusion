@@ -48,6 +48,7 @@ ensemble_wise_types = []
 ensemble_wise_accuracies = []
 ensemble_wise_max_accuracy = []
 ensemble_wise_mean_accuracy = []
+ensemble_wise_combiner_accuracies = []
 
 
 np.random.seed(random_state)
@@ -68,7 +69,7 @@ for i in ensembles:
 
     print("=========== GenericCombiner ============")
     dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
-    dp.set_parallel(True)
+    dp.set_parallel(False)
 
     dp.train(y_ensemble_valid, y_valid)
     y_comb = dp.combine(y_ensemble_test)
@@ -94,6 +95,9 @@ for i in ensembles:
     ensemble_mean_accuracy = np.mean(ensemble_accuracies)
     ensemble_wise_mean_accuracy.append(ensemble_mean_accuracy)
 
+    ensemble_wise_combiner_accuracies.append(
+        eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY))
+
 
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
@@ -106,6 +110,7 @@ plt.tight_layout()
 save(plt, "000_ensemble_max_accuracy", eval_id)
 plt.close()
 
+# --- Ensemble accuracies ----------------------------------------------------------------------------------------------
 plt.figure()
 plt.boxplot(ensemble_wise_accuracies, showmeans=True, meanprops=meanprops)
 plt.ylabel("Trefferquote", labelpad=15)
@@ -114,6 +119,34 @@ plt.tight_layout()
 save(plt, "001_ensemble_accuracies", eval_id)
 plt.close()
 
+# --- Combiner accuracies per ensemble ---------------------------------------------------------------------------------
+plt.figure(figsize=(12, 5.5))
+bars1 = [t[1] for t in ensemble_wise_combiner_accuracies[0]]
+bars2 = [t[1] for t in ensemble_wise_combiner_accuracies[1]]
+bars3 = [t[1] for t in ensemble_wise_combiner_accuracies[2]]
+
+barWidth = 0.25
+r1 = np.arange(len(bars1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+
+rect1 = plt.bar(r1, bars1, color='#424ef5', width=barWidth, edgecolor='white', label=ensemble_wise_types[0]+"-Ensemble")
+rect2 = plt.bar(r2, bars2, color='#f5a442', width=barWidth, edgecolor='white', label=ensemble_wise_types[1]+"-Ensemble")
+rect3 = plt.bar(r3, bars3, color='#42f5b0', width=barWidth, edgecolor='white', label=ensemble_wise_types[2]+"-Ensemble")
+
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.ylabel('Trefferquote', fontweight='bold', labelpad=15)
+plt.xticks([r + barWidth for r in range(len(bars1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
+plt.yticks(np.arange(0, 1, .1))
+
+plt.bar_label(rect1, padding=3, rotation=90)
+plt.bar_label(rect2, padding=3, rotation=90)
+plt.bar_label(rect3, padding=3, rotation=90)
+
+plt.legend(loc="lower left")
+# plt.tight_layout()
+save(plt, "002_combiner_accuracies_grouped", eval_id)
+plt.close()
 
 # ======================================================================================================================
 save_evaluator(__file__, eval_id)
