@@ -44,12 +44,12 @@ random_state = data['random_state']
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-ensemble_wise_types = []
+ensemble_wise_type = []
 ensemble_wise_accuracies = []
 ensemble_wise_max_accuracy = []
 ensemble_wise_mean_accuracy = []
 ensemble_wise_combiner_accuracies = []
-
+ensemble_wise_accuracy_improvement = []
 
 np.random.seed(random_state)
 
@@ -86,17 +86,21 @@ for i in ensembles:
     print()
 
     # ------------------------------------------------------------------------------------------------------------------
-    ensemble_wise_types.append(ensemble['ensemble_type'])
-    ensemble_wise_max_accuracy.append(eval_ensemble.get_top_n_instances(n=1)[0][1])
+    ensemble_wise_type.append(ensemble['ensemble_type'])
+    ensemble_max_accuracy = eval_ensemble.get_top_n_instances(n=1)[0][1]
+    ensemble_wise_max_accuracy.append(ensemble_max_accuracy)
 
-    ensemble_accuracies = [p[1] for p in eval_ensemble.get_top_n_instances(metric=p.PerformanceMetric.ACCURACY)]
+    ensemble_accuracies = [t[1] for t in eval_ensemble.get_top_n_instances(metric=p.PerformanceMetric.ACCURACY)]
     ensemble_wise_accuracies.append(ensemble_accuracies)
 
     ensemble_mean_accuracy = np.mean(ensemble_accuracies)
     ensemble_wise_mean_accuracy.append(ensemble_mean_accuracy)
 
-    ensemble_wise_combiner_accuracies.append(
-        eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY))
+    combiner_accuracy_tuples = eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)
+    ensemble_wise_combiner_accuracies.append(combiner_accuracy_tuples)
+
+    combiner_accuracies = np.array([t[1] for t in combiner_accuracy_tuples])
+    ensemble_wise_accuracy_improvement.append(combiner_accuracies-ensemble_max_accuracy)
 
 
 # === Plots ============================================================================================================
@@ -104,7 +108,7 @@ meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 # --- Ensemble max. accuracy -------------------------------------------------------------------------------------------
 plt.figure()
-plt.bar(ensemble_wise_types, ensemble_wise_max_accuracy, color='#006aba')
+plt.bar(ensemble_wise_type, ensemble_wise_max_accuracy, color='#006aba')
 plt.ylabel("Max. Trefferquote", labelpad=15)
 plt.tight_layout()
 save(plt, "000_ensemble_max_accuracy", eval_id)
@@ -114,29 +118,29 @@ plt.close()
 plt.figure()
 plt.boxplot(ensemble_wise_accuracies, showmeans=True, meanprops=meanprops)
 plt.ylabel("Trefferquote", labelpad=15)
-plt.xticks(np.arange(1, len(ensemble_wise_types)+1), ensemble_wise_types)
+plt.xticks(np.arange(1, len(ensemble_wise_type) + 1), ensemble_wise_type)
 plt.tight_layout()
 save(plt, "001_ensemble_accuracies", eval_id)
 plt.close()
 
 # --- Combiner accuracies per ensemble ---------------------------------------------------------------------------------
 plt.figure(figsize=(12, 5.5))
-bars1 = [t[1] for t in ensemble_wise_combiner_accuracies[0]]
-bars2 = [t[1] for t in ensemble_wise_combiner_accuracies[1]]
-bars3 = [t[1] for t in ensemble_wise_combiner_accuracies[2]]
+bar1 = [t[1] for t in ensemble_wise_combiner_accuracies[0]]
+bar2 = [t[1] for t in ensemble_wise_combiner_accuracies[1]]
+bar3 = [t[1] for t in ensemble_wise_combiner_accuracies[2]]
 
 barWidth = 0.25
-r1 = np.arange(len(bars1))
+r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
 
-rect1 = plt.bar(r1, bars1, color='#424ef5', width=barWidth, edgecolor='white', label=ensemble_wise_types[0]+"-Ensemble")
-rect2 = plt.bar(r2, bars2, color='#f5a442', width=barWidth, edgecolor='white', label=ensemble_wise_types[1]+"-Ensemble")
-rect3 = plt.bar(r3, bars3, color='#42f5b0', width=barWidth, edgecolor='white', label=ensemble_wise_types[2]+"-Ensemble")
+rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label=ensemble_wise_type[0] + "-Ensemble")
+rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
+rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Trefferquote', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth for r in range(len(bars1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
+plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
 plt.yticks(np.arange(0, 1, .1))
 
 plt.bar_label(rect1, padding=3, rotation=90)
@@ -144,8 +148,38 @@ plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
 
 plt.legend(loc="lower left")
-# plt.tight_layout()
+plt.tight_layout()
 save(plt, "002_combiner_accuracies_grouped", eval_id)
+plt.close()
+
+
+# --- Combiner accuracy improvement per ensemble -----------------------------------------------------------------------
+plt.figure(figsize=(12, 5.5))
+bar1 = ensemble_wise_accuracy_improvement[0]
+bar2 = ensemble_wise_accuracy_improvement[1]
+bar3 = ensemble_wise_accuracy_improvement[2]
+
+barWidth = 0.25
+r1 = np.arange(len(bar1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+
+rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label=ensemble_wise_type[0] + "-Ensemble")
+rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
+rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
+
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.ylabel('Differenz in der Trefferquote', fontweight='bold', labelpad=15)
+plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
+plt.yticks(np.arange(-.3, .3, .1))
+
+plt.bar_label(rect1, padding=3, rotation=90)
+plt.bar_label(rect2, padding=3, rotation=90)
+plt.bar_label(rect3, padding=3, rotation=90)
+
+plt.legend(loc="lower left")
+plt.tight_layout()
+save(plt, "003_combiner_improvements_grouped", eval_id)
 plt.close()
 
 # ======================================================================================================================
