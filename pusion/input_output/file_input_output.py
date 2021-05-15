@@ -21,6 +21,7 @@ def save(plot_instance, name, identifier):
     directory = "figs/eval_" + identifier
     Path(directory).mkdir(parents=True, exist_ok=True)
     plot_instance.savefig(directory + "/" + name + ".svg")
+    plot_instance.savefig(directory + "/" + name + ".pdf")
 
 
 def save_evaluator(file, identifier):
