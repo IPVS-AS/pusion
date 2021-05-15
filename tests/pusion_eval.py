@@ -304,7 +304,7 @@ plt.tight_layout()
 save(plt, "031_box_plot_performance_improvement", eval_id)
 plt.close()
 
-# --- Performance improvement by each fusion method --------------------------------------------------------------------
+# --- Positive performance improvement by each fusion method -----------------------------------------------------------
 reduced_combiners_performance_differences = {}
 for perf_tuples, cls_max_score in zip(combiners_performance_run_tuples, classifier_max_scores):  # reduce
     for t in perf_tuples:
@@ -312,21 +312,28 @@ for perf_tuples, cls_max_score in zip(combiners_performance_run_tuples, classifi
         combiner_score = t[1]
         if combiner not in reduced_combiners_performance_differences:  # create a score list if non-existent
             reduced_combiners_performance_differences[combiner] = []
-        reduced_combiners_performance_differences[combiner].append(combiner_score - cls_max_score)
+        if combiner_score - cls_max_score > 0:
+            reduced_combiners_performance_differences[combiner].append(combiner_score - cls_max_score)
+        else:
+            reduced_combiners_performance_differences[combiner].append(0)
 
 combiners = [comb for comb in reduced_combiners_performance_differences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performance_improvements = [np.mean(reduced_combiners_performance_differences[c]) for c in combiners]
 combiners_performance_improvements_stds = [np.std(reduced_combiners_performance_differences[c]) for c in combiners]
 
-plt.figure(figsize=(10, 4.8))
+plt.figure()
 fig, ax = plt.subplots()
-ax.axhline(0, color='grey', linewidth=0.8)
-p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
-ax.bar_label(p)
-plt.ylabel("Mittlere Performanzdifferenz", fontweight='bold', labelpad=15)
+# ax.axhline(0, color='grey', linewidth=0.8)
+# p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
+p = ax.barh(combiners_names, combiners_performance_improvements, height=0.2, color='black')
+ax.bar_label(p, padding=3)
+plt.xlim([0, np.max(combiners_performance_improvements) +
+          .2*(np.max(combiners_performance_improvements) - np.min(combiners_performance_improvements))])
+plt.xlabel("Mittlere positive Performanzdifferenz (Trefferquote)", fontweight='bold', labelpad=15)
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.tight_layout()
-# save(plt, "032_mean_performance_difference_per_fusion_method", eval_id)
+save(plt, "032_mean_positive_performance_difference_per_fusion_method", eval_id)
 plt.close()
 
 # === Performance Profiles =============================================================================================
@@ -633,6 +640,9 @@ fig.colorbar(scatter).set_label("Ensemble Mean Performance (Trefferquote)", font
 plt.tight_layout()
 save(plt, "321_scatter_plot_ensemble_std__performance_imp__mean_ensemble_performance", eval_id)
 plt.close()
+
+
+# === Comparison between utility and trainable combiners ===============================================================
 
 
 # === Combiner runtimes ================================================================================================

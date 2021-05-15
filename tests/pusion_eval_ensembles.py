@@ -34,10 +34,10 @@ perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.Pe
 # data3 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 # data4 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 
-data = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])[0]
+data = load_native_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])[0]
 
 # Flag for complementary-redundant decision outputs
-cr = True
+cr = False
 
 # Ensemble data
 ensembles = data['ensembles']
@@ -134,15 +134,17 @@ meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 # --- Ensemble max. accuracy -------------------------------------------------------------------------------------------
 plt.figure()
 plt.bar(ensemble_wise_type, ensemble_wise_max_accuracy, color='#006aba')
-plt.ylabel("Max. Trefferquote", labelpad=15)
+plt.xlabel("Ensembles", fontweight='bold', labelpad=15)
+plt.ylabel("Max. Trefferquote", fontweight='bold', labelpad=15)
 plt.tight_layout()
-save(plt, "000_ensemble_max_accuracy", eval_id)
+# save(plt, "000_ensemble_max_accuracy", eval_id)
 plt.close()
 
 # --- Ensemble accuracies ----------------------------------------------------------------------------------------------
 plt.figure()
 plt.boxplot(ensemble_wise_accuracies, showmeans=True, meanprops=meanprops)
-plt.ylabel("Trefferquote", labelpad=15)
+plt.xlabel("Ensembles", fontweight='bold', labelpad=15)
+plt.ylabel("Trefferquote", fontweight='bold', labelpad=15)
 plt.xticks(np.arange(1, len(ensemble_wise_type) + 1), ensemble_wise_type)
 plt.tight_layout()
 save(plt, "001_ensemble_accuracies", eval_id)
