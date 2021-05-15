@@ -319,8 +319,10 @@ for perf_tuples, cls_max_score in zip(combiners_performance_run_tuples, classifi
 
 combiners = [comb for comb in reduced_combiners_performance_differences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
-combiners_performance_improvements = [np.mean(reduced_combiners_performance_differences[c]) for c in combiners]
-combiners_performance_improvements_stds = [np.std(reduced_combiners_performance_differences[c]) for c in combiners]
+combiners_performance_improvements = np.around(
+    [np.mean(reduced_combiners_performance_differences[c]) for c in combiners], 4)
+combiners_performance_improvements_stds = np.around(
+    [np.std(reduced_combiners_performance_differences[c]) for c in combiners], 4)
 
 plt.figure()
 fig, ax = plt.subplots()
