@@ -48,8 +48,11 @@ ensemble_wise_type = []
 ensemble_wise_accuracies = []
 ensemble_wise_max_accuracy = []
 ensemble_wise_mean_accuracy = []
+ensemble_wise_max_confidence = []
 ensemble_wise_combiner_accuracies = []
 ensemble_wise_accuracy_improvement = []
+ensemble_wise_combiner_confidences = []
+ensemble_wise_confidence_improvement = []
 
 np.random.seed(random_state)
 
@@ -87,8 +90,12 @@ for i in ensembles:
 
     # ------------------------------------------------------------------------------------------------------------------
     ensemble_wise_type.append(ensemble['ensemble_type'])
-    ensemble_max_accuracy = eval_ensemble.get_top_n_instances(n=1)[0][1]
+
+    ensemble_max_accuracy = eval_ensemble.get_top_n_instances(n=1, metric=p.PerformanceMetric.ACCURACY)[0][1]
     ensemble_wise_max_accuracy.append(ensemble_max_accuracy)
+
+    ensemble_max_confidence = eval_ensemble.get_top_n_instances(n=1, metric=p.PerformanceMetric.MEAN_CONFIDENCE)[0][1]
+    ensemble_wise_max_confidence.append(ensemble_max_confidence)
 
     ensemble_accuracies = [t[1] for t in eval_ensemble.get_top_n_instances(metric=p.PerformanceMetric.ACCURACY)]
     ensemble_wise_accuracies.append(ensemble_accuracies)
@@ -101,6 +108,12 @@ for i in ensembles:
 
     combiner_accuracies = np.array([t[1] for t in combiner_accuracy_tuples])
     ensemble_wise_accuracy_improvement.append(combiner_accuracies-ensemble_max_accuracy)
+
+    combiner_confidence_tuples = eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.MEAN_CONFIDENCE)
+    ensemble_wise_combiner_confidences.append(combiner_confidence_tuples)
+
+    combiner_confidences = np.array([t[1] for t in combiner_confidence_tuples])
+    ensemble_wise_confidence_improvement.append(combiner_confidences-ensemble_max_confidence)
 
 
 # === Plots ============================================================================================================
@@ -171,7 +184,7 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der Trefferquote', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
-plt.yticks(np.arange(-.3, .3, .1))
+plt.yticks(np.arange(-.2, .2, .1))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
@@ -180,6 +193,66 @@ plt.bar_label(rect3, padding=3, rotation=90)
 plt.legend(loc="lower left")
 plt.tight_layout()
 save(plt, "003_combiner_improvements_grouped", eval_id)
+plt.close()
+
+
+# --- Combiner confidences per ensemble --------------------------------------------------------------------------------
+plt.figure(figsize=(12, 5.5))
+bar1 = np.around([t[1] for t in ensemble_wise_combiner_confidences[0]], 3)
+bar2 = np.around([t[1] for t in ensemble_wise_combiner_confidences[1]], 3)
+bar3 = np.around([t[1] for t in ensemble_wise_combiner_confidences[2]], 3)
+
+barWidth = 0.25
+r1 = np.arange(len(bar1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+
+rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label=ensemble_wise_type[0] + "-Ensemble")
+rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
+rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
+
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.ylabel('Mittlere Konfidenz', fontweight='bold', labelpad=15)
+plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_confidences[0]])
+plt.yticks(np.arange(0, 1.1, .1))
+
+plt.bar_label(rect1, padding=3, rotation=90)
+plt.bar_label(rect2, padding=3, rotation=90)
+plt.bar_label(rect3, padding=3, rotation=90)
+
+plt.legend(loc="lower left")
+plt.tight_layout()
+save(plt, "004_combiner_confidences_grouped", eval_id)
+plt.close()
+
+
+# --- Combiner confidence improvement per ensemble ---------------------------------------------------------------------
+plt.figure(figsize=(12, 5.5))
+bar1 = np.around(ensemble_wise_confidence_improvement[0], 3)
+bar2 = np.around(ensemble_wise_confidence_improvement[1], 3)
+bar3 = np.around(ensemble_wise_confidence_improvement[2], 3)
+
+barWidth = 0.25
+r1 = np.arange(len(bar1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+
+rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label=ensemble_wise_type[0] + "-Ensemble")
+rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
+rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
+
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.ylabel('Differenz in der mittleren Konfidenz', fontweight='bold', labelpad=15)
+plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_confidences[0]])
+plt.yticks(np.arange(-.2, .2, .1))
+
+plt.bar_label(rect1, padding=3, rotation=90)
+plt.bar_label(rect2, padding=3, rotation=90)
+plt.bar_label(rect3, padding=3, rotation=90)
+
+plt.legend(loc="lower left")
+plt.tight_layout()
+save(plt, "005_combiner_improvements_grouped", eval_id)
 plt.close()
 
 # ======================================================================================================================
