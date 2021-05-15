@@ -213,7 +213,18 @@ for i in range(n_runs):
 
 # === Plot properties ==================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
-
+# plt.rcParams.update({'font.size': 14})
+# SMALL_SIZE = 8
+# MEDIUM_SIZE = 10
+# BIGGER_SIZE = 12
+#
+# plt.rc('font', size=BIGGER_SIZE)          # controls default text sizes
+# plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+# plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+# plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+# plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+# plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+# plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # === Fusion methods comparison ========================================================================================
 
@@ -237,7 +248,8 @@ combiners_names.insert(0, 'Kontrolle')
 plt.figure(figsize=(10, 4.8))
 plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Trefferquote", labelpad=15)
+plt.ylabel("Trefferquote", fontweight='bold', labelpad=15)
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
 plt.tight_layout()
 save(plt, "010_box_plot_combiner_control_comparison", eval_id)
@@ -263,7 +275,8 @@ combiners_names.insert(0, 'Kontrolle')
 plt.figure(figsize=(10, 4.8))
 plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Mittlere Konfidenz", labelpad=15)
+plt.ylabel("Mittlere Konfidenz", fontweight='bold', labelpad=15)
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
 plt.tight_layout()
 save(plt, "021_box_plot_combiner_control_comparison_mean_confidence", eval_id)
@@ -275,7 +288,7 @@ plt.close()
 plt.figure()
 plt.boxplot([classifier_max_scores, combiners_max_scores], showmeans=True, meanprops=meanprops)
 # plt.title("Performanzvergleich (" + str(n_runs) + " runs)")
-plt.ylabel("Max. Trefferquote", labelpad=15)
+plt.ylabel("Max. Trefferquote", fontweight='bold', labelpad=15)
 plt.xticks([1, 2], ['Ensemble', 'Framework'])
 plt.tight_layout()
 save(plt, "030_box_plot_max_performance_comparison", eval_id)
@@ -285,7 +298,7 @@ plt.close()
 plt.figure()
 plt.boxplot(performance_improvements, showmeans=True, meanprops=meanprops)
 # plt.title("Performanzverbesserung (" + str(n_runs) + " runs)")
-plt.ylabel("Trefferquote (Differenz)", labelpad=15)
+plt.ylabel("Trefferquote (Differenz)", fontweight='bold', labelpad=15)
 plt.xticks([1], ['Framework'])
 plt.tight_layout()
 save(plt, "031_box_plot_performance_improvement", eval_id)
@@ -311,7 +324,7 @@ fig, ax = plt.subplots()
 ax.axhline(0, color='grey', linewidth=0.8)
 p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
 ax.bar_label(p)
-plt.ylabel("Mittlere Performanzdifferenz", labelpad=15)
+plt.ylabel("Mittlere Performanzdifferenz", fontweight='bold', labelpad=15)
 plt.tight_layout()
 # save(plt, "032_mean_performance_difference_per_fusion_method", eval_id)
 plt.close()
@@ -354,123 +367,123 @@ save(plt, "040_performance_profiles", eval_id)
 plt.close()
 
 
-# === Diversity -- Framework Performance ===============================================================================
+# === Diversity -- Framework-Performanz ===============================================================================
 if not cr:
     plt.figure()
     plt.plot(ensemble_diversity_kappa_statistic, combiners_max_scores, 'g^')
-    plt.xlabel("Diversity (Kappa-statistic)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Kappa-Statistik)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_00_div_cohens_kappa2__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_correlation_scores, combiners_max_scores, 'bs')
-    plt.xlabel("Diversity (Correlation)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Korrelation)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_01_div_correlation__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_q_statistic_scores, combiners_max_scores, 'g^')
-    plt.xlabel("Diversity (Q-statistic)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Q-Statistik)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_02_div_q_stat__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_disagreement, combiners_max_scores, 'mv')
-    plt.xlabel("Diversity (Disagreement)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Disagreement)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_03_div_disagreement__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_double_fault, combiners_max_scores, 'rH')
-    plt.xlabel("Diversity (Double Fault)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Double Fault)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_04_div_double_fault__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_cohens_kappa_scores, combiners_max_scores, 'ro')
-    plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Cohen's Kappa)", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_05_div_cohens_kappa__framework_performance", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_pairwise_euclidean_distance, combiners_max_scores, 'gD')
-    plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Mittlere paarweise euklidische Distanz", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "100_data_plot_06_euclidean_distance__framework_performance", eval_id)
     plt.close()
 
-    # === Diversity -- Performance Improvement =========================================================================
+    # === Diversity -- Performanzverbesserung =========================================================================
 
     plt.figure()
     plt.plot(ensemble_diversity_kappa_statistic, performance_improvements, 'ro')
-    plt.xlabel("Diversity (Kappa statistic)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Kappa statistic)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_10_div_cohens_kappa2__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_correlation_scores, performance_improvements, 'bs')
-    plt.xlabel("Diversity (Correlation)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Correlation)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_11_div_correlation__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_q_statistic_scores, performance_improvements, 'g^')
-    plt.xlabel("Diversity (Q-statistic)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Q-statistic)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_12_div_q_stat__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_disagreement, performance_improvements, 'mv')
-    plt.xlabel("Diversity (Disagreement)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Disagreement)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_13_div_disagreement__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_double_fault, performance_improvements, 'rH')
-    plt.xlabel("Diversity (Double Fault)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Double Fault)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_14_div_double_fault__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_diversity_cohens_kappa_scores, performance_improvements, 'ro')
-    plt.xlabel("Diversity (Cohen's Kappa)", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Diversität (Cohen's Kappa)", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_15_div_cohens_kappa__perf_improvement", eval_id)
     plt.close()
 
     plt.figure()
     plt.plot(ensemble_pairwise_euclidean_distance, performance_improvements, 'bD')
-    plt.xlabel("Mean pairwise Euclidean distance", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Mean pairwise Euclidean distance", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "200_data_plot_16_euclidean_distance__perf_improvement", eval_id)
     plt.close()
 
-    # === Diversity - Framework Performance - Mean Ensemble Performance ================================================
+    # === Diversity - Framework-Performanz - Mean Ensemble Performance ================================================
 
     mean_classifier_perf_per_run = []
     for perf_tuples in classifiers_performance_run_tuples:
@@ -478,20 +491,20 @@ if not cr:
 
     fig, ax = plt.subplots()
     scatter = ax.scatter(ensemble_diversity_correlation_scores, combiners_max_scores, c=mean_classifier_perf_per_run)
-    ax.set_xlabel('Diversity (Correlation)', labelpad=15)
-    ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
-    fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+    ax.set_xlabel('Diversität (Correlation)', fontweight='bold', labelpad=15)
+    ax.set_ylabel('Framework-Performanz (Trefferquote)', fontweight='bold', labelpad=15)
+    fig.colorbar(scatter).set_label("Mittlere Ensemble-Performance (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "300_scatter_plot_cls_mean_acc__framework_performance__diversity_correlation", eval_id)
     plt.close()
 
-    # === Diversity - Performance Improvement - Mean Ensemble Performance ==============================================
+    # === Diversity - Performanzverbesserung - Mean Ensemble Performance ==============================================
 
     fig, ax = plt.subplots()
     scatter = ax.scatter(ensemble_diversity_correlation_scores, performance_improvements, c=mean_classifier_perf_per_run)
-    ax.set_xlabel('Diversity (Correlation)', labelpad=15)
-    ax.set_ylabel('Performance Improvement (Accuracy)', labelpad=15)
-    fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+    ax.set_xlabel('Diversität (Correlation)', fontweight='bold', labelpad=15)
+    ax.set_ylabel('Performanzverbesserung (Trefferquote)', fontweight='bold', labelpad=15)
+    fig.colorbar(scatter).set_label("Mittlere Ensemble-Performance (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
     plt.close()
@@ -501,8 +514,8 @@ if cr:
     # --- Coverage - Max. scores ---------------------------------------------------------------------------------------
     plt.figure()
     plt.plot(coverage_overlaps, combiners_max_scores, 'bx')
-    plt.xlabel("Overlap percentage", labelpad=15)
-    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.xlabel("Überdeckugnsdichte", fontweight='bold', labelpad=15)
+    plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "050_data_plot_01_cr_overlap__framework_performance", eval_id)
     plt.close()
@@ -510,8 +523,8 @@ if cr:
     # --- Coverage - Improvement ---------------------------------------------------------------------------------------
     plt.figure()
     plt.plot(coverage_overlaps, performance_improvements, 'rx')
-    plt.xlabel("Overlap percentage", labelpad=15)
-    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.xlabel("Überdeckugnsdichte", fontweight='bold', labelpad=15)
+    plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "051_data_plot_01_cr_overlap__framework_imp", eval_id)
     plt.close()
@@ -531,7 +544,8 @@ plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_names, combiners_frequency, color='gray')
 plt.bar('combiners_names', 'combiners_frequency', data=df_sorted, color='gray')
 plt.title("Auftrittshäufigkeit der besten Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.ylabel("Auftrittsfrequenz", fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "400_combiner_frequency", eval_id)
 plt.close()
@@ -551,55 +565,71 @@ combiners_frequency = unique_best_combiners[1]
 df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_frequency': combiners_frequency})
 df_sorted = df.sort_values('combiners_frequency')
 
-plt.figure(figsize=(10, 4.8))
+plt.figure()
 plt.bar('combiners_names', 'combiners_frequency', data=df_sorted, color='gray')
 plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.ylabel("Auftrittsfrequenz", fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "401_improving_combiner_frequency", eval_id)
 plt.close()
 
+# --- Frequencies of improving combiners (percentage) ------------------------------------------------------------------
+combiners_frequency = [cf/n_runs*100 for cf in combiners_frequency]
+
+df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_frequency': combiners_frequency})
+df_sorted = df.sort_values('combiners_frequency', ascending=False)
+
+plt.figure()
+bar1 = plt.barh('combiners_names', 'combiners_frequency', data=df_sorted, color='#5a6f9c')
+plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.xlabel("Auftrittsfrequenz in %", labelpad=15, fontweight='bold')
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.bar_label(bar1, padding=3)
+plt.tight_layout()
+save(plt, "402_improving_combiner_frequency_h", eval_id)
+plt.close()
 
 # === Ensemble STD =====================================================================================================
 
-# --- Ensemble STD - Framework Performance -----------------------------------------------------------------------------
+# --- Ensemble STD - Framework-Performanz -----------------------------------------------------------------------------
 plt.figure()
 plt.plot(classifier_score_stds, combiners_max_scores, 'bx')
-plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
-plt.ylabel('Framework Performance (Accuracy)', labelpad=15)
+plt.xlabel("Ensemble-Standardabweichung (Trefferquote)", fontweight='bold', labelpad=15)
+plt.ylabel('Framework-Performanz (Trefferquote)', fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "310_scatter_plot_ensemble_std__performance", eval_id)
 plt.close()
 
-# --- Ensemble STD - Performance Improvement ---------------------------------------------------------------------------
+# --- Ensemble STD - Performanzverbesserung ---------------------------------------------------------------------------
 plt.figure()
 plt.plot(classifier_score_stds, performance_improvements, 'rx')
-plt.xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
-plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+plt.xlabel("Ensemble-Standardabweichung (Trefferquote)", fontweight='bold', labelpad=15)
+plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "311_scatter_plot_ensemble_std__performance_imp", eval_id)
 plt.close()
 
-# --- Ensemble STD - Framework Performance - Mean Ensemble Performance -------------------------------------------------
+# --- Ensemble STD - Framework-Performanz - Mean Ensemble Performance -------------------------------------------------
 mean_classifier_perf_per_run = []
 for perf_tuples in classifiers_performance_run_tuples:
     mean_classifier_perf_per_run.append(np.mean([t[1] for t in perf_tuples]))
 
 fig, ax = plt.subplots()
 scatter = ax.scatter(classifier_score_stds, combiners_max_scores, c=mean_classifier_perf_per_run)
-ax.set_xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
-ax.set_ylabel('Framework Performance (Accuracy)', labelpad=15)
-fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+ax.set_xlabel("Ensemble-Standardabweichung (Trefferquote)", fontweight='bold', labelpad=15)
+ax.set_ylabel('Framework-Performanz (Trefferquote)', fontweight='bold', labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Trefferquote)", fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "320_scatter_plot_ensemble_std__performance__mean_ensemble_performance", eval_id)
 plt.close()
 
-# --- Ensemble STD - Performance Improvement - Mean Ensemble Performance -----------------------------------------------
+# --- Ensemble STD - Performanzverbesserung - Mean Ensemble Performance -----------------------------------------------
 fig, ax = plt.subplots()
 scatter = ax.scatter(classifier_score_stds, performance_improvements, c=mean_classifier_perf_per_run)
-ax.set_xlabel("Ensemble Standard Deviation (Accuracy)", labelpad=15)
-ax.set_ylabel("Performance Improvement (Accuracy)", labelpad=15)
-fig.colorbar(scatter).set_label("Ensemble Mean Performance (Accuracy)", labelpad=15)
+ax.set_xlabel("Ensemble-Standardabweichung (Trefferquote)", fontweight='bold', labelpad=15)
+ax.set_ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
+fig.colorbar(scatter).set_label("Ensemble Mean Performance (Trefferquote)", fontweight='bold', labelpad=15)
 plt.tight_layout()
 save(plt, "321_scatter_plot_ensemble_std__performance_imp__mean_ensemble_performance", eval_id)
 plt.close()
@@ -615,8 +645,8 @@ for i, runtime_matrix in enumerate(combiners_runtime_run_matrices):
 runtime_tensor = np.nan_to_num(runtime_tensor)
 
 mean_runtime_matrix = np.nanmean(runtime_tensor, axis=0)
-combiners_train_mean_runtimes = mean_runtime_matrix[:, 0]
-combiners_combine_mean_runtimes = mean_runtime_matrix[:, 1]
+combiners_train_mean_runtimes = np.around(mean_runtime_matrix[:, 0], 4)
+combiners_combine_mean_runtimes = np.around(mean_runtime_matrix[:, 1], 4)
 combiners_names = [c.SHORT_NAME for c in combiners_per_run[0]]
 
 # --- Mean train runtimes ----------------------------------------------------------------------------------------------
@@ -634,9 +664,12 @@ df = pd.DataFrame({'combiners_non_zero_names': combiners_non_zero_names,
 df_sorted = df.sort_values('combiners_train_mean_non_zero_runtimes')
 plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_non_zero_names, combiners_train_mean_non_zero_runtimes, color='#93c6ed')
-plt.bar('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtimes', data=df_sorted, color='#93c6ed')
+bar1 = plt.bar('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtimes', data=df_sorted, color='#93c6ed',
+               width=.75)
 plt.title("Mittlere Trainingslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Laufzeit (s)", labelpad=15)
+plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z91z_train_runtime_comparison", eval_id)
 plt.close()
@@ -648,9 +681,11 @@ df = pd.DataFrame({'combiners_names': combiners_names,
 df_sorted = df.sort_values('combiners_combine_mean_runtimes')
 plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
-plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#006aba')
+bar1 = plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#006aba')
 plt.title("Mittlere Fusionslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
-plt.ylabel("Laufzeit (s)", labelpad=15)
+plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
 plt.close()
