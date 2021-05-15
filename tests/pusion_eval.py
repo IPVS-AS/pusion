@@ -493,6 +493,26 @@ if not cr:
     save(plt, "301_scatter_plot_cls_mean_acc__performance_imp__diversity_correlation", eval_id)
     plt.close()
 
+# === Coverage =========================================================================================================
+if cr:
+    # --- Coverage - Max. scores ---------------------------------------------------------------------------------------
+    plt.figure()
+    plt.plot(coverage_overlaps, combiners_max_scores, 'bx')
+    plt.xlabel("Overlap percentage", labelpad=15)
+    plt.ylabel("Framework Performance (Accuracy)", labelpad=15)
+    plt.tight_layout()
+    save(plt, "050_data_plot_01_cr_overlap__framework_performance", eval_id)
+    plt.close()
+
+    # --- Coverage - Improvement ---------------------------------------------------------------------------------------
+    plt.figure()
+    plt.plot(coverage_overlaps, performance_improvements, 'rx')
+    plt.xlabel("Overlap percentage", labelpad=15)
+    plt.ylabel("Performance Improvement (Accuracy)", labelpad=15)
+    plt.tight_layout()
+    save(plt, "051_data_plot_01_cr_overlap__framework_imp", eval_id)
+    plt.close()
+
 # === Combiner Frequencies =============================================================================================
 
 best_combiners__short_names = [c.SHORT_NAME for c in best_combiners_per_run]
