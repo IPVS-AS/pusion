@@ -34,7 +34,10 @@ perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.Pe
 # data3 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 # data4 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 
-data = load_native_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])[0]
+data = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])[0]
+
+# Flag for complementary-redundant decision outputs
+cr = True
 
 # Ensemble data
 ensembles = data['ensembles']
@@ -67,20 +70,29 @@ for i in ensembles:
     print("============== Ensemble ================")
     eval_ensemble = Evaluation(*perf_metrics)
     eval_ensemble.set_instances(ensemble['classifiers'])
-    eval_ensemble.evaluate(y_test, y_ensemble_test)
+    if cr:
+        eval_ensemble.set_instances('Ensemble')
+        eval_ensemble.evaluate_cr_decision_outputs(y_test, y_ensemble_test, ensemble['coverage'])
+    else:
+        eval_ensemble.set_instances(ensemble['classifiers'])
+        eval_ensemble.evaluate(y_test, y_ensemble_test)
     print(eval_ensemble.get_report())
 
     print("=========== GenericCombiner ============")
     dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
     dp.set_parallel(False)
-
+    if cr:
+        dp.set_coverage(ensemble['coverage'])
     dp.train(y_ensemble_valid, y_valid)
     y_comb = dp.combine(y_ensemble_test)
 
     eval_combiner = Evaluation()
     eval_combiner.set_metrics(*perf_metrics)
     eval_combiner.set_instances(dp.get_combiners())
-    eval_combiner.evaluate(y_test, y_comb)
+    if cr:
+        eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, y_comb)
+    else:
+        eval_combiner.evaluate(y_test, y_comb)
     print(eval_combiner.get_report())
     print("----------------------------------------")
     eval_combiner.set_runtimes(dp.get_multi_combiner_runtimes())
@@ -138,9 +150,9 @@ plt.close()
 
 # --- Combiner accuracies per ensemble ---------------------------------------------------------------------------------
 plt.figure(figsize=(12, 5.5))
-bar1 = [t[1] for t in ensemble_wise_combiner_accuracies[0]]
-bar2 = [t[1] for t in ensemble_wise_combiner_accuracies[1]]
-bar3 = [t[1] for t in ensemble_wise_combiner_accuracies[2]]
+bar1 = np.around([t[1] for t in ensemble_wise_combiner_accuracies[0]], 3)
+bar2 = np.around([t[1] for t in ensemble_wise_combiner_accuracies[1]], 3)
+bar3 = np.around([t[1] for t in ensemble_wise_combiner_accuracies[2]], 3)
 
 barWidth = 0.25
 r1 = np.arange(len(bar1))
@@ -154,13 +166,13 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Trefferquote', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
-plt.yticks(np.arange(0, 1, .1))
+plt.yticks(np.arange(0, 1.1, .1))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
 
-plt.legend(loc="lower left")
+plt.legend(loc="lower right")
 plt.tight_layout()
 save(plt, "002_combiner_accuracies_grouped", eval_id)
 plt.close()
@@ -168,9 +180,9 @@ plt.close()
 
 # --- Combiner accuracy improvement per ensemble -----------------------------------------------------------------------
 plt.figure(figsize=(12, 5.5))
-bar1 = ensemble_wise_accuracy_improvement[0]
-bar2 = ensemble_wise_accuracy_improvement[1]
-bar3 = ensemble_wise_accuracy_improvement[2]
+bar1 = np.around(ensemble_wise_accuracy_improvement[0], 3)
+bar2 = np.around(ensemble_wise_accuracy_improvement[1], 3)
+bar3 = np.around(ensemble_wise_accuracy_improvement[2], 3)
 
 barWidth = 0.25
 r1 = np.arange(len(bar1))
@@ -184,13 +196,13 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der Trefferquote', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
-plt.yticks(np.arange(-.2, .2, .1))
+plt.yticks(np.arange(np.min(np.around([bar1, bar2, bar3], 1)) - .1, np.max(np.around([bar1, bar2, bar3], 1)) + .05, .05))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
 
-plt.legend(loc="lower left")
+plt.legend(loc="lower right")
 plt.tight_layout()
 save(plt, "003_combiner_improvements_grouped", eval_id)
 plt.close()
@@ -220,7 +232,7 @@ plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
 
-plt.legend(loc="lower left")
+plt.legend(loc="lower right")
 plt.tight_layout()
 save(plt, "004_combiner_confidences_grouped", eval_id)
 plt.close()
@@ -244,13 +256,13 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der mittleren Konfidenz', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_confidences[0]])
-plt.yticks(np.arange(-.2, .2, .1))
+plt.yticks(np.arange(np.min(np.around([bar1, bar2, bar3], 1)) - .1, np.max(np.around([bar1, bar2, bar3], 1)) + .05, .05))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
 
-plt.legend(loc="lower left")
+plt.legend(loc="lower right")
 plt.tight_layout()
 save(plt, "005_combiner_improvements_grouped", eval_id)
 plt.close()
