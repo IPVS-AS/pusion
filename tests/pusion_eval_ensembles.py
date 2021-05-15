@@ -196,7 +196,9 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der Trefferquote', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
-plt.yticks(np.arange(np.min(np.around([bar1, bar2, bar3], 1)) - .1, np.max(np.around([bar1, bar2, bar3], 1)) + .05, .05))
+y_min = np.min([bar1, bar2, bar3])
+y_max = np.max([bar1, bar2, bar3])
+plt.yticks(np.arange(y_min - 0.2 * (y_max - y_min), y_max + 0.4 * (y_max - y_min), 0.2 * (y_max - y_min)))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
@@ -256,7 +258,9 @@ rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', la
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der mittleren Konfidenz', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_confidences[0]])
-plt.yticks(np.arange(np.min(np.around([bar1, bar2, bar3], 1)) - .1, np.max(np.around([bar1, bar2, bar3], 1)) + .05, .05))
+y_min = np.min([bar1, bar2, bar3])
+y_max = np.max([bar1, bar2, bar3])
+plt.yticks(np.arange(y_min - 0.2 * (y_max - y_min), y_max + 0.4 * (y_max - y_min), 0.2 * (y_max - y_min)))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
