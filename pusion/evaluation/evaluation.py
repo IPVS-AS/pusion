@@ -198,6 +198,27 @@ class Evaluation:
         top_n_instance_indices = performance_values.argsort()[-n:][::-1]
         return [(self.instances[i], self.performance_matrix[i, metric_index]) for i in top_n_instance_indices]
 
+    def get_top_instances(self, metric=None):
+        """
+        Retrieve best performing instances according to the given `metric`.
+        Multiple instances may be returned having the identical best performance score.
+
+        :param metric: The metric all instances were evaluated with. If unset, the first metric is used.
+        :return: Evaluated top instances according to their performance.
+        """
+        top_n_instances = self.get_top_n_instances(metric=metric)
+        top_score = None
+        top_instances = []
+        for i, t in enumerate(top_n_instances):
+            if top_score is None:
+                top_score = t[1]
+                top_instances.append(t)
+                continue
+            if t[1] == top_instances[0][1]:
+                top_instances.append(t)
+        return top_instances
+
+
     def get_instance_performance_tuples(self, metric=None):
         """
         Retrieve (instance, performance) tuples created for to the given `metric`.

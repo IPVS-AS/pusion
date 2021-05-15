@@ -46,6 +46,7 @@ combiners_max_scores = []
 classifier_score_stds = []
 
 best_combiners_per_run = []
+best_combiner_perf_tuples_per_run = []
 
 ensemble_diversity_correlation_scores = []
 ensemble_diversity_q_statistic_scores = []
@@ -194,6 +195,8 @@ for i in range(n_runs):
 
     best_combiners_per_run.append(eval_combiner.get_top_n_instances()[0][0])
 
+    best_combiner_perf_tuples_per_run.append(eval_combiner.get_top_instances())
+
     if not cr:
         ensemble_diversity_correlation_scores.append(pairwise_correlation(y_ensemble_test, y_test))
         ensemble_diversity_q_statistic_scores.append(pairwise_q_statistic(y_ensemble_test, y_test))
@@ -310,7 +313,7 @@ p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_p
 ax.bar_label(p)
 plt.ylabel("Mittlere Performanzdifferenz", labelpad=15)
 plt.tight_layout()
-save(plt, "032_mean_performance_difference_per_fusion_method", eval_id)
+# save(plt, "032_mean_performance_difference_per_fusion_method", eval_id)
 plt.close()
 
 # === Performance Profiles =============================================================================================
@@ -531,6 +534,29 @@ plt.title("Auftrittshäufigkeit der besten Fusionsmethoden (" + str(n_runs) + " 
 plt.ylabel("Auftrittsfrequenz", labelpad=15)
 plt.tight_layout()
 save(plt, "400_combiner_frequency", eval_id)
+plt.close()
+
+# --- Frequencies of improving combiners -------------------------------------------------------------------------------
+improving_combiners__short_names = []
+for i, classifier_max_score in enumerate(classifier_max_scores):
+    best_combiner_perf_tuples = best_combiner_perf_tuples_per_run[i]
+    if best_combiner_perf_tuples[0][1] > classifier_max_score:
+        for t in best_combiner_perf_tuples:
+            improving_combiners__short_names.append(t[0].SHORT_NAME)
+
+unique_best_combiners = np.unique(improving_combiners__short_names, return_counts=True)
+combiners_names = unique_best_combiners[0]
+combiners_frequency = unique_best_combiners[1]
+
+df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_frequency': combiners_frequency})
+df_sorted = df.sort_values('combiners_frequency')
+
+plt.figure(figsize=(10, 4.8))
+plt.bar('combiners_names', 'combiners_frequency', data=df_sorted, color='gray')
+plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Auftrittsfrequenz", labelpad=15)
+plt.tight_layout()
+save(plt, "401_improving_combiner_frequency", eval_id)
 plt.close()
 
 
