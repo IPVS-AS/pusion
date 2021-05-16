@@ -108,6 +108,12 @@ def extend_y_ticks(plot):
     return y_ticks
 
 
+def extend_y_ticks_upper_bound(plot):
+    y_ticks = plot.yticks()[0].tolist()
+    step = y_ticks[-1] - y_ticks[-2]
+    y_ticks.append(y_ticks[-1] + step)
+    return y_ticks
+
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
 classifiers_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.F1_SCORE)]
@@ -221,6 +227,56 @@ plt.bar_label(rect3, padding=3, rotation=90)
 plt.legend(loc="lower right")
 plt.tight_layout()
 save(plt, "102_combiner_score_differences_grouped", eval_id)
+plt.close()
+
+
+# --- Performance improvement ------------------------------------------------------------------------------------------
+
+classifiers_max_accuracy = np.max(classifiers_accuracies)
+classifiers_max_f1_score = np.max(classifiers_f1_scores)
+classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
+
+difference_accuracies = (np.array(combiners_accuracies) - classifiers_max_accuracy).clip(min=0)
+difference_f1_scores = (np.array(combiners_f1_scores) - classifiers_max_f1_score).clip(min=0)
+difference_mean_confidences = (np.array(combiners_mean_confidences) - classifiers_max_mean_confidence).clip(min=0)
+
+combiners = list(eval_combiner.get_instances())
+
+for i, perf in reversed(list(enumerate(difference_accuracies))):
+    if difference_accuracies[i] == difference_f1_scores[i] == difference_mean_confidences[i] == 0:
+        difference_accuracies = np.delete(difference_accuracies, i)
+        difference_f1_scores = np.delete(difference_f1_scores, i)
+        difference_mean_confidences = np.delete(difference_mean_confidences, i)
+        del combiners[i]
+
+bar1 = np.around(difference_accuracies, 3)
+bar2 = np.around(difference_f1_scores, 3)
+bar3 = np.around(difference_mean_confidences, 3)
+
+barWidth = 0.2
+r1 = np.arange(len(bar1))
+r2 = [x + barWidth for x in r1]
+r3 = [x + barWidth for x in r2]
+
+plt.figure(figsize=(12, 5.5))
+
+rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
+rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
+rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
+plt.xlim(-.5, np.max(r1) + 1.5)
+plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
+plt.yticks(extend_y_ticks_upper_bound(plt))
+
+plt.bar_label(rect1, padding=3, rotation=90)
+plt.bar_label(rect2, padding=3, rotation=90)
+plt.bar_label(rect3, padding=3, rotation=90)
+
+plt.legend(loc="lower right")
+plt.tight_layout()
+save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
 plt.close()
 
 
