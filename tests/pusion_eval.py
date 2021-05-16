@@ -556,7 +556,7 @@ plt.title("Auftrittshäufigkeit der besten Fusionsmethoden (" + str(n_runs) + " 
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Auftrittsfrequenz", fontweight='bold', labelpad=15)
 plt.tight_layout()
-save(plt, "400_combiner_frequency", eval_id)
+# save(plt, "400_combiner_frequency", eval_id)
 plt.close()
 
 # --- Frequencies of improving combiners -------------------------------------------------------------------------------
@@ -580,7 +580,7 @@ plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) +
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Auftrittsfrequenz", fontweight='bold', labelpad=15)
 plt.tight_layout()
-save(plt, "401_improving_combiner_frequency", eval_id)
+# save(plt, "401_improving_combiner_frequency", eval_id)
 plt.close()
 
 # --- Frequencies of improving combiners (percentage) ------------------------------------------------------------------
