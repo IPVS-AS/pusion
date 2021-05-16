@@ -94,6 +94,14 @@ print(eval_combiner.get_report())
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 
+def extend_y_ticks(plot):
+    y_ticks = plot.yticks()[0].tolist()
+    step = y_ticks[-1] - y_ticks[-2]
+    y_ticks.insert(0, y_ticks[0] - step)
+    y_ticks.append(y_ticks[-1] + step)
+    return y_ticks
+
+
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
 classifiers_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.F1_SCORE)]
@@ -198,7 +206,7 @@ plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
-plt.ylim((plt.gca().get_ylim()[0]*1.1, plt.gca().get_ylim()[1]*1.1))
+plt.yticks(extend_y_ticks(plt))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)

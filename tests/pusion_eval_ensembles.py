@@ -34,10 +34,10 @@ perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.Pe
 # data3 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 # data4 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 
-data = load_native_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])[0]
+data = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])[0]
 
 # Flag for complementary-redundant decision outputs
-cr = False
+cr = True
 
 # Ensemble data
 ensembles = data['ensembles']
@@ -131,6 +131,15 @@ for i in ensembles:
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
+
+def extend_y_ticks(plot):
+    y_ticks = plot.yticks()[0].tolist()
+    step = y_ticks[-1] - y_ticks[-2]
+    y_ticks.insert(0, y_ticks[0] - step)
+    y_ticks.append(y_ticks[-1] + step)
+    return y_ticks
+
+
 # --- Ensemble max. accuracy -------------------------------------------------------------------------------------------
 plt.figure()
 plt.bar(ensemble_wise_type, ensemble_wise_max_accuracy, color='#006aba')
@@ -195,12 +204,11 @@ rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', la
 rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
 rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
 
+plt.axhline(y=0, color='gray', linestyle='-', linewidth=1)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der Trefferquote', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_accuracies[0]])
-y_min = np.min([bar1, bar2, bar3])
-y_max = np.max([bar1, bar2, bar3])
-plt.ylim((plt.gca().get_ylim()[0]*1.2, plt.gca().get_ylim()[1]*2))
+plt.yticks(extend_y_ticks(plt))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
@@ -257,10 +265,11 @@ rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', la
 rect2 = plt.bar(r2, bar2, color='#5a6f9c', width=barWidth, edgecolor='white', label=ensemble_wise_type[1] + "-Ensemble")
 rect3 = plt.bar(r3, bar3, color='#9ab2e6', width=barWidth, edgecolor='white', label=ensemble_wise_type[2] + "-Ensemble")
 
+plt.axhline(y=0, color='gray', linestyle='-', linewidth=1)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.ylabel('Differenz in der mittleren Konfidenz', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [t[0].SHORT_NAME for t in ensemble_wise_combiner_confidences[0]])
-plt.ylim((plt.gca().get_ylim()[0]*1.2, plt.gca().get_ylim()[1]*2))
+plt.yticks(extend_y_ticks(plt))
 
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
