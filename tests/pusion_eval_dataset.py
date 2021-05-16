@@ -27,11 +27,11 @@ dataset_files = [
 data = load_native_files_as_data(dataset_files)
 
 decision_outputs = [
-    # data[0]['Y_predictions'],
-    # data[1]['Y_predictions'],
+    data[0]['Y_predictions'],
+    data[1]['Y_predictions'],
     data[2]['Y_predictions'],
     data[3]['Y_predictions'],
-    # data[4]['Y_predictions']
+    data[4]['Y_predictions']
 ]
 
 true_assignments = np.array(data[2]['Y_test'])
@@ -44,7 +44,7 @@ coverage = [
     [0,  8]
 ]
 
-cr = False
+cr = True
 
 np.random.seed(random_state)
 
@@ -255,8 +255,8 @@ plt.close()
 df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_combine_runtimes': combiners_combine_runtimes})
 df_sorted = df.sort_values('combiners_combine_runtimes')
 
-plt.figure()
-bar1 = plt.bar('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#006aba')
+plt.figure(figsize=(8, 4.8))
+bar1 = plt.bar('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#006aba', width=.75)
 # plt.title("Fusionslaufzeit der Fusionsmethoden")
 plt.xlabel("Fusionsmethoden", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
