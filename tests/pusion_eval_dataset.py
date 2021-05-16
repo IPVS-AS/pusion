@@ -22,19 +22,25 @@ dataset_files = [
     'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',
     'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',
     'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',
 ]
 
 data = load_native_files_as_data(dataset_files)
 
 decision_outputs = [
-    data[0]['Y_predictions'],
-    data[1]['Y_predictions'],
-    data[2]['Y_predictions'],
-    data[3]['Y_predictions'],
-    data[4]['Y_predictions']
+    # data[0]['Y_predictions'],
+    # data[1]['Y_predictions'],
+    # data[2]['Y_predictions'],
+    # data[3]['Y_predictions'],
+    # data[4]['Y_predictions'],
+    # data[5]['Y_predictions'],
+    data[6]['Y_predictions'],
+    data[7]['Y_predictions'],
 ]
 
-true_assignments = np.array(data[2]['Y_test'])
+true_assignments = np.array(data[6]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -44,7 +50,7 @@ coverage = [
     [0,  8]
 ]
 
-cr = True
+cr = False
 
 np.random.seed(random_state)
 
