@@ -17,14 +17,16 @@ eval_id = time.strftime("%Y%m%d-%H%M%S")
 random_state = 1
 
 dataset_files = [
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',  # 4 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',  # 4 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',  # 16 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',  # 16 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',  # 2 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',  # 16 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',  # 4 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',  # 4 classes (MC)
+    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',  # 9 classes (ML)
+    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',  # 9 classes (ML)
 ]
 
 data = load_native_files_as_data(dataset_files)
@@ -36,11 +38,13 @@ decision_outputs = [
     # data[3]['Y_predictions'],
     # data[4]['Y_predictions'],
     # data[5]['Y_predictions'],
-    data[6]['Y_predictions'],
-    data[7]['Y_predictions'],
+    # data[6]['Y_predictions'],
+    # data[7]['Y_predictions'],
+    data[8]['Y_predictions'],
+    data[9]['Y_predictions'],
 ]
 
-true_assignments = np.array(data[6]['Y_test'])
+true_assignments = np.array(data[8]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -249,35 +253,36 @@ for i, perf in reversed(list(enumerate(difference_accuracies))):
         difference_mean_confidences = np.delete(difference_mean_confidences, i)
         del combiners[i]
 
-bar1 = np.around(difference_accuracies, 3)
-bar2 = np.around(difference_f1_scores, 3)
-bar3 = np.around(difference_mean_confidences, 3)
+if len(combiners) > 0:
+    bar1 = np.around(difference_accuracies, 3)
+    bar2 = np.around(difference_f1_scores, 3)
+    bar3 = np.around(difference_mean_confidences, 3)
 
-barWidth = 0.2
-r1 = np.arange(len(bar1))
-r2 = [x + barWidth for x in r1]
-r3 = [x + barWidth for x in r2]
+    barWidth = 0.2
+    r1 = np.arange(len(bar1))
+    r2 = [x + barWidth for x in r1]
+    r3 = [x + barWidth for x in r2]
 
-plt.figure(figsize=(12, 5.5))
+    plt.figure(figsize=(12, 5.5))
 
-rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
-rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+    rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
+    rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
+    rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
-plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
-plt.xlim(-.5, np.max(r1) + 1.5)
-plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
-plt.yticks(extend_y_ticks_upper_bound(plt))
+    plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+    plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
+    plt.xlim(-.5, np.max(r1) + 1.5)
+    plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
+    plt.yticks(extend_y_ticks_upper_bound(plt))
 
-plt.bar_label(rect1, padding=3, rotation=90)
-plt.bar_label(rect2, padding=3, rotation=90)
-plt.bar_label(rect3, padding=3, rotation=90)
+    plt.bar_label(rect1, padding=3, rotation=90)
+    plt.bar_label(rect2, padding=3, rotation=90)
+    plt.bar_label(rect3, padding=3, rotation=90)
 
-plt.legend(loc="lower right")
-plt.tight_layout()
-save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
-plt.close()
+    plt.legend(loc="lower right")
+    plt.tight_layout()
+    save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
+    plt.close()
 
 
 # === Combiner runtimes ================================================================================================
