@@ -80,18 +80,18 @@ for i in range(n_runs):
         np.random.seed(random_state)
 
     classifiers = [
-        # KNeighborsClassifier(1),
-        # KNeighborsClassifier(3),
-        # KNeighborsClassifier(5),
-        # KNeighborsClassifier(7),
-        # KNeighborsClassifier(9),
+        KNeighborsClassifier(1),
+        KNeighborsClassifier(3),
+        KNeighborsClassifier(5),
+        KNeighborsClassifier(7),
+        KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=2),  # MLK
-        MLPClassifier(max_iter=5000, random_state=3),  # MLK
-        MLPClassifier(max_iter=5000, random_state=4),  # MLK
-        MLPClassifier(max_iter=5000, random_state=5),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=1),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=2),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=3),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=4),  # MLK
+        # MLPClassifier(max_iter=5000, random_state=5),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
