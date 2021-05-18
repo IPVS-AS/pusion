@@ -80,18 +80,18 @@ for i in range(n_runs):
         np.random.seed(random_state)
 
     classifiers = [
-        KNeighborsClassifier(1),
-        KNeighborsClassifier(3),
-        KNeighborsClassifier(5),
-        KNeighborsClassifier(7),
-        KNeighborsClassifier(9),
+        # KNeighborsClassifier(1),
+        # KNeighborsClassifier(3),
+        # KNeighborsClassifier(5),
+        # KNeighborsClassifier(7),
+        # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
-        # MLPClassifier(max_iter=5000, random_state=1),  # MLK
-        # MLPClassifier(max_iter=5000, random_state=2),  # MLK
-        # MLPClassifier(max_iter=5000, random_state=3),  # MLK
-        # MLPClassifier(max_iter=5000, random_state=4),  # MLK
-        # MLPClassifier(max_iter=5000, random_state=5),  # MLK
+        MLPClassifier(max_iter=5000, random_state=1),  # MLK
+        MLPClassifier(max_iter=5000, random_state=2),  # MLK
+        MLPClassifier(max_iter=5000, random_state=3),  # MLK
+        MLPClassifier(max_iter=5000, random_state=4),  # MLK
+        MLPClassifier(max_iter=5000, random_state=5),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
@@ -255,6 +255,30 @@ plt.tight_layout()
 save(plt, "010_box_plot_combiner_control_comparison", eval_id)
 plt.close()
 
+# --- Fusion methods performance improvement comparison ----------------------------------------------------------------
+combiner_wise_perf_differences = {}
+for i, perf_tuples in enumerate(combiners_performance_run_tuples):  # reduce
+    for t in perf_tuples:
+        combiner = type(t[0])
+        if combiner not in combiner_wise_perf_differences:  # create a score list if non-existent
+            combiner_wise_perf_differences[combiner] = []
+        combiner_wise_perf_differences[combiner].append(t[1] - classifier_max_scores[i])
+
+combiners = [comb for comb in combiner_wise_perf_differences.keys()]
+combiners_names = [c.SHORT_NAME for c in combiners]
+combiners_improvements = [combiner_wise_perf_differences[c] for c in combiners]
+
+
+plt.figure(figsize=(10, 4.8))
+plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops)
+# plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Differenz (Trefferquote)", fontweight='bold', labelpad=15)
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
+plt.tight_layout()
+save(plt, "011_box_plot_combiner_perf_improvements", eval_id)
+plt.close()
+
 # --- Fusion methods mean confidence comparison ------------------------------------------------------------------------
 reduced_combiners_mean_confidences = {}
 for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
@@ -330,8 +354,6 @@ fig, ax = plt.subplots()
 # p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
 p = ax.barh(combiners_names, combiners_performance_improvements, height=0.2, color='black')
 ax.bar_label(p, padding=3)
-plt.xlim([0, np.max(combiners_performance_improvements) +
-          .2*(np.max(combiners_performance_improvements) - np.min(combiners_performance_improvements))])
 plt.xlabel("Mittlere positive Performanzdifferenz (Trefferquote)", fontweight='bold', labelpad=15)
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.tight_layout()
