@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 import pusion as p
+from pusion.evaluation.evaluation_metrics import *
 from pusion.evaluation.evaluation import Evaluation
 from pusion.input_output.file_input_output import *
 from pusion.util.generator import split_into_train_and_validation_data
@@ -17,34 +18,35 @@ eval_id = time.strftime("%Y%m%d-%H%M%S")
 random_state = 1
 
 dataset_files = [
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',  # 4 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',  # 4 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',  # 16 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',  # 16 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',  # 2 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',  # 16 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',  # 4 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',  # 4 classes (MC)
-    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',  # 9 classes (ML)
-    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',  # 9 classes (ML)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',           # 0 --  4 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',           # 1 --  4 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',           # 2 -- 16 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',           # 3 -- 16 classes (MC)
+    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',           # 4 --  2 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',   # 5 -- 16 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',   # 6 --  4 classes (MC)
+    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',   # 7 --  4 classes (MC)
+
+    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',  # 8 --  9 classes (ML)
+    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',  # 9 --  9 classes (ML)
 ]
 
 data = load_native_files_as_data(dataset_files)
 
-decision_outputs = [
+decision_outputs = (
     # data[0]['Y_predictions'],
     # data[1]['Y_predictions'],
-    # data[2]['Y_predictions'],
+    data[2]['Y_predictions'],
     # data[3]['Y_predictions'],
     # data[4]['Y_predictions'],
-    # data[5]['Y_predictions'],
+    data[5]['Y_predictions'],
     # data[6]['Y_predictions'],
     # data[7]['Y_predictions'],
-    data[8]['Y_predictions'],
-    data[9]['Y_predictions'],
-]
+    # data[8]['Y_predictions'],
+    # data[9]['Y_predictions'],
+)
 
-true_assignments = np.array(data[8]['Y_test'])
+true_assignments = np.array(data[2]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -117,6 +119,7 @@ def extend_y_ticks_upper_bound(plot):
     step = y_ticks[-1] - y_ticks[-2]
     y_ticks.append(y_ticks[-1] + step)
     return y_ticks
+
 
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
