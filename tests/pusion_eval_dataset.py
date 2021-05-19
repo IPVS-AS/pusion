@@ -2,6 +2,7 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 import pusion as p
@@ -33,20 +34,20 @@ dataset_files = [
 
 data = load_native_files_as_data(dataset_files)
 
-decision_outputs = (
+decision_outputs = [
     # data[0]['Y_predictions'],
     # data[1]['Y_predictions'],
-    data[2]['Y_predictions'],
-    # data[3]['Y_predictions'],
+    # data[2]['Y_predictions'],
+    data[3]['Y_predictions'],
     # data[4]['Y_predictions'],
     data[5]['Y_predictions'],
     # data[6]['Y_predictions'],
     # data[7]['Y_predictions'],
     # data[8]['Y_predictions'],
     # data[9]['Y_predictions'],
-)
+]
 
-true_assignments = np.array(data[2]['Y_test'])
+true_assignments = np.array(data[3]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -60,8 +61,12 @@ cr = False
 
 np.random.seed(random_state)
 
-y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
-    split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.75)
+y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
+    split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
+
+y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
+y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
+
 
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
@@ -72,7 +77,6 @@ eval_metrics = [
 
 print("============= Ensemble ===============")
 eval_classifiers = Evaluation(*eval_metrics)
-y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
 if cr:
     eval_classifiers.set_instances(['Ensemble'])
     eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
@@ -287,6 +291,27 @@ if len(combiners) > 0:
     save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
     plt.close()
 
+# === Confusion matrices ===============================================================================================
+
+if not cr:
+    for i, dt in enumerate(y_ensemble_test):
+        # labels=np.arange(4)
+        cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(dt))
+        display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
+        display.plot(cmap='PuBu')
+        plt.title("Classifier " + str(i))
+        save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
+        plt.close()
+
+if not cr:
+    for i, comb in enumerate(eval_combiner.get_instances()):
+        cm = confusion_matrix(multiclass_assignments_to_labels(y_test),
+                              multiclass_assignments_to_labels(multi_comb_decision_outputs[i]))  # labels=np.arange(4)
+        display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
+        display.plot(cmap='PuBu')
+        plt.title(comb.SHORT_NAME)
+        save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "combiner_confusion_matrix", eval_id + "/cm")
+        plt.close()
 
 # === Combiner runtimes ================================================================================================
 

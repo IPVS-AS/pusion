@@ -218,7 +218,6 @@ class Evaluation:
                 top_instances.append(t)
         return top_instances
 
-
     def get_instance_performance_tuples(self, metric=None):
         """
         Retrieve (instance, performance) tuples created for to the given `metric`.
