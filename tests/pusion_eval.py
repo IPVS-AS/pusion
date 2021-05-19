@@ -251,13 +251,15 @@ combiners_performances.insert(0, classifier_max_scores)
 combiners_names.insert(0, 'Kontrolle')
 
 plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
+bp = plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops, patch_artist=True)
+for box in bp['boxes']:
+    box.set_facecolor('white')
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Trefferquote", fontweight='bold', labelpad=15)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
 for y_tick in plt.yticks()[0].tolist():
-    plt.axhline(y_tick, color='grey', linewidth=0.5, linestyle='--')
+    plt.axhline(y_tick, color='#bbbbbb', linewidth=0.5, linestyle='--', zorder=-1)
 plt.tight_layout()
 save(plt, "010_box_plot_combiner_control_comparison", eval_id)
 plt.close()
@@ -277,7 +279,9 @@ combiners_improvements = [combiner_wise_perf_differences[c] for c in combiners]
 
 
 plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops)
+bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
+for box in bp['boxes']:
+    box.set_facecolor('white')
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Differenz (Trefferquote)", fontweight='bold', labelpad=15)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
@@ -306,7 +310,9 @@ combiners_performances.insert(0, classifier_max_mean_confidences)
 combiners_names.insert(0, 'Kontrolle')
 
 plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops)
+bp = plt.boxplot(combiners_performances, showmeans=True, meanprops=meanprops, patch_artist=True)
+for box in bp['boxes']:
+    box.set_facecolor('white')
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Mittlere Konfidenz", fontweight='bold', labelpad=15)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
@@ -332,7 +338,9 @@ combiners_improvements = [combiner_wise_conf_differences[c] for c in combiners]
 
 
 plt.figure(figsize=(10, 4.8))
-plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops)
+bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
+for box in bp['boxes']:
+    box.set_facecolor('white')
 # plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.ylabel("Differenz (Mittlere Konfidenz)", fontweight='bold', labelpad=15)
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
