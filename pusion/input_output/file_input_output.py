@@ -20,8 +20,8 @@ def dump_pusion_data(data, file_path='fusion_output.pickle5'):
 def save(plot_instance, name, identifier):
     directory = "figs/eval_" + identifier
     Path(directory).mkdir(parents=True, exist_ok=True)
-    plot_instance.savefig(directory + "/" + name + ".svg")
-    plot_instance.savefig(directory + "/" + name + ".pdf")
+    plot_instance.savefig(directory + "/" + name + ".svg", bbox_inches = "tight")
+    plot_instance.savefig(directory + "/" + name + ".pdf", bbox_inches = "tight")
 
 
 def save_evaluator(file, identifier):

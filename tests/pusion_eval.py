@@ -213,7 +213,7 @@ for i in range(n_runs):
 
 # === Plot properties ==================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
-# plt.rcParams.update({'font.size': 14})
+plt.rcParams.update({'font.size': 13})
 # SMALL_SIZE = 8
 # MEDIUM_SIZE = 10
 # BIGGER_SIZE = 12
@@ -228,7 +228,7 @@ meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 
 # === Fusion methods comparison ========================================================================================
 
-# --- Fusion methods mean performance comparison -----------------------------------------------------------------------
+# --- Fusion methods performance comparison ----------------------------------------------------------------------------
 reduced_combiners_performances = {}
 for perf_tuples in combiners_performance_run_tuples:  # reduce
     for t in perf_tuples:
@@ -283,7 +283,7 @@ plt.tight_layout()
 save(plt, "011_box_plot_combiner_perf_improvements", eval_id)
 plt.close()
 
-# --- Fusion methods mean confidence comparison ------------------------------------------------------------------------
+# --- Fusion methods confidence comparison -----------------------------------------------------------------------------
 reduced_combiners_mean_confidences = {}
 for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
     for t in perf_tuples:
@@ -312,6 +312,31 @@ plt.tight_layout()
 save(plt, "021_box_plot_combiner_control_comparison_mean_confidence", eval_id)
 plt.close()
 
+# --- Fusion methods confidence improvement comparison -----------------------------------------------------------------
+combiner_wise_conf_differences = {}
+for i, perf_tuples in enumerate(combiners_mean_confidence_run_tuples):  # reduce
+    for t in perf_tuples:
+        combiner = type(t[0])
+        if combiner not in combiner_wise_conf_differences:  # create a score list if non-existent
+            combiner_wise_conf_differences[combiner] = []
+        combiner_wise_conf_differences[combiner].append(t[1] - classifier_max_mean_confidences[i])
+
+combiners = [comb for comb in combiner_wise_conf_differences.keys()]
+combiners_names = [c.SHORT_NAME for c in combiners]
+combiners_improvements = [combiner_wise_conf_differences[c] for c in combiners]
+
+
+plt.figure(figsize=(10, 4.8))
+plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops)
+# plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Differenz (Mittlere Konfidenz)", fontweight='bold', labelpad=15)
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
+for y_tick in plt.yticks()[0].tolist():
+    plt.axhline(y_tick, color='grey', linewidth=0.5, linestyle='--')
+plt.tight_layout()
+save(plt, "022_box_plot_combiner_confidence_improvements", eval_id)
+plt.close()
 
 # === Performance comparison (Ensemble/Framework) ======================================================================
 
@@ -367,6 +392,7 @@ save(plt, "032_mean_positive_performance_difference_per_fusion_method", eval_id)
 plt.close()
 
 # === Performance Profiles =============================================================================================
+plt.rcParams.update({'font.size': 12})
 reduced_combiners_performances = {}
 for perf_tuples in combiners_performance_run_tuples:  # reduce
     for t in perf_tuples:
@@ -405,6 +431,7 @@ plt.close()
 
 
 # === Diversity -- Framework-Performanz ===============================================================================
+plt.rcParams.update({'font.size': 13})
 if not cr:
     plt.figure()
     plt.plot(ensemble_diversity_kappa_statistic, combiners_max_scores, 'g^')
@@ -528,7 +555,7 @@ if not cr:
 
     fig, ax = plt.subplots()
     scatter = ax.scatter(ensemble_diversity_correlation_scores, combiners_max_scores, c=mean_classifier_perf_per_run)
-    ax.set_xlabel('Diversität (Correlation)', fontweight='bold', labelpad=15)
+    ax.set_xlabel('Diversität (Korrelation)', fontweight='bold', labelpad=15)
     ax.set_ylabel('Framework-Performanz (Trefferquote)', fontweight='bold', labelpad=15)
     fig.colorbar(scatter).set_label("Mittlere Ensemble-Performance (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
@@ -539,7 +566,7 @@ if not cr:
 
     fig, ax = plt.subplots()
     scatter = ax.scatter(ensemble_diversity_correlation_scores, performance_improvements, c=mean_classifier_perf_per_run)
-    ax.set_xlabel('Diversität (Correlation)', fontweight='bold', labelpad=15)
+    ax.set_xlabel('Diversität (Korrelation)', fontweight='bold', labelpad=15)
     ax.set_ylabel('Performanzverbesserung (Trefferquote)', fontweight='bold', labelpad=15)
     fig.colorbar(scatter).set_label("Mittlere Ensemble-Performance (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
@@ -551,7 +578,7 @@ if cr:
     # --- Coverage - Max. scores ---------------------------------------------------------------------------------------
     plt.figure()
     plt.plot(coverage_overlaps, combiners_max_scores, 'bx')
-    plt.xlabel("Überdeckugnsdichte", fontweight='bold', labelpad=15)
+    plt.xlabel("Überdeckungsdichte", fontweight='bold', labelpad=15)
     plt.ylabel("Framework-Performanz (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "050_data_plot_01_cr_overlap__framework_performance", eval_id)
@@ -560,7 +587,7 @@ if cr:
     # --- Coverage - Improvement ---------------------------------------------------------------------------------------
     plt.figure()
     plt.plot(coverage_overlaps, performance_improvements, 'rx')
-    plt.xlabel("Überdeckugnsdichte", fontweight='bold', labelpad=15)
+    plt.xlabel("Überdeckungsdichte", fontweight='bold', labelpad=15)
     plt.ylabel("Performanzverbesserung (Trefferquote)", fontweight='bold', labelpad=15)
     plt.tight_layout()
     save(plt, "051_data_plot_01_cr_overlap__framework_imp", eval_id)
@@ -619,7 +646,7 @@ df_sorted = df.sort_values('combiners_frequency', ascending=False)
 
 plt.figure()
 bar1 = plt.barh('combiners_names', 'combiners_frequency', data=df_sorted, color='#5a6f9c')
-plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
+# plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Auftrittsfrequenz in %", labelpad=15, fontweight='bold')
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.bar_label(bar1, padding=3)
@@ -706,7 +733,7 @@ plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_non_zero_names, combiners_train_mean_non_zero_runtimes, color='#93c6ed')
 bar1 = plt.bar('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtimes', data=df_sorted, color='#93c6ed',
                width=.75)
-plt.title("Mittlere Trainingslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+# plt.title("Mittlere Trainingslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.bar_label(bar1, padding=3)
@@ -722,7 +749,7 @@ df_sorted = df.sort_values('combiners_combine_mean_runtimes')
 plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
 bar1 = plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#006aba')
-plt.title("Mittlere Fusionslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+# plt.title("Mittlere Fusionslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.bar_label(bar1, padding=3)
