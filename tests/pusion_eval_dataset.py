@@ -37,8 +37,8 @@ data = load_native_files_as_data(dataset_files)
 decision_outputs = [
     # data[0]['Y_predictions'],
     # data[1]['Y_predictions'],
-    # data[2]['Y_predictions'],
-    data[3]['Y_predictions'],
+    data[2]['Y_predictions'],
+    # data[3]['Y_predictions'],
     # data[4]['Y_predictions'],
     data[5]['Y_predictions'],
     # data[6]['Y_predictions'],
@@ -47,7 +47,7 @@ decision_outputs = [
     # data[9]['Y_predictions'],
 ]
 
-true_assignments = np.array(data[3]['Y_test'])
+true_assignments = np.array(data[2]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -292,6 +292,15 @@ if len(combiners) > 0:
     plt.close()
 
 # === Confusion matrices ===============================================================================================
+
+if not cr:
+    # labels=np.arange(4)
+    cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(y_test))
+    display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
+    display.plot(cmap='PuBu')
+    plt.title("Ground Truth")
+    save(plt, "000_ground_truth_confusion_matrix", eval_id + "/cm")
+    plt.close()
 
 if not cr:
     for i, dt in enumerate(y_ensemble_test):
