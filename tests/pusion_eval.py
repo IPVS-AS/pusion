@@ -45,6 +45,8 @@ classifier_max_mean_confidences = []
 combiners_max_scores = []
 classifier_score_stds = []
 
+ensemble_mean_scores = []
+
 best_combiners_per_run = []
 best_combiner_perf_tuples_per_run = []
 
@@ -180,6 +182,9 @@ for i in range(n_runs):
 
     classifier_max_score = classifiers_performance_tuples[0][1]
     classifier_max_scores.append(classifier_max_score)
+
+    ensemble_mean_score = np.mean([t[1] for t in classifiers_performance_tuples])
+    ensemble_mean_scores.append(ensemble_mean_score)
 
     classifier_max_mean_confidence = classifiers_mean_confidence_tuples[0][1]
     classifier_max_mean_confidences.append(classifier_max_mean_confidence)
@@ -414,8 +419,10 @@ fig, axs = plt.subplots(n_y_cells, n_x_cells, sharex='all', sharey='all', figsiz
 for k, comb in enumerate(combiners):
     i = int(k / 3)
     j = k % 3
-    axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb], s=20, c='black', marker="x",
-                      linewidth=1)
+    axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb],
+                      s=25, c='black', marker="x", linewidth=1)
+    # axs[i, j].scatter(ensemble_mean_scores, reduced_combiners_performances[comb],
+    #                   s=25, marker="o", linewidth=1, facecolor='none', edgecolors='black')
     axs[i, j].plot([0, 1], [0, 1], linewidth=1, linestyle='--', c='#cccccc')
     axs[i, j].set_title(combiners_names[k])
 
