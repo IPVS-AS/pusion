@@ -231,6 +231,20 @@ plt.rcParams.update({'font.size': 13})
 # plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
 # plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
+
+def extend_x_ticks_upper_bound(plot):
+    x_ticks = plot.xticks()[0].tolist()
+    step = x_ticks[-1] - x_ticks[-2]
+    x_ticks.append(x_ticks[-1] + step)
+    return x_ticks
+
+
+def extend_y_ticks_upper_bound(plot):
+    y_ticks = plot.yticks()[0].tolist()
+    step = y_ticks[-1] - y_ticks[-2]
+    y_ticks.append(y_ticks[-1] + step)
+    return y_ticks
+
 # === Fusion methods comparison ========================================================================================
 
 # --- Fusion methods performance comparison ----------------------------------------------------------------------------
@@ -400,6 +414,7 @@ p = ax.barh(combiners_names, combiners_performance_improvements, height=0.2, col
 ax.bar_label(p, padding=3)
 plt.xlabel("Mittlere positive Performanzdifferenz (Trefferquote)", fontweight='bold', labelpad=15)
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
 plt.tight_layout()
 save(plt, "032_mean_positive_performance_difference_per_fusion_method", eval_id)
 plt.close()
@@ -664,6 +679,7 @@ bar1 = plt.barh('combiners_names', 'combiners_frequency', data=df_sorted, color=
 # plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Auftrittsfrequenz in %", labelpad=15, fontweight='bold')
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "402_improving_combiner_frequency_h", eval_id)
@@ -751,6 +767,7 @@ bar1 = plt.bar('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtim
 # plt.title("Mittlere Trainingslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.yticks(extend_y_ticks_upper_bound(plt))
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z91z_train_runtime_comparison", eval_id)
@@ -767,6 +784,7 @@ bar1 = plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sor
 # plt.title("Mittlere Fusionslaufzeit der Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.yticks(extend_y_ticks_upper_bound(plt))
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
