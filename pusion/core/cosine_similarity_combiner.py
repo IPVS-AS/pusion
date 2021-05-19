@@ -77,8 +77,6 @@ class CRCosineSimilarity(CosineSimilarityCombiner):
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT)
     ]
 
-    SHORT_NAME = 'COS (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None

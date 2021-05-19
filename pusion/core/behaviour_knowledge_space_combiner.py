@@ -96,8 +96,6 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
-    SHORT_NAME = 'BKS (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None

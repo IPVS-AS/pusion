@@ -65,8 +65,6 @@ class CRBordaCountCombiner(BordaCountCombiner):
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT)
     ]
 
-    SHORT_NAME = 'BC (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None
