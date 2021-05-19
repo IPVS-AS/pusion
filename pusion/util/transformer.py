@@ -92,7 +92,7 @@ def multiclass_prediction_tensor_to_decision_tensor(predictions):
     for i, pred_matrix in enumerate(predictions):
         # decision_tensor[i] = multiclass_predictions_to_decisions(pred_matrix)
         decision_outputs.append(multiclass_predictions_to_decisions(pred_matrix))
-    return decision_outputs
+    return decision_outputs_to_decision_tensor(decision_outputs)
 
 
 def decision_tensor_to_configs(decision_outputs):
