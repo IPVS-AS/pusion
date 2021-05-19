@@ -93,8 +93,6 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
-    SHORT_NAME = 'WV (CR)'
-
     def __init__(self):
         super().__init__()
         self.accuracy = None

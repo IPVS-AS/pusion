@@ -118,8 +118,6 @@ class CRDempsterShaferCombiner(DempsterShaferCombiner):
         (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
-    SHORT_NAME = 'DS (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None

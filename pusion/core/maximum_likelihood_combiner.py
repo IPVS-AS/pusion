@@ -110,8 +110,6 @@ class CRMaximumLikelihoodCombiner(MaximumLikelihoodCombiner):
         # (Problem.MULTI_LABEL, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT), # performance issues
     ]
 
-    SHORT_NAME = 'MLE (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None

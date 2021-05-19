@@ -50,8 +50,6 @@ class CRMicroMajorityVoteCombiner(MicroMajorityVoteCombiner):
         (Problem.MULTI_LABEL, AssignmentType.CRISP, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
-    SHORT_NAME = 'MIMV (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None

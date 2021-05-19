@@ -80,8 +80,6 @@ class CRDecisionTreeCombiner(DecisionTreeCombiner):
         (Problem.MULTI_LABEL, AssignmentType.CONTINUOUS, CoverageType.COMPLEMENTARY_REDUNDANT),
     ]
 
-    SHORT_NAME = 'DTree (CR)'
-
     def __init__(self):
         super().__init__()
         self.coverage = None
