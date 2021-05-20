@@ -4,6 +4,7 @@ import warnings
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import scikitplot as skplt
 
 import pusion as p
 from pusion.auto.detector import determine_assignment_type
@@ -14,6 +15,11 @@ from pusion.util.generator import split_into_train_and_validation_data
 from pusion.util.transformer import *
 
 warnings.filterwarnings('error')  # halt on warning
+
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
@@ -50,6 +56,8 @@ decision_outputs = [
     data[0]['Y_predictions'],
     data[1]['Y_predictions'],
     data[2]['Y_predictions'],
+    # data[3]['Y_predictions'],
+    # data[4]['Y_predictions'],
 ]
 
 true_assignments = np.array(data[0]['Y_test'])
@@ -134,9 +142,19 @@ else:
     eval_combiner_confidence.evaluate(y_test, multi_comb_continuous_outputs)
 print(eval_combiner_confidence.get_report())
 
-for combiner_out, combiner in zip(multi_comb_continuous_outputs, dp.get_combiners()):
-    if determine_assignment_type(combiner_out) == p.AssignmentType.CONTINUOUS:
-        print("COUT: ", combiner.SHORT_NAME)
+
+# # ---- ROC curves for classifiers
+# for i, do in enumerate(y_ensemble_test):
+#     skplt.metrics.plot_roc_curve(multiclass_assignments_to_labels(y_test), do)
+#     save(plt, "000_classifier_" + str(i) + "_roc_curve", eval_id + "/roc")
+#
+# # ---- ROC curves for combiners with continuous outputs
+for do, comb in zip(multi_comb_continuous_outputs, dp.get_combiners()):
+    if determine_assignment_type(do) == p.AssignmentType.CONTINUOUS:
+        # skplt.metrics.plot_roc_curve(multiclass_assignments_to_labels(y_test), do)
+        # plt.title(comb.SHORT_NAME)
+        # save(plt, "001_combiner_" + comb.SHORT_NAME + "_roc_curve", eval_id + "/roc")
+        print("CONT. OUT: ", comb.SHORT_NAME)
 
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
@@ -186,7 +204,7 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Ensemble', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth for r in range(len(bar1))], [str(instance) for instance in eval_classifiers.get_instances()])
+plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [str(instance) for instance in eval_classifiers.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung', fontweight='bold', labelpad=15)
 plt.yticks(np.arange(0, 1.1, .1))
@@ -230,7 +248,7 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
+plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung', fontweight='bold', labelpad=15)
 plt.yticks(np.arange(0, 1.1, .1))
@@ -279,7 +297,7 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
+plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
 plt.yticks(extend_y_ticks(plt))
@@ -337,7 +355,7 @@ if len(combiners) > 0:
     rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
     plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-    plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
+    plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
     plt.xlim(-.5, np.max(r1) + 2)
     plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
     plt.yticks(extend_y_ticks_upper_bound(plt))
