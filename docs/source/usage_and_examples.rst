@@ -97,9 +97,9 @@ for the combiner as well as for the ensemble.
     # Define classification performance metrics used for the evaluation
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
-        p.PerformanceMetric.F1_SCORE,
-        p.PerformanceMetric.PRECISION,
-        p.PerformanceMetric.RECALL
+        p.PerformanceMetric.MICRO_F1_SCORE,
+        p.PerformanceMetric.MICRO_PRECISION,
+        p.PerformanceMetric.MICRO_RECALL
     ]
 
     print("============= Ensemble ===============")
@@ -244,9 +244,9 @@ The framework provides also a specific evaluation methodology for complementary-
     # Define classification performance metrics used for the evaluation
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
-        p.PerformanceMetric.F1_SCORE,
-        p.PerformanceMetric.PRECISION,
-        p.PerformanceMetric.RECALL
+        p.PerformanceMetric.MICRO_F1_SCORE,
+        p.PerformanceMetric.MICRO_PRECISION,
+        p.PerformanceMetric.MICRO_RECALL
     ]
 
     # Evaluate ensemble classifiers
