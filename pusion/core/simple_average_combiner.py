@@ -35,8 +35,8 @@ class SimpleAverageCombiner(UtilityBasedCombiner):
                 decisions obtained by the AVG method. Axis 0 represents samples and axis 1 the class
                 assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
-        # return np.mean(decision_tensor, axis=0)  # continuous output
-        return multilabel_predictions_to_decisions(np.mean(decision_tensor, axis=0), .5)
+        # return multilabel_predictions_to_decisions(np.mean(decision_tensor, axis=0), .5)
+        return np.mean(decision_tensor, axis=0)  # continuous output
 
 
 class CRSimpleAverageCombiner(SimpleAverageCombiner):
@@ -76,7 +76,8 @@ class CRSimpleAverageCombiner(SimpleAverageCombiner):
                 assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         t_decision_outputs = self.__transform_to_uniform_decision_tensor(decision_outputs, self.coverage)
-        return multilabel_predictions_to_decisions(np.nanmean(t_decision_outputs, axis=0), .5)
+        # return multilabel_predictions_to_decisions(np.nanmean(t_decision_outputs, axis=0), .5)
+        return np.nanmean(t_decision_outputs, axis=0)  # continuous output
 
     @staticmethod
     def __transform_to_uniform_decision_tensor(decision_outputs, coverage):
