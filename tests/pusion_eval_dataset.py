@@ -88,7 +88,7 @@ if cr:
     eval_classifiers.evaluate_cr_decision_outputs(
         y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test), coverage)
 else:
-    eval_classifiers.set_instances([('Classifier ' + str(i)) for i in range(len(decision_outputs))])
+    eval_classifiers.set_instances([('ResNet ' + str(i)) for i in range(len(decision_outputs))])
     eval_classifiers.evaluate(y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test))
 
 print(eval_classifiers.get_report())
@@ -99,7 +99,7 @@ if cr:
     eval_classifiers_confidence.set_instances(['Ensemble'])
     eval_classifiers_confidence.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 else:
-    eval_classifiers_confidence.set_instances([('Classifier ' + str(i)) for i in range(len(decision_outputs))])
+    eval_classifiers_confidence.set_instances([('ResNet ' + str(i)) for i in range(len(decision_outputs))])
     eval_classifiers_confidence.evaluate(y_test, y_ensemble_test)
 
 print(eval_classifiers_confidence.get_report())
@@ -140,6 +140,8 @@ for combiner_out, combiner in zip(multi_comb_continuous_outputs, dp.get_combiner
 
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
+plt.rc('axes', titlesize=12)     # fontsize of the axes title
+plt.rc('axes', labelsize=12)    # fontsize of the x and y labels
 
 
 def extend_y_ticks(plot):
@@ -358,6 +360,8 @@ if not cr:
     display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
     display.plot(cmap='PuBu')
     plt.title("Ground Truth")
+    plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
+    plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
     save(plt, "000_ground_truth_confusion_matrix", eval_id + "/cm")
     plt.close()
 
@@ -368,6 +372,8 @@ if not cr:
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
         display.plot(cmap='PuBu')
         plt.title("Classifier " + str(i))
+        plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
+        plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
         save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
         plt.close()
 
@@ -378,6 +384,8 @@ if not cr:
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
         display.plot(cmap='PuBu')
         plt.title(comb.SHORT_NAME)
+        plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
+        plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
         save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "combiner_confusion_matrix", eval_id + "/cm")
         plt.close()
 
