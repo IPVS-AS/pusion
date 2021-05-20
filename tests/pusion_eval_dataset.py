@@ -77,8 +77,8 @@ np.random.seed(random_state)
 y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
     split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
 
-# y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
-# y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
+y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
+y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
 
 
 eval_metrics = [
@@ -235,7 +235,7 @@ bar2 = np.around(combiners_micro_f1_scores, 3)
 bar3 = np.around(combiners_macro_f1_scores, 3)
 bar4 = np.around(combiners_mean_confidences, 3)
 
-barWidth = 0.13
+barWidth = 0.16
 r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
@@ -282,7 +282,7 @@ bar2 = np.around(difference_micro_f1_scores, 3)
 bar3 = np.around(difference_macro_f1_scores, 3)
 bar4 = np.around(difference_mean_confidences, 3)
 
-barWidth = 0.13
+barWidth = 0.16
 r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
@@ -342,7 +342,7 @@ if len(combiners) > 0:
     bar3 = np.around(difference_macro_f1_scores, 3)
     bar4 = np.around(difference_mean_confidences, 3)
 
-    barWidth = 0.13
+    barWidth = 0.16
     r1 = np.arange(len(bar1))
     r2 = [x + barWidth for x in r1]
     r3 = [x + barWidth for x in r2]
@@ -377,9 +377,9 @@ if not cr:
     cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(y_test))
     display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
     display.plot(cmap='PuBu')
-    plt.title("Ground Truth")
-    plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
-    plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
+    # plt.title("Ground Truth")
+    plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
+    plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
     save(plt, "000_ground_truth_confusion_matrix", eval_id + "/cm")
     plt.close()
 
@@ -389,9 +389,9 @@ if not cr:
         cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(dt))
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
         display.plot(cmap='PuBu')
-        plt.title("Classifier " + str(i))
-        plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
-        plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
+        # plt.title("Classifier " + str(i))
+        plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
+        plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
         save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
         plt.close()
 
@@ -401,10 +401,10 @@ if not cr:
                               multiclass_assignments_to_labels(multi_comb_decision_outputs[i]))  # labels=np.arange(4)
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
         display.plot(cmap='PuBu')
-        plt.title(comb.SHORT_NAME)
-        plt.xlabel('Vorhergesagte Klassen', fontweight='bold', labelpad=15)
-        plt.ylabel('Wahre Klassen', fontweight='bold', labelpad=15)
-        save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "combiner_confusion_matrix", eval_id + "/cm")
+        # plt.title(comb.SHORT_NAME)
+        plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
+        plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
+        save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "_combiner_confusion_matrix", eval_id + "/cm")
         plt.close()
 
 # === Combiner runtimes ================================================================================================
