@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 import pusion as p
+from pusion.auto.detector import determine_assignment_type
 from pusion.evaluation.evaluation_metrics import *
 from pusion.evaluation.evaluation import Evaluation
 from pusion.input_output.file_input_output import *
@@ -19,46 +20,39 @@ eval_id = time.strftime("%Y%m%d-%H%M%S")
 random_state = 1
 
 dataset_files = [
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',                   # 0  --  4 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',                   # 1  --  4 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',                   # 2  -- 16 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',                   # 3  -- 16 classes (MC)
-    'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',                   # 4  --  2 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',           # 5  -- 16 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',           # 6  --  4 classes (MC)
-    'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',           # 7  --  4 classes (MC)
+    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',                   # 0  --  4 classes (MC)
+    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',                   # 1  --  4 classes (MC)
+    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',                   # 2  -- 16 classes (MC) (2)
+    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',                   # 3  -- 16 classes (MC) (2)
+    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',                   # 4  --  2 classes (MC)
+    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',           # 5  -- 16 classes (MC)
+    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',           # 6  --  4 classes (MC)
+    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',           # 7  --  4 classes (MC)
 
-    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',          # 8  --  9 classes (ML)
-    'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',          # 9  --  9 classes (ML)
+    # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',          # 8  --  9 classes (ML)
+    # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',          # 9  --  9 classes (ML)
 
-    'datasets/generated_multiclass_classification_classifier_0.pickle',     # 10 --  5 classes (MC)
-    'datasets/generated_multiclass_classification_classifier_1.pickle',     # 11 --  5 classes (MC)
-    'datasets/generated_multiclass_classification_classifier_2.pickle',     # 12 --  5 classes (MC)
-    'datasets/generated_multiclass_classification_classifier_3.pickle',     # 13 --  5 classes (MC)
-    'datasets/generated_multiclass_classification_classifier_4.pickle',     # 14 --  5 classes (MC)
+    # 'datasets/generated_multiclass_classification_classifier_0.pickle',     # 10 --  5 classes (MC)
+    # 'datasets/generated_multiclass_classification_classifier_1.pickle',     # 11 --  5 classes (MC)
+    # 'datasets/generated_multiclass_classification_classifier_2.pickle',     # 12 --  5 classes (MC)
+    # 'datasets/generated_multiclass_classification_classifier_3.pickle',     # 13 --  5 classes (MC)
+    # 'datasets/generated_multiclass_classification_classifier_4.pickle',     # 14 --  5 classes (MC)
+
+    # 'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_1.pickle',                 # 15 -- 16 classes (MC) (2)
+    'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_2.pickle',                 # 16 -- 16 classes (MC) (1)
+    'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_3.pickle',                 # 17 -- 16 classes (MC) (1)
+    'datasets/Time-SE-ResNet_performance.pickle'                            # 18 -- 16 classes (MC) (1)
 ]
 
 data = load_native_files_as_data(dataset_files)
 
 decision_outputs = [
-    # data[0]['Y_predictions'],
-    # data[1]['Y_predictions'],
-    # data[2]['Y_predictions'],
-    # data[3]['Y_predictions'],
-    # data[4]['Y_predictions'],
-    # data[5]['Y_predictions'],
-    # data[6]['Y_predictions'],
-    # data[7]['Y_predictions'],
-    # data[8]['Y_predictions'],
-    # data[9]['Y_predictions'],
-    data[10]['Y_predictions'],
-    data[11]['Y_predictions'],
-    data[12]['Y_predictions'],
-    data[13]['Y_predictions'],
-    data[14]['Y_predictions'],
+    data[0]['Y_predictions'],
+    data[1]['Y_predictions'],
+    data[2]['Y_predictions'],
 ]
 
-true_assignments = np.array(data[10]['Y_test'])
+true_assignments = np.array(data[0]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -75,13 +69,14 @@ np.random.seed(random_state)
 y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
     split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
 
-y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
-y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
+# y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
+# y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
 
 
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
-    p.PerformanceMetric.F1_SCORE,
+    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MACRO_F1_SCORE,
     p.PerformanceMetric.MEAN_CONFIDENCE,
 ]
 
@@ -90,12 +85,25 @@ print("============= Ensemble ===============")
 eval_classifiers = Evaluation(*eval_metrics)
 if cr:
     eval_classifiers.set_instances(['Ensemble'])
-    eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
+    eval_classifiers.evaluate_cr_decision_outputs(
+        y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test), coverage)
 else:
     eval_classifiers.set_instances([('Classifier ' + str(i)) for i in range(len(decision_outputs))])
-    eval_classifiers.evaluate(y_test, y_ensemble_test)
+    eval_classifiers.evaluate(y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test))
 
 print(eval_classifiers.get_report())
+
+# ---- Mean confidence on continuous ensemble outputs
+eval_classifiers_confidence = Evaluation(p.PerformanceMetric.MEAN_CONFIDENCE)
+if cr:
+    eval_classifiers_confidence.set_instances(['Ensemble'])
+    eval_classifiers_confidence.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
+else:
+    eval_classifiers_confidence.set_instances([('Classifier ' + str(i)) for i in range(len(decision_outputs))])
+    eval_classifiers_confidence.evaluate(y_test, y_ensemble_test)
+
+print(eval_classifiers_confidence.get_report())
+
 
 # ---- GenericCombiner -------------------------------------------------------------------------------------------------
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
@@ -116,6 +124,19 @@ else:
     eval_combiner.evaluate(y_test, multi_comb_decision_outputs)
 print(eval_combiner.get_report())
 
+# ---- Mean confidence on continuous combiner outputs
+eval_combiner_confidence = Evaluation(p.PerformanceMetric.MEAN_CONFIDENCE)
+eval_combiner_confidence.set_instances(dp.get_combiners())
+multi_comb_continuous_outputs = dp.get_multi_combiner_decision_output()
+if cr:
+    eval_combiner_confidence.evaluate_cr_multi_combiner_decision_outputs(y_test, multi_comb_continuous_outputs)
+else:
+    eval_combiner_confidence.evaluate(y_test, multi_comb_continuous_outputs)
+print(eval_combiner_confidence.get_report())
+
+for combiner_out, combiner in zip(multi_comb_continuous_outputs, dp.get_combiners()):
+    if determine_assignment_type(combiner_out) == p.AssignmentType.CONTINUOUS:
+        print("COUT: ", combiner.SHORT_NAME)
 
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
@@ -138,23 +159,29 @@ def extend_y_ticks_upper_bound(plot):
 
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
-classifiers_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.F1_SCORE)]
+classifiers_micro_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
+    p.PerformanceMetric.MICRO_F1_SCORE)]
+classifiers_macro_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
+    p.PerformanceMetric.MACRO_F1_SCORE)]
 classifiers_mean_confidences = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
     p.PerformanceMetric.MEAN_CONFIDENCE)]
 
 bar1 = np.around(classifiers_accuracies, 3)
-bar2 = np.around(classifiers_f1_scores, 3)
-bar3 = np.around(classifiers_mean_confidences, 3)
+bar2 = np.around(classifiers_micro_f1_scores, 3)
+bar3 = np.around(classifiers_macro_f1_scores, 3)
+bar4 = np.around(classifiers_mean_confidences, 3)
 
-barWidth = 0.2
+barWidth = 0.13
 r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
+r4 = [x + barWidth for x in r3]
 
 plt.figure()
-rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
-rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
+rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Ensemble', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [str(instance) for instance in eval_classifiers.get_instances()])
@@ -166,6 +193,7 @@ plt.ylim((0, 1.2))
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
+plt.bar_label(rect4, padding=3, rotation=90)
 
 plt.legend(loc="lower right")
 plt.tight_layout()
@@ -175,23 +203,29 @@ plt.close()
 
 # --- Combiners performance --------------------------------------------------------------------------------------------
 combiners_accuracies = [t[1] for t in eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
-combiners_f1_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.F1_SCORE)]
+combiners_micro_f1_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(
+    p.PerformanceMetric.MICRO_F1_SCORE)]
+combiners_macro_f1_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(
+    p.PerformanceMetric.MACRO_F1_SCORE)]
 combiners_mean_confidences = [t[1] for t in eval_combiner.get_instance_performance_tuples(
     p.PerformanceMetric.MEAN_CONFIDENCE)]
 
 bar1 = np.around(combiners_accuracies, 3)
-bar2 = np.around(combiners_f1_scores, 3)
-bar3 = np.around(combiners_mean_confidences, 3)
+bar2 = np.around(combiners_micro_f1_scores, 3)
+bar3 = np.around(combiners_macro_f1_scores, 3)
+bar4 = np.around(combiners_mean_confidences, 3)
 
-barWidth = 0.2
+barWidth = 0.13
 r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
+r4 = [x + barWidth for x in r3]
 
 plt.figure(figsize=(12, 5.5))
-rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
-rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
+rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
@@ -203,6 +237,7 @@ plt.ylim((0, 1.2))
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
+plt.bar_label(rect4, padding=3, rotation=90)
 
 plt.legend(loc="lower right")
 plt.tight_layout()
@@ -213,28 +248,33 @@ plt.close()
 # --- Performance difference -------------------------------------------------------------------------------------------
 
 classifiers_max_accuracy = np.max(classifiers_accuracies)
-classifiers_max_f1_score = np.max(classifiers_f1_scores)
+classifiers_max_micro_f1_score = np.max(classifiers_micro_f1_scores)
+classifiers_max_macro_f1_score = np.max(classifiers_macro_f1_scores)
 classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
 
 difference_accuracies = np.array(combiners_accuracies) - classifiers_max_accuracy
-difference_f1_scores = np.array(combiners_f1_scores) - classifiers_max_f1_score
+difference_micro_f1_scores = np.array(combiners_micro_f1_scores) - classifiers_max_micro_f1_score
+difference_macro_f1_scores = np.array(combiners_macro_f1_scores) - classifiers_max_macro_f1_score
 difference_mean_confidences = np.array(combiners_mean_confidences) - classifiers_max_mean_confidence
 
 bar1 = np.around(difference_accuracies, 3)
-bar2 = np.around(difference_f1_scores, 3)
-bar3 = np.around(difference_mean_confidences, 3)
+bar2 = np.around(difference_micro_f1_scores, 3)
+bar3 = np.around(difference_macro_f1_scores, 3)
+bar4 = np.around(difference_mean_confidences, 3)
 
-barWidth = 0.2
+barWidth = 0.13
 r1 = np.arange(len(bar1))
 r2 = [x + barWidth for x in r1]
 r3 = [x + barWidth for x in r2]
+r4 = [x + barWidth for x in r3]
 
 plt.figure(figsize=(12, 5.5))
 plt.axhline(y=0, color='gray', linestyle='-', linewidth=1)
 
-rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
-rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
+rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
 plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
@@ -245,6 +285,7 @@ plt.yticks(extend_y_ticks(plt))
 plt.bar_label(rect1, padding=3, rotation=90)
 plt.bar_label(rect2, padding=3, rotation=90)
 plt.bar_label(rect3, padding=3, rotation=90)
+plt.bar_label(rect4, padding=3, rotation=90)
 
 plt.legend(loc="lower right")
 plt.tight_layout()
@@ -255,47 +296,54 @@ plt.close()
 # --- Performance improvement ------------------------------------------------------------------------------------------
 
 classifiers_max_accuracy = np.max(classifiers_accuracies)
-classifiers_max_f1_score = np.max(classifiers_f1_scores)
+classifiers_max_micro_f1_score = np.max(classifiers_micro_f1_scores)
+classifiers_max_macro_f1_score = np.max(classifiers_macro_f1_scores)
 classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
 
 difference_accuracies = (np.array(combiners_accuracies) - classifiers_max_accuracy).clip(min=0)
-difference_f1_scores = (np.array(combiners_f1_scores) - classifiers_max_f1_score).clip(min=0)
+difference_micro_f1_scores = (np.array(combiners_micro_f1_scores) - classifiers_max_micro_f1_score).clip(min=0)
+difference_macro_f1_scores = (np.array(combiners_macro_f1_scores) - classifiers_max_macro_f1_score).clip(min=0)
 difference_mean_confidences = (np.array(combiners_mean_confidences) - classifiers_max_mean_confidence).clip(min=0)
 
 combiners = list(eval_combiner.get_instances())
 
 for i, perf in reversed(list(enumerate(difference_accuracies))):
-    if difference_accuracies[i] == difference_f1_scores[i] == difference_mean_confidences[i] == 0:
+    if difference_accuracies[i] == difference_micro_f1_scores[i] == difference_macro_f1_scores[i] == \
+            difference_mean_confidences[i] == 0:
         difference_accuracies = np.delete(difference_accuracies, i)
-        difference_f1_scores = np.delete(difference_f1_scores, i)
+        difference_micro_f1_scores = np.delete(difference_micro_f1_scores, i)
+        difference_macro_f1_scores = np.delete(difference_macro_f1_scores, i)
         difference_mean_confidences = np.delete(difference_mean_confidences, i)
         del combiners[i]
 
 if len(combiners) > 0:
     bar1 = np.around(difference_accuracies, 3)
-    bar2 = np.around(difference_f1_scores, 3)
-    bar3 = np.around(difference_mean_confidences, 3)
+    bar2 = np.around(difference_micro_f1_scores, 3)
+    bar3 = np.around(difference_macro_f1_scores, 3)
+    bar4 = np.around(difference_mean_confidences, 3)
 
-    barWidth = 0.2
+    barWidth = 0.13
     r1 = np.arange(len(bar1))
     r2 = [x + barWidth for x in r1]
     r3 = [x + barWidth for x in r2]
+    r4 = [x + barWidth for x in r3]
 
     plt.figure(figsize=(12, 5.5))
-
-    rect1 = plt.bar(r1, bar1, color='#2b3854', width=barWidth, edgecolor='white', label="Trefferquote")
-    rect2 = plt.bar(r2, bar2, color='#a87f52', width=barWidth, edgecolor='white', label="F1-Score")
-    rect3 = plt.bar(r3, bar3, color='#52a859', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
+    rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
+    rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+    rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
+    rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
     plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
     plt.xticks([r + barWidth for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
-    plt.xlim(-.5, np.max(r1) + 1.5)
+    plt.xlim(-.5, np.max(r1) + 2)
     plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
     plt.yticks(extend_y_ticks_upper_bound(plt))
 
     plt.bar_label(rect1, padding=3, rotation=90)
     plt.bar_label(rect2, padding=3, rotation=90)
     plt.bar_label(rect3, padding=3, rotation=90)
+    plt.bar_label(rect4, padding=3, rotation=90)
 
     plt.legend(loc="lower right")
     plt.tight_layout()
