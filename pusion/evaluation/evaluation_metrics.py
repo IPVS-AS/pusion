@@ -6,28 +6,100 @@ from pusion.auto.detector import determine_problem
 from pusion.util.transformer import multiclass_assignments_to_labels, multilabel_to_multiclass_assignments
 
 
-def precision(y_true, y_pred):
+def micro_precision(y_true, y_pred):
     """
-    Calculate the precision, i.e. TP / (TP + FP).
+    Calculate the micro precision, i.e. TP / (TP + FP).
 
     :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
             class assignments.
-    :return: Precision.
+    :return: The micro precision.
     """
     return precision_score(y_true, y_pred, average='micro')
 
 
-def recall(y_true, y_pred):
+def micro_recall(y_true, y_pred):
     """
-    Calculate the recall, i.e.  TP / (TP + FN).
+    Calculate the micro recall, i.e.  TP / (TP + FN).
 
     :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
             class assignments.
-    :return: Recall.
+    :return: The micro recall.
     """
     return recall_score(y_true, y_pred, average='micro')
+
+
+def micro_f1(y_true, y_pred):
+    """
+    Calculate the micro F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The micro F1-score.
+    """
+    return f1_score(y_true, y_pred, average='micro')
+
+
+def micro_jaccard(y_true, y_pred):
+    """
+    Calculate the micro Jaccard-score, i.e. TP / (TP + FP + FN).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The micro Jaccard-score.
+    """
+    return jaccard_score(y_true, y_pred, average='micro')
+
+
+def macro_precision(y_true, y_pred):
+    """
+    Calculate the macro precision, i.e. TP / (TP + FP).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The macro precision.
+    """
+    return precision_score(y_true, y_pred, average='macro')
+
+
+def macro_recall(y_true, y_pred):
+    """
+    Calculate the macro recall, i.e.  TP / (TP + FN).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The macro recall.
+    """
+    return recall_score(y_true, y_pred, average='macro')
+
+
+def macro_f1(y_true, y_pred):
+    """
+    Calculate the macro F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The macro F1-score.
+    """
+    return f1_score(y_true, y_pred, average='macro')
+
+
+def macro_jaccard(y_true, y_pred):
+    """
+    Calculate the macro Jaccard-score, i.e. TP / (TP + FP + FN).
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The macro Jaccard-score.
+    """
+    return jaccard_score(y_true, y_pred, average='macro')
 
 
 def accuracy(y_true, y_pred):
@@ -40,30 +112,6 @@ def accuracy(y_true, y_pred):
     :return: Accuracy.
     """
     return accuracy_score(y_true, y_pred)
-
-
-def f1(y_true, y_pred):
-    """
-    Calculate the F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).
-
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
-            class assignments.
-    :return: F1-score.
-    """
-    return f1_score(y_true, y_pred, average='micro')
-
-
-def jaccard(y_true, y_pred):
-    """
-    Calculate the Jaccard-score, i.e. TP / (TP + FP + FN).
-
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
-            class assignments.
-    :return: Jaccard-score.
-    """
-    return jaccard_score(y_true, y_pred, average='micro')
 
 
 def mean_multilabel_confusion_matrix(y_true, y_pred):

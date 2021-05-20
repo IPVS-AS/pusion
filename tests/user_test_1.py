@@ -22,9 +22,9 @@ y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensem
 
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
-    p.PerformanceMetric.F1_SCORE,
-    p.PerformanceMetric.PRECISION,
-    p.PerformanceMetric.RECALL
+    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MICRO_PRECISION,
+    p.PerformanceMetric.MICRO_RECALL
 ]
 
 

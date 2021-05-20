@@ -31,7 +31,7 @@ n_classes = 5
 n_samples = 2000
 random_state = 1
 cr = False
-perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
+perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
 # ----------------------------------------------------------------------------------------------------------------------
 combiners_per_run = []

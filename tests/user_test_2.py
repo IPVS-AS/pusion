@@ -16,9 +16,9 @@ classifiers = [
 
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
-    p.PerformanceMetric.F1_SCORE,
-    p.PerformanceMetric.PRECISION,
-    p.PerformanceMetric.RECALL
+    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MICRO_PRECISION,
+    p.PerformanceMetric.MICRO_RECALL
 ]
 
 coverage = p.generate_classification_coverage(n_classifiers=len(classifiers), n_classes=5, overlap=.6, normal_class=True)

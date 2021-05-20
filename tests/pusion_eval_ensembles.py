@@ -26,7 +26,7 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
+perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
 
 # data1 = load_native_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])
