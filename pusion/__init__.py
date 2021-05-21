@@ -48,10 +48,12 @@ class PerformanceMetric:
     MICRO_PRECISION = micro_precision
     MICRO_RECALL = micro_recall
     MICRO_F1_SCORE = micro_f1
+    MICRO_F2_SCORE = micro_f2
     MICRO_JACCARD_SCORE = micro_jaccard
     MACRO_PRECISION = macro_precision
     MACRO_RECALL = macro_recall
     MACRO_F1_SCORE = macro_f1
+    MACRO_F2_SCORE = macro_f2
     MACRO_JACCARD_SCORE = macro_jaccard
     ACCURACY = accuracy
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
