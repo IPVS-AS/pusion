@@ -98,7 +98,7 @@ y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_va
 
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
-    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MICRO_JACCARD_SCORE,
     p.PerformanceMetric.MACRO_F1_SCORE,
     p.PerformanceMetric.MEAN_CONFIDENCE,
 ]
@@ -194,15 +194,15 @@ def extend_y_ticks_upper_bound(plot):
 
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
-classifiers_micro_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
-    p.PerformanceMetric.MICRO_F1_SCORE)]
+classifiers_micro_jaccard_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
+    p.PerformanceMetric.MICRO_JACCARD_SCORE)]
 classifiers_macro_f1_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
     p.PerformanceMetric.MACRO_F1_SCORE)]
 classifiers_mean_confidences = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
     p.PerformanceMetric.MEAN_CONFIDENCE)]
 
 bar1 = np.around(classifiers_accuracies, 3)
-bar2 = np.around(classifiers_micro_f1_scores, 3)
+bar2 = np.around(classifiers_micro_jaccard_scores, 3)
 bar3 = np.around(classifiers_macro_f1_scores, 3)
 bar4 = np.around(classifiers_mean_confidences, 3)
 
@@ -213,8 +213,8 @@ r3 = [x + barWidth for x in r2]
 r4 = [x + barWidth for x in r3]
 
 plt.figure()
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
@@ -238,15 +238,15 @@ plt.close()
 
 # --- Combiners performance --------------------------------------------------------------------------------------------
 combiners_accuracies = [t[1] for t in eval_combiner.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
-combiners_micro_f1_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(
-    p.PerformanceMetric.MICRO_F1_SCORE)]
+combiners_micro_jaccard_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(
+    p.PerformanceMetric.MICRO_JACCARD_SCORE)]
 combiners_macro_f1_scores = [t[1] for t in eval_combiner.get_instance_performance_tuples(
     p.PerformanceMetric.MACRO_F1_SCORE)]
 combiners_mean_confidences = [t[1] for t in eval_combiner.get_instance_performance_tuples(
     p.PerformanceMetric.MEAN_CONFIDENCE)]
 
 bar1 = np.around(combiners_accuracies, 3)
-bar2 = np.around(combiners_micro_f1_scores, 3)
+bar2 = np.around(combiners_micro_jaccard_scores, 3)
 bar3 = np.around(combiners_macro_f1_scores, 3)
 bar4 = np.around(combiners_mean_confidences, 3)
 
@@ -257,8 +257,8 @@ r3 = [x + barWidth for x in r2]
 r4 = [x + barWidth for x in r3]
 
 plt.figure(figsize=(12, 5.5))
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
@@ -283,17 +283,17 @@ plt.close()
 # --- Performance difference -------------------------------------------------------------------------------------------
 
 classifiers_max_accuracy = np.max(classifiers_accuracies)
-classifiers_max_micro_f1_score = np.max(classifiers_micro_f1_scores)
+classifiers_max_micro_jaccard_score = np.max(classifiers_micro_jaccard_scores)
 classifiers_max_macro_f1_score = np.max(classifiers_macro_f1_scores)
 classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
 
 difference_accuracies = np.array(combiners_accuracies) - classifiers_max_accuracy
-difference_micro_f1_scores = np.array(combiners_micro_f1_scores) - classifiers_max_micro_f1_score
+difference_micro_jaccard_scores = np.array(combiners_micro_jaccard_scores) - classifiers_max_micro_jaccard_score
 difference_macro_f1_scores = np.array(combiners_macro_f1_scores) - classifiers_max_macro_f1_score
 difference_mean_confidences = np.array(combiners_mean_confidences) - classifiers_max_mean_confidence
 
 bar1 = np.around(difference_accuracies, 3)
-bar2 = np.around(difference_micro_f1_scores, 3)
+bar2 = np.around(difference_micro_jaccard_scores, 3)
 bar3 = np.around(difference_macro_f1_scores, 3)
 bar4 = np.around(difference_mean_confidences, 3)
 
@@ -306,8 +306,8 @@ r4 = [x + barWidth for x in r3]
 plt.figure(figsize=(12, 5.5))
 plt.axhline(y=0, color='gray', linestyle='-', linewidth=1)
 
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
-rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
@@ -331,29 +331,29 @@ plt.close()
 # --- Performance improvement ------------------------------------------------------------------------------------------
 
 classifiers_max_accuracy = np.max(classifiers_accuracies)
-classifiers_max_micro_f1_score = np.max(classifiers_micro_f1_scores)
+classifiers_max_micro_jaccard_score = np.max(classifiers_micro_jaccard_scores)
 classifiers_max_macro_f1_score = np.max(classifiers_macro_f1_scores)
 classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
 
 difference_accuracies = (np.array(combiners_accuracies) - classifiers_max_accuracy).clip(min=0)
-difference_micro_f1_scores = (np.array(combiners_micro_f1_scores) - classifiers_max_micro_f1_score).clip(min=0)
+difference_micro_jaccard_scores = (np.array(combiners_micro_jaccard_scores) - classifiers_max_micro_jaccard_score).clip(min=0)
 difference_macro_f1_scores = (np.array(combiners_macro_f1_scores) - classifiers_max_macro_f1_score).clip(min=0)
 difference_mean_confidences = (np.array(combiners_mean_confidences) - classifiers_max_mean_confidence).clip(min=0)
 
 combiners = list(eval_combiner.get_instances())
 
 for i, perf in reversed(list(enumerate(difference_accuracies))):
-    if difference_accuracies[i] == difference_micro_f1_scores[i] == difference_macro_f1_scores[i] == \
+    if difference_accuracies[i] == difference_micro_jaccard_scores[i] == difference_macro_f1_scores[i] == \
             difference_mean_confidences[i] == 0:
         difference_accuracies = np.delete(difference_accuracies, i)
-        difference_micro_f1_scores = np.delete(difference_micro_f1_scores, i)
+        difference_micro_jaccard_scores = np.delete(difference_micro_jaccard_scores, i)
         difference_macro_f1_scores = np.delete(difference_macro_f1_scores, i)
         difference_mean_confidences = np.delete(difference_mean_confidences, i)
         del combiners[i]
 
 if len(combiners) > 0:
     bar1 = np.around(difference_accuracies, 3)
-    bar2 = np.around(difference_micro_f1_scores, 3)
+    bar2 = np.around(difference_micro_jaccard_scores, 3)
     bar3 = np.around(difference_macro_f1_scores, 3)
     bar4 = np.around(difference_mean_confidences, 3)
 
@@ -364,8 +364,8 @@ if len(combiners) > 0:
     r4 = [x + barWidth for x in r3]
 
     plt.figure(figsize=(12, 5.5))
-    rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
-    rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro F1-Score")
+    rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+    rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
     rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
     rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
