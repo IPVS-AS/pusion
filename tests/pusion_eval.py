@@ -129,9 +129,9 @@ for i in range(n_runs):
     coverage = coverage_list[i]
 
     y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
-        p.generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, True)
+        p.generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples)
     # y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
-    #     p.generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage, True)
+    #     p.generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage)
 
     print("============== Ensemble ================")
     eval_classifiers = Evaluation()
@@ -406,11 +406,15 @@ combiners_performance_improvements = np.around(
 combiners_performance_improvements_stds = np.around(
     [np.std(reduced_combiners_performance_differences[c]) for c in combiners], 4)
 
+df = pd.DataFrame({'combiners_names': combiners_names,
+                   'combiners_performance_improvements': combiners_performance_improvements})
+df_sorted = df.sort_values('combiners_performance_improvements', ascending=False)
+
 plt.figure()
 fig, ax = plt.subplots()
-# ax.axhline(0, color='grey', linewidth=0.8)
 # p = ax.bar(combiners_names, combiners_performance_improvements, yerr=combiners_performance_improvements_stds)
-p = ax.barh(combiners_names, combiners_performance_improvements, height=0.2, color='black')
+# p = ax.barh(combiners_names, combiners_performance_improvements, height=0.2, color='black')
+p = plt.barh('combiners_names', 'combiners_performance_improvements', data=df_sorted, height=0.1)
 ax.bar_label(p, padding=3)
 plt.xlabel("Mittlere positive Performanzdifferenz (Trefferquote)", fontweight='bold', labelpad=15)
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
@@ -675,7 +679,7 @@ df = pd.DataFrame({'combiners_names': combiners_names, 'combiners_frequency': co
 df_sorted = df.sort_values('combiners_frequency', ascending=False)
 
 plt.figure()
-bar1 = plt.barh('combiners_names', 'combiners_frequency', data=df_sorted, color='#5a6f9c')
+bar1 = plt.barh('combiners_names', 'combiners_frequency', data=df_sorted, color='#5a6f9c', height=0.1)
 # plt.title("Auftrittshäufigkeit verbessernder Fusionsmethoden (" + str(n_runs) + " Läufe)")
 plt.xlabel("Auftrittsfrequenz in %", labelpad=15, fontweight='bold')
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)

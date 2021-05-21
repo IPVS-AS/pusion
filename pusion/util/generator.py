@@ -7,42 +7,8 @@ from pusion.util.processes import p_fit
 from pusion.util.transformer import *
 
 
-def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_class=True):
-    """
-    Generate random complementary redundant class indices for each classifier `0..(n_classifiers-1)`.
-    The coverage is drawn from normal distribution for all classifiers.
-    However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
-
-    :param n_classifiers: Number of classifiers representing the classifier `0..(n_classifiers-1)`.
-    :param n_classes: Number of classes representing the class label `0..(n_classes-1)`.
-    :param overlap: Indicator between `0` and `1` for overall classifier overlapping in terms of classes.
-            If `0`, only complementary class indices are obtained.
-            If `1`, the overlapping is fully redundant.
-    :param normal_class: If `True`, a class for the normal state is included for all classifiers as class index `0`.
-    :return: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
-            which is identified by the positional index of the respective list.
-    """
-    if normal_class:
-        n_classes = n_classes - 1
-    coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
-    n_selected_classifier = int(np.interp(overlap, [0, 1], [np.ceil(n_classifiers/n_classes), n_classifiers]))
-    while np.any(coverage_matrix.sum(axis=1) < 1):
-        coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
-        for i in range(n_classes):
-            selected_classifier = np.random.choice(np.arange(n_classifiers), n_selected_classifier, replace=False)
-            coverage_matrix[selected_classifier, i] = 1
-
-    class_index_list = []
-    if normal_class:
-        for i in range(n_classifiers):
-            class_index_list.append(np.array([0, *np.where(coverage_matrix[i])[0] + 1]))
-    else:
-        for i in range(n_classifiers):
-            class_index_list.append(np.where(coverage_matrix[i])[0])
-    return class_index_list
-
-
-def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, parallelize=True):
+def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, continuous_out=False,
+                                                        parallelize=True):
     """
     Generate random multiclass, crisp and redundant classification outputs (assignments) for the given ensemble of
     classifiers.
@@ -52,11 +18,13 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     :param n_classes: `integer`. Number of classes, predictions are made for.
     :param n_samples: `integer`. Number of samples.
     :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
+    :param continuous_out: If `True`, class assignments in `y_ensemble_valid` and `y_ensemble_test` are given as
+            probabilities. Default value is `False`.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
             - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
-            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            - `y_ensemble_test`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a test dataset.
             - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
     """
@@ -92,20 +60,31 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
-    for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_ensemble_valid.append(clf.predict(x_valid))
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_ensemble_valid.append(clf.predict_proba(x_valid))
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_ensemble_valid.append(clf.predict(x_valid))
 
     # Classifier test
     y_ensemble_test = []
-    for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_ensemble_test.append(clf.predict(x_test))
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_ensemble_test.append(clf.predict_proba(x_test))
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_ensemble_test.append(clf.predict(x_test))
 
     # Transform to matrix representation
-    y_ensemble_valid = transform_label_tensor_to_class_assignment_tensor(y_ensemble_valid, n_classes)
+    if not continuous_out:
+        y_ensemble_valid = transform_label_tensor_to_class_assignment_tensor(y_ensemble_valid, n_classes)
+        y_ensemble_test = transform_label_tensor_to_class_assignment_tensor(y_ensemble_test, n_classes)
     y_valid = transform_label_vector_to_class_assignment_matrix(y_valid, n_classes)
-    y_ensemble_test = transform_label_tensor_to_class_assignment_tensor(y_ensemble_test, n_classes)
     y_test = transform_label_vector_to_class_assignment_matrix(y_test, n_classes)
 
     # Transform to numpy tensors if possible
@@ -116,7 +95,7 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
 
 
 def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None,
-                                                           parallelize=True):
+                                                           continuous_out=False, parallelize=True):
     """
     Generate random multiclass, crisp and complementary-redundant classification outputs (assignments) for the given
     ensemble of classifiers.
@@ -128,12 +107,14 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.
             If unset, redundant classification outputs are retrieved.
+    :param continuous_out: If `True`, class assignments in `y_ensemble_valid` and `y_ensemble_test` are given as
+            probabilities. Default value is `False`.
     :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
             - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
-            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            - `y_ensemble_test`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a test dataset.
             - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
     """
@@ -180,19 +161,31 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
-    for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_valid)
-        y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
-        y_ensemble_valid.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_valid)
+            y_ensemble_valid.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_valid)
+            y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
+            y_ensemble_valid.append(y_pred)
 
     # Classifier test
     y_ensemble_test = []
-    for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_test)
-        y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
-        y_ensemble_test.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_test)
+            y_ensemble_test.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_test)
+            y_pred = transform_label_vector_to_class_assignment_matrix(y_pred, len(coverage[i]))
+            y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
@@ -201,7 +194,8 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
-def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples, parallelize=True):
+def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples,  continuous_out=False,
+                                                        parallelize=True):
     """
     Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
     the normal class included at index `0`.
@@ -210,12 +204,14 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
             These need to implement `fit` and `predict` methods according to classifiers provided by `sklearn`.
     :param n_classes: `integer`. Number of classes, predictions are made for with the normal class included.
     :param n_samples: `integer`. Number of samples.
+    :param continuous_out: If `True`, class assignments in `y_ensemble_valid` and `y_ensemble_test` are given as
+            probabilities. Default value is `False`.
     :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
             - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
-            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            - `y_ensemble_test`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a test dataset.
             - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
     """
@@ -253,19 +249,33 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
-    for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_valid)
-        # y_pred = intercept_normal_class(y_pred, override=True)
-        y_ensemble_valid.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_valid)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_valid.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_valid)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_valid.append(y_pred)
 
     # Classifier test
     y_ensemble_test = []
-    for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_test)
-        # y_pred = intercept_normal_class(y_pred, override=True)
-        y_ensemble_test.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_test)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_test.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_test)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
@@ -275,7 +285,7 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
 
 
 def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None,
-                                                           parallelize=True):
+                                                           continuous_out=False, parallelize=True):
     """
     Generate random multilabel, crisp and complementary-redundant classification outputs (assignments) for the given
     ensemble of classifiers with the normal class included at index `0`.
@@ -287,12 +297,14 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
     :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
             which is identified by the positional index of the respective list.
             If unset, redundant classification outputs are retrieved.
+    :param continuous_out: If `True`, class assignments in `y_ensemble_valid` and `y_ensemble_test` are given as
+            probabilities. Default value is `False`.
     :param parallelize: If `True`, all classifiers are trained in parallel. Otherwise they are trained in sequence.
     :return: `tuple` of:
             - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a validation dataset.
             - `y_valid`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the validation.
-            - `y_ensemble_valid`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
+            - `y_ensemble_test`: `numpy.array` of shape `(n_samples, n_classes)`. Ensemble decision output matrix for
             as a test dataset.
             - `y_test`: `numpy.array` of shape `(n_samples, n_classes)`. True class assignments for the test.
     """
@@ -334,25 +346,74 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
 
     # Classifier validation to generate combiner training data
     y_ensemble_valid = []
-    for i, clf in enumerate(classifiers):
-        print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_valid)
-        # y_pred = intercept_normal_class(y_pred, override=True)
-        y_ensemble_valid.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_valid)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_valid.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Validate classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_valid)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_valid.append(y_pred)
 
     # Classifier test
     y_ensemble_test = []
-    for i, clf in enumerate(classifiers):
-        print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
-        y_pred = clf.predict(x_test)
-        # y_pred = intercept_normal_class(y_pred, override=True)
-        y_ensemble_test.append(y_pred)
+    if continuous_out:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict_proba(x_test)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_test.append(y_pred)
+    else:
+        for i, clf in enumerate(classifiers):
+            print("Test classifier: ", type(clf).__name__, " [" + str(i) + "] ...")
+            y_pred = clf.predict(x_test)
+            # y_pred = intercept_normal_class(y_pred, override=True)
+            y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
     y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
     y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
+
+
+def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_class=True):
+    """
+    Generate random complementary redundant class indices for each classifier `0..(n_classifiers-1)`.
+    The coverage is drawn from normal distribution for all classifiers.
+    However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
+
+    :param n_classifiers: Number of classifiers representing the classifier `0..(n_classifiers-1)`.
+    :param n_classes: Number of classes representing the class label `0..(n_classes-1)`.
+    :param overlap: Indicator between `0` and `1` for overall classifier overlapping in terms of classes.
+            If `0`, only complementary class indices are obtained.
+            If `1`, the overlapping is fully redundant.
+    :param normal_class: If `True`, a class for the normal state is included for all classifiers as class index `0`.
+    :return: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+    """
+    if normal_class:
+        n_classes = n_classes - 1
+    coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
+    n_selected_classifier = int(np.interp(overlap, [0, 1], [np.ceil(n_classifiers/n_classes), n_classifiers]))
+    while np.any(coverage_matrix.sum(axis=1) < 1):
+        coverage_matrix = np.zeros((n_classifiers, n_classes), dtype=int)
+        for i in range(n_classes):
+            selected_classifier = np.random.choice(np.arange(n_classifiers), n_selected_classifier, replace=False)
+            coverage_matrix[selected_classifier, i] = 1
+
+    class_index_list = []
+    if normal_class:
+        for i in range(n_classifiers):
+            class_index_list.append(np.array([0, *np.where(coverage_matrix[i])[0] + 1]))
+    else:
+        for i in range(n_classifiers):
+            class_index_list.append(np.where(coverage_matrix[i])[0])
+    return class_index_list
 
 
 def shrink_to_coverage(decision_tensor, coverage):
