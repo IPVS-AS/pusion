@@ -25,42 +25,57 @@ eval_id = time.strftime("%Y%m%d-%H%M%S")
 
 random_state = 1
 
+# dataset_files = [
+#     # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',                   # 0  --  4 classes (MC)
+#     # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',                   # 1  --  4 classes (MC)
+#     # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',                   # 2  -- 16 classes (MC) (2)
+#     # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',                   # 3  -- 16 classes (MC) (2)
+#     # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',                   # 4  --  2 classes (MC)
+#     # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',           # 5  -- 16 classes (MC)
+#     # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',           # 6  --  4 classes (MC)
+#     # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',           # 7  --  4 classes (MC)
+#
+#     # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',          # 8  --  9 classes (ML)
+#     # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',          # 9  --  9 classes (ML)
+#
+#     # 'datasets/generated_multiclass_classification_classifier_0.pickle',     # 10 --  5 classes (MC)
+#     # 'datasets/generated_multiclass_classification_classifier_1.pickle',     # 11 --  5 classes (MC)
+#     # 'datasets/generated_multiclass_classification_classifier_2.pickle',     # 12 --  5 classes (MC)
+#     # 'datasets/generated_multiclass_classification_classifier_3.pickle',     # 13 --  5 classes (MC)
+#     # 'datasets/generated_multiclass_classification_classifier_4.pickle',     # 14 --  5 classes (MC)
+#
+#     # 'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_1.pickle',                 # 15 -- 16 classes (MC) (2)
+#     # 'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_2.pickle',                 # 16 -- 16 classes (MC) (1)
+#     # 'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_3.pickle',                 # 17 -- 16 classes (MC) (1)
+#     # 'datasets/Time-SE-ResNet_performance.pickle'                            # 18 -- 16 classes (MC) (1)
+# ]
+
 dataset_files = [
-    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_1.pickle',                   # 0  --  4 classes (MC)
-    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep04_2.pickle',                   # 1  --  4 classes (MC)
-    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep24_3.pickle',                   # 2  -- 16 classes (MC) (2)
-    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_4.pickle',                   # 3  -- 16 classes (MC) (2)
-    # 'datasets/Time-SE-ResNet_lr0.01_bs128_ep70_5.pickle',                   # 4  --  2 classes (MC)
-    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_1.pickle',           # 5  -- 16 classes (MC)
-    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_2.pickle',           # 6  --  4 classes (MC)
-    # 'datasets/IndRnn_Classification_lr0.001_bs128_ep35_3.pickle',           # 7  --  4 classes (MC)
-
-    # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep24_1.pickle',          # 8  --  9 classes (ML)
-    # 'datasets/Time-SE-ResNet_MultiClass_MultiLabel_ep70_2.pickle',          # 9  --  9 classes (ML)
-
-    # 'datasets/generated_multiclass_classification_classifier_0.pickle',     # 10 --  5 classes (MC)
-    # 'datasets/generated_multiclass_classification_classifier_1.pickle',     # 11 --  5 classes (MC)
-    # 'datasets/generated_multiclass_classification_classifier_2.pickle',     # 12 --  5 classes (MC)
-    # 'datasets/generated_multiclass_classification_classifier_3.pickle',     # 13 --  5 classes (MC)
-    # 'datasets/generated_multiclass_classification_classifier_4.pickle',     # 14 --  5 classes (MC)
-
-    # 'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_1.pickle',                 # 15 -- 16 classes (MC) (2)
-    'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_2.pickle',                 # 16 -- 16 classes (MC) (1)
-    'datasets/Time-SE-ResNet_2_lr0.01_bs128_ep70_3.pickle',                 # 17 -- 16 classes (MC) (1)
-    'datasets/Time-SE-ResNet_performance.pickle'                            # 18 -- 16 classes (MC) (1)
+    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_01.pickle',
+    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_02.pickle',
+    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_03.pickle',
+    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_04.pickle'
 ]
 
 data = load_native_files_as_data(dataset_files)
 
-decision_outputs = [
-    data[0]['Y_predictions'],
-    data[1]['Y_predictions'],
-    data[2]['Y_predictions'],
-    # data[3]['Y_predictions'],
-    # data[4]['Y_predictions'],
-]
+y_ensemble_valid = [data[i]['Y_test_predictions'] for i in range(len(dataset_files))]
+y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
+y_valid = data[0]['Y_test']
 
-true_assignments = np.array(data[0]['Y_test'])
+y_ensemble_test = [data[i]['Y_test_for_fusion_predictions'] for i in range(len(dataset_files))]
+y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+y_test = data[0]['Y_test_for_fusion']
+
+
+# decision_outputs = [
+#     data[0]['Y_test_predictions'],
+#     data[1]['Y_test_predictions'],
+#     data[2]['Y_test_predictions'],
+#     data[3]['Y_test_predictions'],
+#     data[4]['Y_test_predictions'],
+# ]
+# true_assignments = np.array(data[0]['Y_test'])
 
 coverage = [
     [0,  1,  2,  3],
@@ -74,8 +89,8 @@ cr = False
 
 np.random.seed(random_state)
 
-y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
-    split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
+# y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
+#     split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
 
 y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
 y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
@@ -96,7 +111,7 @@ if cr:
     eval_classifiers.evaluate_cr_decision_outputs(
         y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test), coverage)
 else:
-    eval_classifiers.set_instances([('ResNet ' + str(i)) for i in range(len(decision_outputs))])
+    eval_classifiers.set_instances([('ResNet ' + str(i)) for i in range(len(y_ensemble_test))])
     eval_classifiers.evaluate(y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test))
 
 print(eval_classifiers.get_report())
@@ -107,7 +122,7 @@ if cr:
     eval_classifiers_confidence.set_instances(['Ensemble'])
     eval_classifiers_confidence.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 else:
-    eval_classifiers_confidence.set_instances([('ResNet ' + str(i)) for i in range(len(decision_outputs))])
+    eval_classifiers_confidence.set_instances([('ResNet ' + str(i)) for i in range(len(y_ensemble_test))])
     eval_classifiers_confidence.evaluate(y_test, y_ensemble_test)
 
 print(eval_classifiers_confidence.get_report())

@@ -52,7 +52,7 @@ classifiers = [
 
 np.random.seed(random_state)
 y_ensemble_valid, y_valid, y_ensemble_test, y_test = \
-        generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, True)
+        generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, parallelize=False)
 
 y_ensemble_test = np.append(y_ensemble_test, y_ensemble_valid, axis=1)
 y_test = np.append(y_test, y_valid, axis=0)
