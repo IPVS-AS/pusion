@@ -34,6 +34,8 @@ cr = False
 perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
 
 # ----------------------------------------------------------------------------------------------------------------------
+eval_dict = {}
+
 combiners_per_run = []
 classifiers_performance_run_tuples = []
 classifiers_mean_confidence_run_tuples = []
@@ -260,6 +262,15 @@ combiners = [comb for comb in reduced_combiners_performances.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performances = [reduced_combiners_performances[c] for c in combiners]
 
+eval_dict['classifiers_mean_performance'] = np.mean(classifier_max_scores)
+eval_dict['classifiers_median_performance'] = np.median(classifier_max_scores)
+eval_dict['combiners'] = combiners_names
+eval_dict['combiners_mean_performances'] = \
+    [t for t in zip(combiners_names, [np.mean(reduced_combiners_performances[c]) for c in combiners])]
+eval_dict['combiners_median_performances'] = \
+    [t for t in zip(combiners_names, [np.median(reduced_combiners_performances[c]) for c in combiners])]
+
+
 # Add control (best classifier performance)
 combiners_performances.insert(0, classifier_max_scores)
 combiners_names.insert(0, 'Kontrolle')
@@ -291,6 +302,15 @@ combiners = [comb for comb in combiner_wise_perf_differences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_improvements = [combiner_wise_perf_differences[c] for c in combiners]
 
+eval_dict['combiners_mean_performance_improvement'] = \
+    [t for t in zip(combiners_names, [np.mean(combiner_wise_perf_differences[c]) for c in combiners])]
+eval_dict['combiners_median_performance_improvement'] = \
+    [t for t in zip(combiners_names, [np.median(combiner_wise_perf_differences[c]) for c in combiners])]
+eval_dict['combiners_min_performance_improvement'] = \
+    [t for t in zip(combiners_names, [np.min(combiner_wise_perf_differences[c]) for c in combiners])]
+eval_dict['combiners_max_performance_improvement'] = \
+    [t for t in zip(combiners_names, [np.max(combiner_wise_perf_differences[c]) for c in combiners])]
+
 
 plt.figure(figsize=(10, 4.8))
 bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
@@ -318,6 +338,13 @@ for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
 combiners = [comb for comb in reduced_combiners_mean_confidences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performances = [reduced_combiners_mean_confidences[c] for c in combiners]
+
+eval_dict['classifiers_mean_confidence'] = np.mean(classifier_max_mean_confidences)
+eval_dict['classifiers_median_confidence'] = np.median(classifier_max_mean_confidences)
+eval_dict['combiners_mean_confidence'] = \
+    [t for t in zip(combiners_names, [np.mean(reduced_combiners_mean_confidences[c]) for c in combiners])]
+eval_dict['combiners_median_confidence'] = \
+    [t for t in zip(combiners_names, [np.median(reduced_combiners_mean_confidences[c]) for c in combiners])]
 
 # Add control (best classifier confidence)
 combiners_performances.insert(0, classifier_max_mean_confidences)
@@ -349,6 +376,15 @@ for i, perf_tuples in enumerate(combiners_mean_confidence_run_tuples):  # reduce
 combiners = [comb for comb in combiner_wise_conf_differences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_improvements = [combiner_wise_conf_differences[c] for c in combiners]
+
+eval_dict['combiners_mean_mean_confidence_improvement'] = \
+    [t for t in zip(combiners_names, [np.mean(combiner_wise_conf_differences[c]) for c in combiners])]
+eval_dict['combiners_median_mean_confidence_improvement'] = \
+    [t for t in zip(combiners_names, [np.median(combiner_wise_conf_differences[c]) for c in combiners])]
+eval_dict['combiners_min_mean_confidence_improvement'] = \
+    [t for t in zip(combiners_names, [np.min(combiner_wise_conf_differences[c]) for c in combiners])]
+eval_dict['combiners_max_mean_confidence_improvement'] = \
+    [t for t in zip(combiners_names, [np.max(combiner_wise_conf_differences[c]) for c in combiners])]
 
 
 plt.figure(figsize=(10, 4.8))
@@ -403,8 +439,13 @@ combiners = [comb for comb in reduced_combiners_performance_differences.keys()]
 combiners_names = [c.SHORT_NAME for c in combiners]
 combiners_performance_improvements = np.around(
     [np.mean(reduced_combiners_performance_differences[c]) for c in combiners], 4)
-combiners_performance_improvements_stds = np.around(
-    [np.std(reduced_combiners_performance_differences[c]) for c in combiners], 4)
+
+# filter out combiners with 0 performance improvement
+non_improving_comb_indices = np.where(combiners_performance_improvements == 0)[0]
+combiners = np.delete(np.array(combiners), non_improving_comb_indices)
+combiners_names = np.delete(np.array(combiners_names), non_improving_comb_indices)
+combiners_performance_improvements = np.delete(combiners_performance_improvements, non_improving_comb_indices)
+
 
 df = pd.DataFrame({'combiners_names': combiners_names,
                    'combiners_performance_improvements': combiners_performance_improvements})
@@ -447,10 +488,10 @@ for k, comb in enumerate(combiners):
     i = int(k / 3)
     j = k % 3
     axs[i, j].scatter(classifier_max_scores, reduced_combiners_performances[comb],
-                      s=25, c='black', marker="x", linewidth=1)
+                      s=25, c='black', marker="x", linewidth=.6)
     # axs[i, j].scatter(ensemble_mean_scores, reduced_combiners_performances[comb],
     #                   s=25, marker="o", linewidth=1, facecolor='none', edgecolors='black')
-    axs[i, j].plot([0, 1], [0, 1], linewidth=1, linestyle='--', c='#cccccc')
+    axs[i, j].plot([0, 1], [0, 1], linewidth=0.5, c='#8a8a8a')
     axs[i, j].set_title(combiners_names[k])
 
 for k in range(len(combiners), n_x_cells * n_y_cells):
@@ -793,6 +834,10 @@ plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
 plt.close()
+
+# === Data tables ======================================================================================================
+
+dump_data_as_txt(eval_dict, '_stats', eval_id)
 
 save_evaluator(__file__, eval_id)
 print("Evaluation", eval_id, "done.")
