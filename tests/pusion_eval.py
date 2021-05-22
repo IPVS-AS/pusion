@@ -89,11 +89,11 @@ for i in range(n_runs):
         # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=1),  # MLK
-        MLPClassifier(max_iter=5000, random_state=2),  # MLK
-        MLPClassifier(max_iter=5000, random_state=3),  # MLK
-        MLPClassifier(max_iter=5000, random_state=4),  # MLK
-        MLPClassifier(max_iter=5000, random_state=5),  # MLK
+        MLPClassifier(max_iter=5000, random_state=1, hidden_layer_sizes=(20, 20, 20)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=2, hidden_layer_sizes=(20, 20, 20)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=3, hidden_layer_sizes=(20, 20, 20)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=4, hidden_layer_sizes=(20, 20, 20)),  # MLK
+        MLPClassifier(max_iter=5000, random_state=5, hidden_layer_sizes=(20, 20, 20)),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
         # SVC(),
