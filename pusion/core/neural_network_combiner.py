@@ -21,9 +21,11 @@ class NeuralNetworkCombiner(TrainableCombiner):
 
     SHORT_NAME = 'NN'
 
+    N_LAYERS = 3
+
     def __init__(self):
         TrainableCombiner.__init__(self)
-        self.classifier = MLPClassifier(max_iter=5000)
+        self.classifier = None
 
     def train(self, decision_tensor, true_assignments):
         """
@@ -38,6 +40,9 @@ class NeuralNetworkCombiner(TrainableCombiner):
                 Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
         """
+        hidden_layer_sizes = (true_assignments.shape[1]*len(decision_tensor),) * self.N_LAYERS
+        self.classifier = MLPClassifier(max_iter=5000, hidden_layer_sizes=hidden_layer_sizes)
+
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
         # transfer decisions into a new feature space
         featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
