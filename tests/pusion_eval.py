@@ -326,6 +326,37 @@ plt.tight_layout()
 save(plt, "011_box_plot_combiner_perf_improvements", eval_id)
 plt.close()
 
+
+# --- Fusion methods performance improvement comparison (positive means only) ------------------------------------------
+combiner_wise_perf_differences = {}
+for i, perf_tuples in enumerate(combiners_performance_run_tuples):  # reduce
+    for t in perf_tuples:
+        combiner = type(t[0])
+        if combiner not in combiner_wise_perf_differences:  # create a score list if non-existent
+            combiner_wise_perf_differences[combiner] = []
+        combiner_wise_perf_differences[combiner].append(t[1] - classifier_max_scores[i])
+
+# filter out combiners with negative mean performance difference.
+combiners = [comb for comb in combiner_wise_perf_differences.keys()
+             if np.mean(combiner_wise_perf_differences[comb]) > 0]
+combiners_names = [c.SHORT_NAME for c in combiners]
+combiners_improvements = [combiner_wise_perf_differences[c] for c in combiners]
+
+plt.figure(figsize=(10, 4.8))
+bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
+for box in bp['boxes']:
+    box.set_facecolor('white')
+# plt.title("Performanzvergleich der Fusionsmethoden (" + str(n_runs) + " Läufe)")
+plt.ylabel("Differenz (Trefferquote)", fontweight='bold', labelpad=15)
+plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
+plt.xticks(np.arange(1, len(combiners_names)+1), combiners_names)
+for y_tick in plt.yticks()[0].tolist():
+    plt.axhline(y_tick, color='grey', linewidth=0.5, linestyle='--')
+plt.tight_layout()
+save(plt, "011_box_plot_combiner_perf_improvements_positive_means", eval_id)
+plt.close()
+
+
 # --- Fusion methods confidence comparison -----------------------------------------------------------------------------
 reduced_combiners_mean_confidences = {}
 for perf_tuples in combiners_mean_confidence_run_tuples:  # reduce
