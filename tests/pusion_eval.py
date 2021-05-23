@@ -247,6 +247,7 @@ def extend_y_ticks_upper_bound(plot):
     y_ticks.append(y_ticks[-1] + step)
     return y_ticks
 
+
 # === Fusion methods comparison ========================================================================================
 
 # --- Fusion methods performance comparison ----------------------------------------------------------------------------
@@ -433,6 +434,15 @@ save(plt, "022_box_plot_combiner_confidence_improvements", eval_id)
 plt.close()
 
 # === Performance comparison (Ensemble/Framework) ======================================================================
+
+eval_dict['classifier_max_scores_overall_mean'] = np.mean(classifier_max_scores)
+eval_dict['combiners_max_scores_overall_mean'] = np.mean(combiners_max_scores)
+eval_dict['combiners_max_scores_overall_min'] = np.min(combiners_max_scores)
+eval_dict['combiners_max_scores_overall_max'] = np.max(combiners_max_scores)
+
+eval_dict['combiners_performance_improvements_mean'] = np.mean(performance_improvements)
+eval_dict['combiners_performance_improvements_min'] = np.min(performance_improvements)
+eval_dict['combiners_performance_improvements_max'] = np.max(performance_improvements)
 
 plt.figure()
 plt.boxplot([classifier_max_scores, combiners_max_scores], showmeans=True, meanprops=meanprops)
