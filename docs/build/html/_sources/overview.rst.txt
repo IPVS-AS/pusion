@@ -72,7 +72,7 @@ Trainable methods (highest evidence resolution):
 
 - Behaviour Knowledge Space (:ref:`BKS <bks-cref>`)
 - Decision Templates (:ref:`DT <dt-cref>`)
-- Decision Trees (:ref:`DTree <dtree-cref>`)
+- k Nearest Neighbors (:ref:`KNN <knn-cref>`)
 - Dempster Shafer (:ref:`DS <ds-cref>`)
 - Maximum Likelihood (:ref:`MLE <mle-cref>`)
 - Neural Network (:ref:`NN <nn-cref>`)

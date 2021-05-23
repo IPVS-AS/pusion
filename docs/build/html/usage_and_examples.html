@@ -253,9 +253,9 @@ for the combiner as well as for the ensemble.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
 <span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">F1_SCORE</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">RECALL</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_F1_SCORE</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_RECALL</span>
 <span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;============= Ensemble ===============&quot;</span><span class="p">)</span>
@@ -384,9 +384,9 @@ The following code example shows how to generate and combine such complementary-
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
 <span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">F1_SCORE</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">PRECISION</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">RECALL</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_F1_SCORE</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_RECALL</span>
 <span class="p">]</span>
 
 <span class="c1"># Evaluate ensemble classifiers</span>

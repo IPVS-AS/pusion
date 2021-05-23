@@ -33,7 +33,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -99,7 +98,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.combiner.html">pusion.core.combiner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.cosine_similarity_combiner.html">pusion.core.cosine_similarity_combiner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.decision_templates_combiner.html">pusion.core.decision_templates_combiner</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pusion.core.decision_tree_combiner.html">pusion.core.decision_tree_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.core.k_nearest_neighbors_combiner.html">pusion.core.k_nearest_neighbors_combiner.py</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.dempster_shafer_combiner.html">pusion.core.dempster_shafer_combiner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.macro_majority_vote_combiner.html">pusion.core.macro_majority_vote_combiner</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pusion.core.maximum_likelihood_combiner.html">pusion.core.maximum_likelihood_combiner</a></li>
@@ -196,8 +195,8 @@
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">pusion.core.neural_network_combiner.</span></code><code class="sig-name descname"><span class="pre">NeuralNetworkCombiner</span></code><a class="headerlink" href="#pusion.core.neural_network_combiner.NeuralNetworkCombiner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pusion.core.combiner.html#pusion.core.combiner.TrainableCombiner" title="pusion.core.combiner.TrainableCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">pusion.core.combiner.TrainableCombiner</span></code></a></p>
 <p>The <a class="reference internal" href="#pusion.core.neural_network_combiner.NeuralNetworkCombiner" title="pusion.core.neural_network_combiner.NeuralNetworkCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralNetworkCombiner</span></code></a> (NN) is a learning and classifier-based combiner that converts multiple decision
-outputs into new features, which in turn are used to train this combiner. The NN includes one hidden layer with
-100 neurons and <span class="math notranslate nohighlight">\(\alpha = 1\)</span>.</p>
+outputs into new features, which in turn are used to train this combiner. The NN includes three hidden layers and a
+dynamic number of neurons per layer, which is given by (<cite>n_classifiers * n_classes</cite>).</p>
 <dl class="py method">
 <dt id="pusion.core.neural_network_combiner.NeuralNetworkCombiner.train">
 <code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.neural_network_combiner.NeuralNetworkCombiner.train" title="Permalink to this definition">¶</a></dt>

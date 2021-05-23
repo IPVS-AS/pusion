@@ -10,7 +10,7 @@ pusion.core package
    pusion.core.combiner
    pusion.core.cosine_similarity_combiner
    pusion.core.decision_templates_combiner
-   pusion.core.decision_tree_combiner
+   pusion.core.k_nearest_neighbors_combiner
    pusion.core.dempster_shafer_combiner
    pusion.core.macro_majority_vote_combiner
    pusion.core.maximum_likelihood_combiner
