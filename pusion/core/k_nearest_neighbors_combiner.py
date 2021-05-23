@@ -1,3 +1,5 @@
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 
 from pusion.core.combiner import TrainableCombiner
@@ -5,11 +7,11 @@ from pusion.util.transformer import *
 from pusion.util.constants import *
 
 
-class DecisionTreeCombiner(TrainableCombiner):
+class KNNCombiner(TrainableCombiner):
     """
-    The :class`DecisionTreeCombiner` (DTree) is a learning and classifier-based combiner that converts multiple decision
-    outputs into new features, which in turn are used to train this combiner. The decision tree is of depth 5 and uses
-    the Gini index as a measure of the split impurity.
+    The :class:`KNNCombiner` (kNN) is a learning and classifier-based combiner that converts multiple decision
+    outputs into new features, which in turn are used to train this combiner.
+    The kNN combiner (k=5) uses uniform weights for all neighbors and the standard Euclidean metric for the distance.
     """
 
     _SUPPORTED_PAC = [
@@ -19,15 +21,15 @@ class DecisionTreeCombiner(TrainableCombiner):
         (Problem.MULTI_LABEL, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT),
     ]
 
-    SHORT_NAME = 'DTree'
+    SHORT_NAME = 'kNN'
 
     def __init__(self):
         TrainableCombiner.__init__(self)
-        self.classifier = DecisionTreeClassifier(max_depth=5)
+        self.classifier = KNeighborsClassifier()
 
     def train(self, decision_tensor, true_assignments):
         """
-        Train the DTree combiner by fitting the decision tree model with given decision outputs and
+        Train the kNN combiner by fitting the `k` nearest neighbors (k=5) model with given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported.
         This procedure transforms decision outputs into a new feature space.
 
@@ -46,7 +48,7 @@ class DecisionTreeCombiner(TrainableCombiner):
 
     def combine(self, decision_tensor):
         """
-        Combine decision outputs by the decision tree model.
+        Combine decision outputs by the `k` nearest neighbors (k=5) model.
         Both continuous and crisp classification outputs are supported. Combining requires a trained
         :class:`DecisionTreeCombiner`.
         This procedure transforms decision outputs into a new feature space.
@@ -55,7 +57,7 @@ class DecisionTreeCombiner(TrainableCombiner):
                 Tensor of either crisp or continuous decision outputs by different classifiers per sample.
 
         :return: A matrix (`numpy.array`) of either crisp or continuous class assignments which represents fused
-                decisions obtained by DTree. Axis 0 represents samples and axis 1 the class
+                decisions obtained by kNN. Axis 0 represents samples and axis 1 the class
                 assignments which are aligned with axis 2 in ``decision_tensor`` input tensor.
         """
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
@@ -65,9 +67,9 @@ class DecisionTreeCombiner(TrainableCombiner):
         return self.classifier.predict(featured_decisions)
 
 
-class CRDecisionTreeCombiner(DecisionTreeCombiner):
+class CRKNNCombiner(KNNCombiner):
     """
-    The :class:`CRDecisionTreeCombiner` is a modification of :class:`DecisionTreeCombiner` that
+    The :class:`CRKNNCombiner` is a modification of :class:`KNNCombiner` that
     also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
     classification assignments are considered as a constant, respectively. To use methods :meth:`train` and
     :meth:`combine` a coverage needs to be set first by the inherited :meth:`set_coverage` method.
@@ -89,7 +91,7 @@ class CRDecisionTreeCombiner(DecisionTreeCombiner):
 
     def train(self, decision_outputs, true_assignments):
         """
-        Train the DTree combiner model by fitting the decision tree model with given decision outputs and
+        Train the kNN combiner model by fitting the `k` nearest neighbors (k=5) model with given decision outputs and
         true class assignments. Both continuous and crisp classification outputs are supported.
         This procedure transforms decision outputs into a new feature space.
 
@@ -107,7 +109,7 @@ class CRDecisionTreeCombiner(DecisionTreeCombiner):
 
     def combine(self, decision_outputs):
         """
-        Combine decision outputs by the decision tree model.
+        Combine decision outputs by the `k` nearest neighbors (k=5) model.
         Both continuous and crisp classification outputs are supported. Combining requires a trained
         :class:`DecisionTreeCombiner`.
         This procedure transforms decision outputs into a new feature space.

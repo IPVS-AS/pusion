@@ -13,7 +13,7 @@ from pusion.core.behaviour_knowledge_space_combiner import BehaviourKnowledgeSpa
 from pusion.core.borda_count_combiner import BordaCountCombiner
 from pusion.core.cosine_similarity_combiner import CosineSimilarityCombiner
 from pusion.core.decision_templates_combiner import DecisionTemplatesCombiner
-from pusion.core.decision_tree_combiner import DecisionTreeCombiner
+from pusion.core.k_nearest_neighbors_combiner import KNNCombiner
 from pusion.core.dempster_shafer_combiner import DempsterShaferCombiner
 from pusion.core.macro_majority_vote_combiner import MacroMajorityVoteCombiner
 from pusion.core.maximum_likelihood_combiner import MaximumLikelihoodCombiner
@@ -31,8 +31,8 @@ class Method:
     BORDA_COUNT = BordaCountCombiner
     COSINE_SIMILARITY = CosineSimilarityCombiner
     DECISION_TEMPLATES = DecisionTemplatesCombiner
-    DECISION_TREE = DecisionTreeCombiner
     DEMPSTER_SHAFER = DempsterShaferCombiner
+    KNN = KNNCombiner
     MACRO_MAJORITY_VOTE = MacroMajorityVoteCombiner
     MAXIMUM_LIKELIHOOD = MaximumLikelihoodCombiner
     MICRO_MAJORITY_VOTE = MicroMajorityVoteCombiner
