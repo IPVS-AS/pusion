@@ -8,8 +8,8 @@ from pusion.util.constants import *
 class NeuralNetworkCombiner(TrainableCombiner):
     """
     The :class:`NeuralNetworkCombiner` (NN) is a learning and classifier-based combiner that converts multiple decision
-    outputs into new features, which in turn are used to train this combiner. The NN includes one hidden layer with
-    100 neurons and :math:`\\alpha = 1`.
+    outputs into new features, which in turn are used to train this combiner. The NN includes three hidden layers and a
+    dynamic number of neurons per layer, which is given by (`n_classifiers * n_classes`).
     """
 
     _SUPPORTED_PAC = [
