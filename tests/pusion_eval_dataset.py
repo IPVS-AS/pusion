@@ -51,7 +51,7 @@ random_state = 1
 # ]
 
 dataset_files = [
-    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_01.pickle',
+    # '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_01.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_02.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_03.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_04.pickle'
@@ -111,7 +111,7 @@ if cr:
     eval_classifiers.evaluate_cr_decision_outputs(
         y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test), coverage)
 else:
-    eval_classifiers.set_instances([('ResNet ' + str(i)) for i in range(len(y_ensemble_test))])
+    eval_classifiers.set_instances([('ResNet ' + str(i + 1)) for i in range(len(y_ensemble_test))])
     eval_classifiers.evaluate(y_test, multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test))
 
 print(eval_classifiers.get_report())
@@ -122,7 +122,7 @@ if cr:
     eval_classifiers_confidence.set_instances(['Ensemble'])
     eval_classifiers_confidence.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 else:
-    eval_classifiers_confidence.set_instances([('ResNet ' + str(i)) for i in range(len(y_ensemble_test))])
+    eval_classifiers_confidence.set_instances([('ResNet ' + str(i + 1)) for i in range(len(y_ensemble_test))])
     eval_classifiers_confidence.evaluate(y_test, y_ensemble_test)
 
 print(eval_classifiers_confidence.get_report())
@@ -213,7 +213,7 @@ r3 = [x + barWidth for x in r2]
 r4 = [x + barWidth for x in r3]
 
 plt.figure()
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
 rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
@@ -257,7 +257,7 @@ r3 = [x + barWidth for x in r2]
 r4 = [x + barWidth for x in r3]
 
 plt.figure(figsize=(12, 5.5))
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
 rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
@@ -306,7 +306,7 @@ r4 = [x + barWidth for x in r3]
 plt.figure(figsize=(12, 5.5))
 plt.axhline(y=0, color='gray', linestyle='-', linewidth=1)
 
-rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
 rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
 rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
@@ -364,7 +364,7 @@ if len(combiners) > 0:
     r4 = [x + barWidth for x in r3]
 
     plt.figure(figsize=(12, 5.5))
-    rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote / Micro F1-Score")
+    rect1 = plt.bar(r1, bar1, color='#7a9fc2', width=barWidth, edgecolor='white', label="Trefferquote")
     rect2 = plt.bar(r2, bar2, color='#7d2150', width=barWidth, edgecolor='white', label="Micro Jaccard-Score")
     rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', label="Macro F1-Score")
     rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
@@ -391,7 +391,7 @@ if not cr:
     # labels=np.arange(4)
     cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(y_test))
     display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-    display.plot(cmap='PuBu')
+    display.plot(cmap='binary')
     # plt.title("Ground Truth")
     plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
     plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
@@ -403,7 +403,7 @@ if not cr:
         # labels=np.arange(4)
         cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(dt))
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-        display.plot(cmap='PuBu')
+        display.plot(cmap='binary')
         # plt.title("Classifier " + str(i))
         plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
         plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
@@ -415,7 +415,7 @@ if not cr:
         cm = confusion_matrix(multiclass_assignments_to_labels(y_test),
                               multiclass_assignments_to_labels(multi_comb_decision_outputs[i]))  # labels=np.arange(4)
         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-        display.plot(cmap='PuBu')
+        display.plot(cmap='binary')
         # plt.title(comb.SHORT_NAME)
         plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
         plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
