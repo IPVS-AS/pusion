@@ -51,7 +51,7 @@ random_state = 1
 # ]
 
 dataset_files = [
-    # '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_01.pickle',
+    '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_01.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_02.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_03.pickle',
     '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_04.pickle'
@@ -226,7 +226,8 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Ensemble', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [str(instance) for instance in eval_classifiers.get_instances()])
+plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))],
+           [str(instance) for instance in eval_classifiers.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung', fontweight='bold', labelpad=15)
 plt.yticks(np.arange(0, 1.1, .1))
@@ -270,7 +271,7 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
+plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung', fontweight='bold', labelpad=15)
 plt.yticks(np.arange(0, 1.1, .1))
@@ -319,7 +320,7 @@ rect3 = plt.bar(r3, bar3, color='#b55b53', width=barWidth, edgecolor='white', la
 rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
 plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
+plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [comb.SHORT_NAME for comb in eval_combiner.get_instances()])
 plt.xlim(-.5, np.max(r1) + 1.5)
 plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
 plt.yticks(extend_y_ticks(plt))
@@ -343,7 +344,8 @@ classifiers_max_macro_f1_score = np.max(classifiers_macro_f1_scores)
 classifiers_max_mean_confidence = np.max(classifiers_mean_confidences)
 
 difference_accuracies = (np.array(combiners_accuracies) - classifiers_max_accuracy).clip(min=0)
-difference_micro_jaccard_scores = (np.array(combiners_micro_jaccard_scores) - classifiers_max_micro_jaccard_score).clip(min=0)
+difference_micro_jaccard_scores = (np.array(combiners_micro_jaccard_scores) -
+                                   classifiers_max_micro_jaccard_score).clip(min=0)
 difference_macro_f1_scores = (np.array(combiners_macro_f1_scores) - classifiers_max_macro_f1_score).clip(min=0)
 difference_mean_confidences = (np.array(combiners_mean_confidences) - classifiers_max_mean_confidence).clip(min=0)
 
@@ -377,7 +379,7 @@ if len(combiners) > 0:
     rect4 = plt.bar(r4, bar4, color='#197435', width=barWidth, edgecolor='white', label="Mittlere Konfidenz")
 
     plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
-    plt.xticks([r + barWidth * 1.5  for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
+    plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
     plt.xlim(-.5, np.max(r1) + 2)
     plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
     plt.yticks(extend_y_ticks_upper_bound(plt))
