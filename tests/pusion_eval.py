@@ -847,8 +847,8 @@ non_zero_indexes = np.nonzero(combiners_train_mean_runtimes)[0]
 combiners_train_mean_non_zero_runtimes = combiners_train_mean_runtimes[non_zero_indexes]
 combiners_non_zero_names = [combiners_names[i] for i in non_zero_indexes]
 
-eval_dict['combiners_train_mean_non_zero_runtimes'] = combiners_non_zero_names
-eval_dict['combiners_train_runtime_non_zero_names'] = combiners_train_mean_non_zero_runtimes.tolist()
+eval_dict['combiners_train_mean_non_zero_runtimes'] = list(combiners_non_zero_names)
+eval_dict['combiners_train_runtime_non_zero_names'] = list(combiners_train_mean_non_zero_runtimes.tolist())
 
 # remove outliers
 max_index = np.argmax(combiners_train_mean_non_zero_runtimes)
