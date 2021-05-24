@@ -26,9 +26,9 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 50
+n_runs = 3
 n_classes = 5
-n_samples = 2000
+n_samples = 200
 random_state = 1
 cr = False
 perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
@@ -847,8 +847,8 @@ non_zero_indexes = np.nonzero(combiners_train_mean_runtimes)[0]
 combiners_train_mean_non_zero_runtimes = combiners_train_mean_runtimes[non_zero_indexes]
 combiners_non_zero_names = [combiners_names[i] for i in non_zero_indexes]
 
-eval_dict['combiners_train_runtime_non_zero_names'] = combiners_train_mean_non_zero_runtimes
 eval_dict['combiners_train_mean_non_zero_runtimes'] = combiners_non_zero_names
+eval_dict['combiners_train_runtime_non_zero_names'] = combiners_train_mean_non_zero_runtimes.tolist()
 
 # remove outliers
 max_index = np.argmax(combiners_train_mean_non_zero_runtimes)
@@ -889,7 +889,7 @@ df = pd.DataFrame({'combiners_names': combiners_names,
 df_sorted = df.sort_values('combiners_combine_mean_runtimes')
 
 eval_dict['combiners_combine_runtime_names'] = combiners_names
-eval_dict['combiners_combine_mean_runtimes'] = combiners_combine_mean_runtimes
+eval_dict['combiners_combine_mean_runtimes'] = combiners_combine_mean_runtimes.tolist()
 
 plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
