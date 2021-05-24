@@ -380,7 +380,7 @@ if len(combiners) > 0:
     plt.bar_label(rect3, padding=3, rotation=90)
     plt.bar_label(rect4, padding=3, rotation=90)
 
-    plt.legend(loc="lower right")
+    plt.legend(loc="upper right")
     plt.tight_layout()
     save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
     plt.close()

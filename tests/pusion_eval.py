@@ -312,6 +312,15 @@ eval_dict['combiners_min_performance_improvement'] = \
 eval_dict['combiners_max_performance_improvement'] = \
     [t for t in zip(combiners_names, [np.max(combiner_wise_perf_differences[c]) for c in combiners])]
 
+# TODO delete breakpoint code
+# arr = None
+# arr_j_labels = []
+# for i, comb in enumerate(combiners):
+#     if arr is None:
+#         arr = np.full((len(combiner_wise_perf_differences[comb]), len(combiners)), np.nan)
+#     arr[:, i] = np.around(combiner_wise_perf_differences[comb], 4)
+#     arr_j_labels.append(comb.SHORT_NAME)
+# print()
 
 plt.figure(figsize=(10, 4.8))
 bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
@@ -856,11 +865,22 @@ plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.yticks(extend_y_ticks_upper_bound(plt))
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
-save(plt, "z91z_train_runtime_comparison", eval_id)
+save(plt, "z90_train_runtime_comparison", eval_id)
+plt.close()
+
+# --- horizontal bar plot
+plt.figure()
+bar1 = plt.barh('combiners_non_zero_names', 'combiners_train_mean_non_zero_runtimes', data=df_sorted, color='#b5670e',
+                height=.2)
+plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
+plt.bar_label(bar1, padding=3)
+plt.tight_layout()
+save(plt, "z91_train_runtime_comparison_h", eval_id)
 plt.close()
 
 # --- Mean combine runtimes --------------------------------------------------------------------------------------------
-
 df = pd.DataFrame({'combiners_names': combiners_names,
                    'combiners_combine_mean_runtimes': combiners_combine_mean_runtimes})
 df_sorted = df.sort_values('combiners_combine_mean_runtimes')
@@ -874,6 +894,17 @@ plt.yticks(extend_y_ticks_upper_bound(plt))
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
+plt.close()
+
+# --- horizontal bar plot
+plt.figure()
+bar1 = plt.barh('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#915006', height=.2)
+plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
+plt.bar_label(bar1, padding=3)
+plt.tight_layout()
+save(plt, "z93_combine_runtime_comparison_h", eval_id)
 plt.close()
 
 # === Data tables ======================================================================================================
