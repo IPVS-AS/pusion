@@ -26,9 +26,9 @@ warnings.filterwarnings('error')  # halt on warning
 
 eval_id = time.strftime("%Y%m%d-%H%M%S")
 
-n_runs = 3
+n_runs = 50
 n_classes = 5
-n_samples = 200
+n_samples = 2000
 random_state = 1
 cr = False
 perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE, p.PerformanceMetric.MEAN_CONFIDENCE)
