@@ -847,6 +847,9 @@ non_zero_indexes = np.nonzero(combiners_train_mean_runtimes)[0]
 combiners_train_mean_non_zero_runtimes = combiners_train_mean_runtimes[non_zero_indexes]
 combiners_non_zero_names = [combiners_names[i] for i in non_zero_indexes]
 
+eval_dict['combiners_train_runtime_non_zero_names'] = combiners_train_mean_non_zero_runtimes
+eval_dict['combiners_train_mean_non_zero_runtimes'] = combiners_non_zero_names
+
 # remove outliers
 max_index = np.argmax(combiners_train_mean_non_zero_runtimes)
 combiners_train_mean_non_zero_runtimes = np.delete(combiners_train_mean_non_zero_runtimes, max_index)
@@ -884,6 +887,10 @@ plt.close()
 df = pd.DataFrame({'combiners_names': combiners_names,
                    'combiners_combine_mean_runtimes': combiners_combine_mean_runtimes})
 df_sorted = df.sort_values('combiners_combine_mean_runtimes')
+
+eval_dict['combiners_combine_runtime_names'] = combiners_names
+eval_dict['combiners_combine_mean_runtimes'] = combiners_combine_mean_runtimes
+
 plt.figure(figsize=(10, 4.8))
 # plt.bar(combiners_names, combiners_combine_mean_runtimes, color='#006aba')
 bar1 = plt.bar('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#006aba')
