@@ -192,6 +192,13 @@ def extend_y_ticks_upper_bound(plot):
     return y_ticks
 
 
+def extend_x_ticks_upper_bound(plot):
+    x_ticks = plot.xticks()[0].tolist()
+    step = x_ticks[-1] - x_ticks[-2]
+    x_ticks.append(x_ticks[-1] + step)
+    return x_ticks
+
+
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.ACCURACY)]
 classifiers_micro_jaccard_scores = [t[1] for t in eval_classifiers.get_instance_performance_tuples(
@@ -446,12 +453,23 @@ df_sorted = df.sort_values('combiners_train_non_zero_runtimes')
 plt.figure()
 bar1 = plt.bar('combiners_non_zero_names', 'combiners_train_non_zero_runtimes', data=df_sorted, color='#93c6ed',
                width=.75)
-# plt.title("Trainingslaufzeit der Fusionsmethoden")
 plt.xlabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.bar_label(bar1, padding=3)
 plt.tight_layout()
-save(plt, "z91z_train_runtime_comparison", eval_id)
+save(plt, "z90_train_runtime_comparison", eval_id)
+plt.close()
+
+# --- horizontal bar plot
+plt.figure()
+bar1 = plt.barh('combiners_non_zero_names', 'combiners_train_non_zero_runtimes', data=df_sorted, color='#b5670e',
+                height=.2)
+plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
+plt.bar_label(bar1, padding=3)
+plt.tight_layout()
+save(plt, "z91_train_runtime_comparison_h", eval_id)
 plt.close()
 
 # --- Combine runtimes -------------------------------------------------------------------------------------------------
@@ -461,7 +479,6 @@ df_sorted = df.sort_values('combiners_combine_runtimes')
 
 plt.figure(figsize=(8, 4.8))
 bar1 = plt.bar('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#006aba', width=.75)
-# plt.title("Fusionslaufzeit der Fusionsmethoden")
 plt.xlabel("Fusionsmethoden", fontweight='bold', labelpad=15)
 plt.ylabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.bar_label(bar1, padding=3)
@@ -469,6 +486,16 @@ plt.tight_layout()
 save(plt, "z92_combine_runtime_comparison", eval_id)
 plt.close()
 
+# --- horizontal bar plot
+plt.figure()
+bar1 = plt.barh('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#915006', height=.2)
+plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
+plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
+plt.xticks(extend_x_ticks_upper_bound(plt))
+plt.bar_label(bar1, padding=3)
+plt.tight_layout()
+save(plt, "z93_combine_runtime_comparison_h", eval_id)
+plt.close()
 
 save_evaluator(__file__, eval_id)
 print("Evaluation", eval_id, "done.")
