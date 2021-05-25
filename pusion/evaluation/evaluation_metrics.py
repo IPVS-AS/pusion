@@ -138,6 +138,20 @@ def accuracy(y_true, y_pred):
     return accuracy_score(y_true, y_pred)
 
 
+def balanced_multiclass_accuracy(y_true, y_pred):
+    """
+    Calculate the balanced accuracy, i.e. (Precision + Recall) / 2.
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: Accuracy.
+    """
+    y_true = multiclass_assignments_to_labels(y_true)
+    y_pred = multiclass_assignments_to_labels(y_pred)
+    return balanced_accuracy_score(y_true, y_pred)
+
+
 def mean_multilabel_confusion_matrix(y_true, y_pred):
     """
     Calculate the normalized mean confusion matrix across all classes.

@@ -58,6 +58,7 @@ class PerformanceMetric:
     ACCURACY = accuracy
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
     MEAN_CONFIDENCE = mean_confidence
+    BALANCED_MULTICLASS_ACCURACY_SCORE = balanced_multiclass_accuracy
 
 
 class DiversityMetric:
