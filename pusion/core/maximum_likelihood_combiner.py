@@ -59,7 +59,9 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
         for i in range(len(self.unique_assignments)):
             xc = featured_decisions[np.where(unique_inv_indices == i)]  # X_train(class)
             mu = np.mean(xc, axis=0)
-            sigma = 1 / len(xc) * np.sum(((xc - mu)*(xc - mu)).sum(1))
+            sigma = np.std(xc, axis=0)
+            sigma[sigma == 0] = 0.00001  # Add a small perturbation in order to enable class conditional density
+
             self.mu.append(mu)
             self.sigma.append(sigma)
 
@@ -87,8 +89,8 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
             for j in range(len(self.unique_assignments)):
                 for k in range(len(x)):
                     # calculate class conditional density for each dimension
-                    exp = (x - self.mu[j])/self.sigma[j]
-                    likelihoods[j] = likelihoods[j] * 1/(np.sqrt(2*np.pi) * self.sigma[j]) * np.e**(-.5*(exp*exp).sum())
+                    exp = (x[k] - self.mu[j][k])/self.sigma[j][k]
+                    likelihoods[j] = likelihoods[j] * 1/(np.sqrt(2*np.pi) * self.sigma[j][k]) * np.e**(-.5*(exp**2))
             fused_decisions[i] = self.unique_assignments[np.argmax(likelihoods)]
         return fused_decisions
 
