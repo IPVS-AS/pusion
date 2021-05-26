@@ -381,7 +381,7 @@ if len(combiners) > 0:
     plt.xlabel('Fusionsmethoden', fontweight='bold', labelpad=15)
     plt.xticks([r + barWidth * 1.5 for r in range(len(bar1))], [comb.SHORT_NAME for comb in combiners])
     plt.xlim(-.5, np.max(r1) + 2)
-    plt.ylabel('Wertung (pos. Differenz)', fontweight='bold', labelpad=15)
+    plt.ylabel('Wertung (Differenz)', fontweight='bold', labelpad=15)
     plt.yticks(extend_y_ticks_upper_bound(plt))
 
     plt.bar_label(rect1, padding=3, rotation=90)
