@@ -175,7 +175,6 @@ print(eval_combiner.get_report())
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 plt.rc('axes', titlesize=12)     # fontsize of the axes title
 plt.rc('axes', labelsize=12)    # fontsize of the x and y labels
-plt.rcParams.update({'font.size': 13})
 
 
 def extend_y_ticks(plot):
