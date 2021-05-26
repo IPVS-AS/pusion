@@ -905,7 +905,7 @@ plt.close()
 
 # --- horizontal bar plot
 plt.figure()
-bar1 = plt.barh('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#915006', height=.2)
+bar1 = plt.barh('combiners_names', 'combiners_combine_mean_runtimes', data=df_sorted, color='#915006', height=.35)
 plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.xticks(extend_x_ticks_upper_bound(plt))
