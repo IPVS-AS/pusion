@@ -60,8 +60,6 @@ class MaximumLikelihoodCombiner(TrainableCombiner):
             xc = featured_decisions[np.where(unique_inv_indices == i)]  # X_train(class)
             mu = np.mean(xc, axis=0)
             sigma = 1 / len(xc) * np.sum(((xc - mu)*(xc - mu)).sum(1))
-            if sigma == .0:
-                sigma = .000001  # Add small perturbation in order to enable class conditional density
             self.mu.append(mu)
             self.sigma.append(sigma)
 
