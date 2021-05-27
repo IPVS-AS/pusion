@@ -432,6 +432,7 @@ if not cr:
         plt.close()
 
 # === Combiner runtimes ================================================================================================
+plt.rcParams.update({'font.size': 13})
 
 runtime_matrix = np.nan_to_num(eval_combiner.get_runtime_matrix())
 combiners_train_runtimes = np.around(runtime_matrix[:, 0], 4)
@@ -490,7 +491,7 @@ plt.close()
 
 # --- horizontal bar plot
 plt.figure()
-bar1 = plt.barh('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#915006', height=.35)
+bar1 = plt.barh('combiners_names', 'combiners_combine_runtimes', data=df_sorted, color='#915006', height=.4)
 plt.xlabel("Laufzeit (s)", fontweight='bold', labelpad=15)
 plt.ylabel("Fusionsmethode", fontweight='bold', labelpad=15)
 plt.xticks(extend_x_ticks_upper_bound(plt))
