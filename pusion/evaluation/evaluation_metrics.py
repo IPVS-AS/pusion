@@ -174,10 +174,7 @@ def mean_confidence(y_true, y_pred):
 
     :return: Mean confidence.
     """
-    y_pred = np.array(y_pred).astype(float)
-    mask = y_true.astype(bool)
-    y_pred[~mask] = 1 - y_pred[~mask]
-    return np.nanmean(y_pred)
+    return 1 - np.sum(np.abs(y_true - y_pred)) / (y_true.shape[0] * y_true.shape[1])
 
 
 # TODO evaluate. Only confidences of 1-assignments in y_pred are considered.
