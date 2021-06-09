@@ -76,7 +76,7 @@ class WeightedVotingCombiner(EvidenceBasedCombiner, TrainableCombiner):
         decision_matrix = np.array([np.average(dp, axis=0, weights=self.accuracy) for dp in decision_profiles])
         fused_decisions = np.zeros_like(decision_matrix)
         # find the maximum class support according to Kuncheva eq. (4.43)
-        fused_decisions[np.arange(len(fused_decisions)), decision_matrix.argmax(1)] = 1
+        fused_decisions[np.arange(len(fused_decisions)), decision_matrix.argmax(axis=1)] = 1
         return fused_decisions
 
 
