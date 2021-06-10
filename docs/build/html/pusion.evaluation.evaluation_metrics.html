@@ -377,6 +377,24 @@ class assignments.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.balanced_multiclass_accuracy">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">balanced_multiclass_accuracy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.balanced_multiclass_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the balanced accuracy, i.e. (Precision + Recall) / 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pusion.evaluation.evaluation_metrics.mean_multilabel_confusion_matrix">
 <code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">mean_multilabel_confusion_matrix</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.mean_multilabel_confusion_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the normalized mean confusion matrix across all classes.</p>

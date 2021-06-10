@@ -272,6 +272,20 @@ Decision profiles.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="pusion.util.transformer.multilabel_prediction_tensor_to_decision_tensor">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multilabel_prediction_tensor_to_decision_tensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multilabel_prediction_tensor_to_decision_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform a continuously valued tensor of multilabel decisions to crisp decision outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predictions</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>. Continuous predictions.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of the same shape as <code class="docutils literal notranslate"><span class="pre">predictions</span></code>. Crisp decision outputs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pusion.util.transformer.multiclass_prediction_tensor_to_decision_tensor">
 <code class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></code><code class="sig-name descname"><span class="pre">multiclass_prediction_tensor_to_decision_tensor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multiclass_prediction_tensor_to_decision_tensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a continuously valued tensor of multiclass decisions to crisp decision outputs.</p>

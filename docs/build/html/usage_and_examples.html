@@ -392,13 +392,13 @@ The following code example shows how to generate and combine such complementary-
 <span class="c1"># Evaluate ensemble classifiers</span>
 <span class="n">eval_classifiers</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
 <span class="n">eval_classifiers</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="s2">&quot;Ensemble&quot;</span><span class="p">)</span>
-<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">evaluate_cr_ensemble</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
+<span class="n">eval_classifiers</span><span class="o">.</span><span class="n">evaluate_cr_decision_outputs</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_ensemble_test</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">eval_classifiers</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
 
 <span class="c1"># Evaluate the fusion</span>
 <span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
-<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate_cr_combiner</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate_cr_decision_outputs</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
 </pre></div>
 </div>
