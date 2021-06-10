@@ -43,11 +43,11 @@ eval_metrics = [
 # Evaluate ensemble classifiers
 eval_classifiers = p.Evaluation(*eval_metrics)
 eval_classifiers.set_instances("Ensemble")
-eval_classifiers.evaluate_cr_ensemble(y_test, y_ensemble_test, coverage)
+eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 print(eval_classifiers.get_report())
 
 # Evaluate the fusion
 eval_combiner = p.Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_combiner(y_test, y_comb, coverage)
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb, coverage)
 print(eval_combiner.get_report())
