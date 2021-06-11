@@ -62,4 +62,4 @@ for i, classifier in enumerate(classifiers):
         'Y_predictions': y_ensemble_test[i],
         'Y_test': y_test
     }
-    dump_pusion_data(data, 'datasets/generated_multiclass_classification_classifier_' + str(i) + '.pickle')
+    dump_pusion_data(data, '/int/datasets/generated_multiclass_classification_classifier_' + str(i) + '.pickle')
