@@ -389,6 +389,22 @@ for i, dt in enumerate(y_ensemble_test):
     plt.tight_layout()
     save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
     plt.close()
+
+for i, comb in enumerate(eval_combiner.get_instances()):
+    fig, axes = plt.subplots(1, y_test.shape[1], figsize=(25, 3))
+    for j in range(y_test.shape[1]):
+        cm = confusion_matrix(y_test[:, j], multi_comb_decision_outputs[i][:, j])
+        display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=[0, 1])
+        display.plot(ax=axes[j], cmap='binary')
+        display.ax_.set_title(f'$\\omega_{j}$', pad=10)
+        display.ax_.set_xlabel('')
+        display.ax_.set_ylabel('')
+        display.im_.colorbar.remove()
+    plt.tight_layout()
+    save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "_combiner_confusion_matrix", eval_id + "/cm")
+    plt.close()
+
+
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
 
 
