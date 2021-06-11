@@ -14,6 +14,8 @@ from pusion.input_output.file_input_output import *
 from pusion.util.generator import split_into_train_and_validation_data
 from pusion.util.transformer import *
 from matplotlib.ticker import MaxNLocator
+import matplotlib
+
 
 warnings.filterwarnings('error')  # halt on warning
 
@@ -367,42 +369,28 @@ if len(combiners) > 0:
     save(plt, "103_combiner_score_positive_improvement_grouped", eval_id)
     plt.close()
 
+
 # === Confusion matrices ===============================================================================================
 
-# if not cr:
-#     # labels=np.arange(4)
-#     cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(y_test))
-#     display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-#     display.plot(cmap='binary')
-#     # plt.title("Ground Truth")
-#     plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
-#     plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
-#     save(plt, "000_ground_truth_confusion_matrix", eval_id + "/cm")
-#     plt.close()
-#
-# if not cr:
-#     for i, dt in enumerate(y_ensemble_test):
-#         # labels=np.arange(4)
-#         cm = confusion_matrix(multiclass_assignments_to_labels(y_test), multiclass_assignments_to_labels(dt))
-#         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-#         display.plot(cmap='binary')
-#         # plt.title("Classifier " + str(i))
-#         plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
-#         plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
-#         save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
-#         plt.close()
-#
-# if not cr:
-#     for i, comb in enumerate(eval_combiner.get_instances()):
-#         cm = confusion_matrix(multiclass_assignments_to_labels(y_test),
-#                               multiclass_assignments_to_labels(multi_comb_decision_outputs[i]))  # labels=np.arange(4)
-#         display = ConfusionMatrixDisplay(confusion_matrix=cm)  # display_labels=np.arange(4)
-#         display.plot(cmap='binary')
-#         # plt.title(comb.SHORT_NAME)
-#         plt.xlabel('vorhergesagte Klassen', fontweight='bold', labelpad=15)
-#         plt.ylabel('wahre Klassen', fontweight='bold', labelpad=15)
-#         save(plt, "002_" + str(i) + "_" + comb.SHORT_NAME + "_combiner_confusion_matrix", eval_id + "/cm")
-#         plt.close()
+plt.rc('axes', titlesize=27)
+plt.rc('axes', labelsize=22)
+matplotlib.rcParams.update({'font.size': 24})
+
+for i, dt in enumerate(y_ensemble_test):
+    fig, axes = plt.subplots(1, y_test.shape[1], figsize=(25, 3))
+    for j in range(y_test.shape[1]):
+        cm = confusion_matrix(y_test[:, j], dt[:, j])
+        display = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=[0, 1])
+        display.plot(ax=axes[j], cmap='binary')
+        display.ax_.set_title(f'$\\omega_{j}$', pad=10)
+        display.ax_.set_xlabel('')
+        display.ax_.set_ylabel('')
+        display.im_.colorbar.remove()
+    plt.tight_layout()
+    save(plt, "001_classifier_" + str(i) + "_confusion_matrix", eval_id + "/cm")
+    plt.close()
+matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+
 
 # === Combiner runtimes ================================================================================================
 plt.rcParams.update({'font.size': 13})
