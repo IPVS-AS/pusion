@@ -66,6 +66,7 @@ class NeuralNetworkCombiner(TrainableCombiner):
         # transfer decisions into a new feature space
         featured_decisions = decision_profiles.reshape((decision_profiles.shape[0], -1))
 
+        # return self.classifier.predict_proba(featured_decisions)  # continuous output
         return self.classifier.predict(featured_decisions)
 
 

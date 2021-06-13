@@ -213,8 +213,6 @@ for i in range(len(dataset_files)):
     save(plt, "010_ensemble_classifier_" + str(i) + "_epochs_accuracy", eval_id)
     plt.close()
 
-exit(0)
-
 # --- Ensemble performance ---------------------------------------------------------------------------------------------
 classifiers_accuracies = [t[1] for t in eval_classifiers.get_instance_performance_tuples(p.PerformanceMetric.MEAN_CONFIDENCE)]
 
