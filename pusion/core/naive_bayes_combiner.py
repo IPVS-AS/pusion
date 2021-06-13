@@ -82,13 +82,11 @@ class NaiveBayesCombiner(EvidenceBasedCombiner, TrainableCombiner):
                 n_j = self.n_samples_per_class[j]
                 mu[j] = n_j / len(decision_profiles)
                 for k in range(np.shape(dp)[0]):
-                    # mu[j] = mu[j] * self.confusion_matrices[k, j, np.argmax(dp[k])]
                     mu[j] = mu[j] * ((self.confusion_matrices[k, j, np.argmax(dp[k])] + 1/n_classes) / (n_j + 1))
             fused_decisions[i, np.argmax(mu)] = 1
         return fused_decisions
 
 
-# TODO align confusion matrices
 class CRNaiveBayesCombiner(NaiveBayesCombiner):
     """
     The :class:`CRNaiveBayesCombiner` is a modification of :class:`NaiveBayesCombiner` that
