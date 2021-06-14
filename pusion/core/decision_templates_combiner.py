@@ -115,10 +115,6 @@ class CRDecisionTemplatesCombiner(DecisionTemplatesCombiner):
 
     def __init__(self):
         super().__init__()
-        self.coverage = None
-
-    def set_coverage(self, coverage):
-        self.coverage = coverage
 
     def train(self, decision_outputs, true_assignments):
         """

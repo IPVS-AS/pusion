@@ -96,10 +96,6 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
     def __init__(self):
         super().__init__()
         self.accuracy = None
-        self.coverage = None
-
-    def set_coverage(self, coverage):
-        self.coverage = coverage
 
     def train(self, decision_outputs, true_assignments):
         """

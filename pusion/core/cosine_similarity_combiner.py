@@ -79,10 +79,6 @@ class CRCosineSimilarity(CosineSimilarityCombiner):
 
     def __init__(self):
         super().__init__()
-        self.coverage = None
-
-    def set_coverage(self, coverage):
-        self.coverage = coverage
 
     def combine(self, decision_outputs):
         """

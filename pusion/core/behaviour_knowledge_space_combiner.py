@@ -98,10 +98,6 @@ class CRBehaviourKnowledgeSpaceCombiner(BehaviourKnowledgeSpaceCombiner):
 
     def __init__(self):
         super().__init__()
-        self.coverage = None
-
-    def set_coverage(self, coverage):  # TODO delete, superclass Combiner contains the method and the attribute.
-        self.coverage = coverage
 
     def train(self, decision_outputs, true_assignments):
         """
