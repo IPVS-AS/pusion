@@ -1,5 +1,5 @@
 from pusion.core.combiner import TrainableCombiner, EvidenceBasedCombiner
-from pusion.util.transformer import *
+from pusion.util.generator import *
 from pusion.util.constants import *
 
 
@@ -76,12 +76,12 @@ class NaiveBayesCombiner(EvidenceBasedCombiner, TrainableCombiner):
         for i in range(len(decision_profiles)):
             # transform to a multiclass decision profile
             dp = multiclass_predictions_to_decisions(decision_profiles[i])
-            n_classes = np.shape(dp)[1]
+            n_classes = dp.shape[1]
             mu = np.zeros(n_classes)
             for j in range(n_classes):
                 n_j = self.n_samples_per_class[j]
                 mu[j] = n_j / len(decision_profiles)
-                for k in range(np.shape(dp)[0]):
+                for k in range(dp.shape[0]):
                     mu[j] = mu[j] * ((self.confusion_matrices[k, j, np.argmax(dp[k])] + 1/n_classes) / (n_j + 1))
             fused_decisions[i, np.argmax(mu)] = 1
         return fused_decisions

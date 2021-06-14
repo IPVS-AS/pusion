@@ -1,5 +1,5 @@
 from pusion.core.combiner import EvidenceBasedCombiner, TrainableCombiner
-from pusion.util.transformer import *
+from pusion.util.generator import *
 from pusion.evaluation.evaluation_metrics import accuracy
 from pusion.util.constants import *
 

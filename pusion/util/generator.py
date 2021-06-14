@@ -381,6 +381,50 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
 
+def generate_multiclass_confusion_matrices(decision_tensor, true_assignments):
+    """
+    Generate multiclass confusion matrices out of the given decision tensor and true assignments.
+    Continuous outputs are converted to multiclass assignments using the MAX rule.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+                Tensor of crisp decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp class assignments which are considered true for calculating confusion matrices.
+    :return: `numpy.array` of shape `(n_classifiers, n_samples, n_samples)`. Confusion matrices per classifier.
+    """
+    true_assignment_labels = np.argmax(true_assignments, axis=1)
+    confusion_matrices = np.zeros((np.shape(decision_tensor)[0],
+                                   np.shape(true_assignments)[1],
+                                   np.shape(true_assignments)[1]), dtype=int)
+    for i in range(len(decision_tensor)):
+        decision_tensor_labels = np.argmax(decision_tensor[i], axis=1)
+        confusion_matrices[i] = confusion_matrix(y_true=true_assignment_labels,
+                                                 y_pred=decision_tensor_labels,
+                                                 labels=np.arange(np.shape(true_assignments)[1]))
+    return confusion_matrices
+
+
+def generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignments, coverage):
+    """
+    Generate multilabel confusion matrices for complementary-redundant multilabel classification outputs.
+
+    :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+            `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+            due to the coverage.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp class assignments which are considered true for calculating confusion matrices.
+    :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a classifier,
+            which is identified by the positional index of the respective list.
+    :return: List of multilabel confusion matrices.
+    """
+    cr_confusion_matrices = []
+    for i, do in enumerate(decision_outputs):
+        ta = intercept_normal_class(true_assignments[:, coverage[i]], override=True)
+        cms = multilabel_confusion_matrix(y_true=ta, y_pred=do, labels=np.arange(len(coverage[i])))
+        cr_confusion_matrices.append(cms)
+    return cr_confusion_matrices
+
+
 def generate_classification_coverage(n_classifiers, n_classes, overlap, normal_class=True):
     """
     Generate random complementary redundant class indices for each classifier `0..(n_classifiers-1)`.
