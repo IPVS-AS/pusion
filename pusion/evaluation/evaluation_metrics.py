@@ -318,16 +318,54 @@ def q_statistic(y1, y2, y_true):
 
 
 def kappa_statistic(y1, y2, y_true):
+    """
+    Calculate the kappa score for decision outputs of two classifiers according to Kuncheva
+    :footcite:`kuncheva2014combining`.
+
+    .. footbibliography::
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Kappa score.
+    """
     a, b, c, d = __relations(y1, y2, y_true)
     return (2 * (a * d - b * c))/((a + b)*(b + d) + (a + c)*(c + d))
 
 
 def disagreement(y1, y2, y_true):
+    """
+    Calculate the disagreement for decision outputs of two classifiers, i.e. the percentage of samples which are
+    correctly classified by exactly one of the classifiers.
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Disagreement score.
+    """
     a, b, c, d = __relations(y1, y2, y_true)
     return b + c
 
 
 def double_fault(y1, y2, y_true):
+    """
+    Calculate the double fault for decision outputs of two classifiers, i.e. the percentage of samples which are
+    misclassified by both classifiers.
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Double fault score.
+    """
     a, b, c, d = __relations(y1, y2, y_true)
     return d
 
@@ -371,6 +409,16 @@ def pairwise_q_statistic(decision_tensor, true_assignments):
 
 
 def pairwise_kappa_statistic(decision_tensor, true_assignments):
+    """
+    Calculate the average of pairwise Kappa scores over all decision outputs.
+    Multilabel class assignments are transformed to equivalent multiclass class assignments.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Pairwise kappa score.
+    """
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
@@ -378,6 +426,16 @@ def pairwise_kappa_statistic(decision_tensor, true_assignments):
 
 
 def pairwise_disagreement(decision_tensor, true_assignments):
+    """
+    Calculate the average of pairwise disagreement scores over all decision outputs.
+    Multilabel class assignments are transformed to equivalent multiclass class assignments.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Pairwise disagreement score.
+    """
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
@@ -385,6 +443,16 @@ def pairwise_disagreement(decision_tensor, true_assignments):
 
 
 def pairwise_double_fault(decision_tensor, true_assignments):
+    """
+    Calculate the average of pairwise double fault scores over all decision outputs.
+    Multilabel class assignments are transformed to equivalent multiclass class assignments.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Pairwise double fault score.
+    """
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
@@ -392,6 +460,13 @@ def pairwise_double_fault(decision_tensor, true_assignments):
 
 
 def pairwise_euclidean_distance(decision_tensor):
+    """
+    Calculate the average of pairwise euclidean distance between decision matrices for the given classifiers.
+
+    :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Tensor of crisp multiclass decision outputs by different classifiers per sample.
+    :return: Pairwise euclidean distance.
+    """
     decision_tensor = np.array(decision_tensor)
     indices = np.array(np.triu_indices(decision_tensor.shape[0], k=1))
     scores = []
