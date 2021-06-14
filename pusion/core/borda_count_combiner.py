@@ -42,7 +42,7 @@ class BordaCountCombiner(UtilityBasedCombiner):
             dp = decision_profiles[i]
             sort_indices = np.argsort(dp, axis=1)
             bc_dp = self.swap_index_and_values(sort_indices)
-            fused_decisions[i, np.argmax(np.sum(bc_dp, axis=0))] = 1  # TODO use a relation for the multilabel problem?
+            fused_decisions[i, np.argmax(np.sum(bc_dp, axis=0))] = 1
         return fused_decisions
 
     def swap_index_and_values(self, m):

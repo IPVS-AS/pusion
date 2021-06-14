@@ -177,17 +177,6 @@ def mean_confidence(y_true, y_pred):
     return 1 - np.sum(np.abs(y_true - y_pred)) / (y_true.shape[0] * y_true.shape[1])
 
 
-# TODO evaluate. Only confidences of 1-assignments in y_pred are considered.
-def mean_confidence_tp(y_true, y_pred, average='macro'):
-    y_pred = np.array(y_pred).astype(float)
-    mask = y_true.astype(bool)
-    y_pred[~mask] = np.nan
-    if average == 'micro':
-        return np.nanmean(y_pred)
-    elif average == 'macro':
-        return np.nanmean(np.nanmean(y_pred, axis=0))
-
-
 def hamming(y_true, y_pred):
     """
     Calculate the average Hamming Loss.

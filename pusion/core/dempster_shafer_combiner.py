@@ -98,7 +98,7 @@ class DempsterShaferCombiner(TrainableCombiner):
                     prod = prod * bel[j, k]
                 mu[j] = prod
 
-            # normalization - TODO use for multilabel output?
+            # normalization
             mu = mu / np.sum(mu)
             fused_decisions[i] = self.distinct_labels[np.argmax(mu)]
 

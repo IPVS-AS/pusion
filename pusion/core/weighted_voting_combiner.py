@@ -116,7 +116,6 @@ class CRWeightedVotingCombiner(WeightedVotingCombiner):
         for i in range(len(decision_outputs)):
             y_true = true_assignments[:, self.coverage[i]]
             y_pred = decision_outputs[i]
-            # TODO accuracy per classifier / per classifier and class
             self.accuracy[i] = accuracy(y_true, y_pred)
 
     def combine(self, decision_outputs):

@@ -54,11 +54,12 @@ class Evaluation:
     def evaluate_cr_decision_outputs(self, true_assignments, decision_outputs, coverage=None):
         """
         Evaluate complementary-redundant decision outputs with already set classification performance metrics.
-        TODO: doc... Class-wise mean score for binary classification metrics.
+        The outputs of each classifier for each class is considered as a binary output and thus, the performance is
+        calculated class-wise and averaged across all classes, which are covered by individual classifiers.
 
-        .. warning::
+        .. note::
 
-            This evaluation is only applicable on complementary-redundant ensemble classifier outputs.
+            This evaluation is applicable on complementary-redundant ensemble classifier outputs.
 
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of crisp class assignments which are considered true for the evaluation.
@@ -113,12 +114,18 @@ class Evaluation:
 
     def class_wise_mean_score(self, true_assignments, decision_outputs, coverage, metric):
         """
-        TODO: Doc.
-        :param true_assignments:
-        :param decision_outputs:
-        :param coverage:
-        :param metric:
-        :return:
+        Calculate the class-wise mean score with the given metric for the given classification outputs.
+
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of crisp class assignments which are considered true for the evaluation.
+        :param decision_outputs: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+        :param coverage: `list` of `list` elements. Each inner list contains classes as integers covered by a
+                classifier, which is identified by the positional index of the respective list.
+                If none set, the coverage for fully redundant classification is chosen by default.
+        :param metric: The score metric.
+        :return: `numpy.array` of shape `(n_classes,)`. The mean score per class across all classifiers.
         """
         self.__check()
         if len(decision_outputs) != len(coverage):
