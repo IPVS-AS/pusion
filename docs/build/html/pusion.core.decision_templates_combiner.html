@@ -253,19 +253,7 @@ are aligned with axis 2 in <code class="docutils literal notranslate"><span clas
 <p>The <a class="reference internal" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner" title="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">CRDecisionTemplatesCombiner</span></code></a> is a modification of <a class="reference internal" href="#pusion.core.decision_templates_combiner.DecisionTemplatesCombiner" title="pusion.core.decision_templates_combiner.DecisionTemplatesCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">DecisionTemplatesCombiner</span></code></a> that
 also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
 classification assignments are considered as a constant, respectively. To use methods <a class="reference internal" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.train" title="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> and
-<a class="reference internal" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.combine" title="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first by the inherited <a class="reference internal" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.set_coverage" title="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.set_coverage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code></a> method.</p>
-<dl class="py method">
-<dt id="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.set_coverage">
-<code class="sig-name descname"><span class="pre">set_coverage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.set_coverage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the coverage for complementary-redundant decisions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<a class="reference internal" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.combine" title="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first by the inherited <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code> method.</p>
 <dl class="py method">
 <dt id="pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.train">
 <code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner.train" title="Permalink to this definition">¶</a></dt>

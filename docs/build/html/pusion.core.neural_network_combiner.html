@@ -244,19 +244,7 @@ with axis 2 in <code class="docutils literal notranslate"><span class="pre">deci
 <p>The <a class="reference internal" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner" title="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">CRNeuralNetworkCombiner</span></code></a> is a modification of <a class="reference internal" href="#pusion.core.neural_network_combiner.NeuralNetworkCombiner" title="pusion.core.neural_network_combiner.NeuralNetworkCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">NeuralNetworkCombiner</span></code></a> that
 also supports complementary-redundant decision outputs. Therefore the input is transformed, such that all missing
 classification assignments are considered as a constant, respectively. To use methods <a class="reference internal" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.train" title="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.train"><code class="xref py py-meth docutils literal notranslate"><span class="pre">train()</span></code></a> and
-<a class="reference internal" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.combine" title="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first by the inherited <a class="reference internal" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.set_coverage" title="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.set_coverage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code></a> method.</p>
-<dl class="py method">
-<dt id="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.set_coverage">
-<code class="sig-name descname"><span class="pre">set_coverage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.set_coverage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the coverage for complementary-redundant decisions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<a class="reference internal" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.combine" title="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first by the inherited <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code> method.</p>
 <dl class="py method">
 <dt id="pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.train">
 <code class="sig-name descname"><span class="pre">train</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.neural_network_combiner.CRNeuralNetworkCombiner.train" title="Permalink to this definition">¶</a></dt>

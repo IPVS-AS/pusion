@@ -301,6 +301,48 @@ as a test dataset.
 </dd></dl>
 
 <dl class="py function">
+<dt id="pusion.util.generator.generate_multiclass_confusion_matrices">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></code><code class="sig-name descname"><span class="pre">generate_multiclass_confusion_matrices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multiclass_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multiclass confusion matrices out of the given decision tensor and true assignments.
+Continuous outputs are converted to multiclass assignments using the MAX rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_samples)</cite>. Confusion matrices per classifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.util.generator.generate_multilabel_cr_confusion_matrices">
+<code class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></code><code class="sig-name descname"><span class="pre">generate_multilabel_cr_confusion_matrices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multilabel_cr_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multilabel confusion matrices for complementary-redundant multilabel classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of multilabel confusion matrices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="pusion.util.generator.generate_classification_coverage">
 <code class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></code><code class="sig-name descname"><span class="pre">generate_classification_coverage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_classification_coverage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate random complementary redundant class indices for each classifier <cite>0..(n_classifiers-1)</cite>.

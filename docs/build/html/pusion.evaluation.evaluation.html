@@ -217,10 +217,11 @@ for each set instance row-wise and each set performance metric column-wise.</p>
 <dt id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs">
 <code class="sig-name descname"><span class="pre">evaluate_cr_decision_outputs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate complementary-redundant decision outputs with already set classification performance metrics.
-TODO: doc… Class-wise mean score for binary classification metrics.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This evaluation is only applicable on complementary-redundant ensemble classifier outputs.</p>
+The outputs of each classifier for each class is considered as a binary output and thus, the performance is
+calculated class-wise and averaged across all classes, which are covered by individual classifiers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This evaluation is applicable on complementary-redundant ensemble classifier outputs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -266,12 +267,25 @@ for each set instance row-wise and each set performance metric column-wise.</p>
 <dl class="py method">
 <dt id="pusion.evaluation.evaluation.Evaluation.class_wise_mean_score">
 <code class="sig-name descname"><span class="pre">class_wise_mean_score</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.class_wise_mean_score" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO: Doc.
-:param true_assignments:
-:param decision_outputs:
-:param coverage:
-:param metric:
-:return:</p>
+<dd><p>Calculate the class-wise mean score with the given metric for the given classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.</p></li>
+<li><p><strong>metric</strong> – The score metric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classes,)</cite>. The mean score per class across all classifiers.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

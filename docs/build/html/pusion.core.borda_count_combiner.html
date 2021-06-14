@@ -229,19 +229,7 @@ Axis 0 represents samples and axis 1 the class labels which are aligned with axi
 <p>The <a class="reference internal" href="#pusion.core.borda_count_combiner.CRBordaCountCombiner" title="pusion.core.borda_count_combiner.CRBordaCountCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">CRBordaCountCombiner</span></code></a> is a modification of <a class="reference internal" href="#pusion.core.borda_count_combiner.BordaCountCombiner" title="pusion.core.borda_count_combiner.BordaCountCombiner"><code class="xref py py-class docutils literal notranslate"><span class="pre">BordaCountCombiner</span></code></a> that also supports
 complementary-redundant decision outputs. Therefore the input is transformed, such that all missing classification
 assignments are considered as <cite>0</cite>, respectively. To call <a class="reference internal" href="#pusion.core.borda_count_combiner.CRBordaCountCombiner.combine" title="pusion.core.borda_count_combiner.CRBordaCountCombiner.combine"><code class="xref py py-meth docutils literal notranslate"><span class="pre">combine()</span></code></a> a coverage needs to be set first
-by the inherited <a class="reference internal" href="#pusion.core.borda_count_combiner.CRBordaCountCombiner.set_coverage" title="pusion.core.borda_count_combiner.CRBordaCountCombiner.set_coverage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code></a> method.</p>
-<dl class="py method">
-<dt id="pusion.core.borda_count_combiner.CRBordaCountCombiner.set_coverage">
-<code class="sig-name descname"><span class="pre">set_coverage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.borda_count_combiner.CRBordaCountCombiner.set_coverage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the coverage for complementary-redundant decisions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
-classifier, which is identified by the positional index of the respective list.</p>
-</dd>
-</dl>
-</dd></dl>
-
+by the inherited <code class="xref py py-meth docutils literal notranslate"><span class="pre">set_coverage()</span></code> method.</p>
 <dl class="py method">
 <dt id="pusion.core.borda_count_combiner.CRBordaCountCombiner.combine">
 <code class="sig-name descname"><span class="pre">combine</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.borda_count_combiner.CRBordaCountCombiner.combine" title="Permalink to this definition">¶</a></dt>
