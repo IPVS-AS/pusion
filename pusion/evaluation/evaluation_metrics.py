@@ -370,12 +370,41 @@ def double_fault(y1, y2, y_true):
     return d
 
 
+def abs_correlation(y1, y2, y_true):
+    """
+    Calculate the absolute correlation score for decision outputs of two classifiers.
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Correlation score.
+    """
+    a, b, c, d = __relations(y1, y2, y_true)
+    return np.abs((a * d - b * c) / np.sqrt((a + b) * (c + d) * (a + c) * (b + d)))
+
+
+def abs_q_statistic(y1, y2, y_true):
+    """
+    Calculate the absolute Q statistic score for decision outputs of two classifiers.
+
+    :param y1: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the first classifier.
+    :param y2: `numpy.array` of shape `(n_samples, n_classes)`.
+            Crisp multiclass decision outputs by the second classifier.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`.
+            Matrix of crisp class assignments which are considered as true.
+    :return: Correlation score.
+    """
+    a, b, c, d = __relations(y1, y2, y_true)
+    return np.abs((a * d - b * c) / (a * d + b * c))
+
+
 def pairwise_correlation(decision_tensor, true_assignments):
     """
-    Calculate the average of pairwise correlation scores over all decision outputs according to Polikar
-    :footcite:`polikar2006ensemble`.
-
-    .. footbibliography::
+    Calculate the average of the pairwise absolute correlation scores over all decision outputs.
 
     :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
@@ -386,15 +415,12 @@ def pairwise_correlation(decision_tensor, true_assignments):
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
-    return __pairwise_avg_score(decision_tensor, true_assignments, correlation)
+    return __pairwise_avg_score(decision_tensor, true_assignments, abs_correlation)
 
 
 def pairwise_q_statistic(decision_tensor, true_assignments):
     """
-    Calculate the average of pairwise Q-statistic scores over all decision outputs according to Polikar
-    :footcite:`polikar2006ensemble`.
-
-    .. footbibliography::
+    Calculate the average of the pairwise absolute Q-statistic scores over all decision outputs.
 
     :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
             Tensor of crisp multiclass decision outputs by different classifiers per sample.
@@ -405,7 +431,7 @@ def pairwise_q_statistic(decision_tensor, true_assignments):
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
-    return __pairwise_avg_score(decision_tensor, true_assignments, q_statistic)
+    return __pairwise_avg_score(decision_tensor, true_assignments, abs_q_statistic)
 
 
 def pairwise_kappa_statistic(decision_tensor, true_assignments):
