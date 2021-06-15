@@ -512,7 +512,7 @@ Tensor of crisp multiclass decision outputs by different classifiers per sample.
 <dd><p>Calculate the correlation score for decision outputs of two classifiers according to Kuncheva
 <a class="footnote-reference brackets" href="#kuncheva2014combining" id="id2">2</a>.</p>
 <p><dl class="footnote brackets">
-<dt class="label" id="kuncheva2014combining"><span class="brackets"><a class="fn-backref" href="#id2">2</a></span></dt>
+<dt class="label" id="kuncheva2014combining"><span class="brackets">2</span><span class="fn-backref">(<a href="#id2">1</a>,<a href="#id4">2</a>)</span></dt>
 <dd><p>Ludmila I Kuncheva. <em>Combining pattern classifiers: methods and algorithms</em>. John Wiley &amp; Sons, 2014.</p>
 </dd>
 </dl>
@@ -563,16 +563,117 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="pusion.evaluation.evaluation_metrics.pairwise_correlation">
-<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_correlation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the average of pairwise correlation scores over all decision outputs according to Polikar
-<a class="footnote-reference brackets" href="#polikar2006ensemble" id="id4">4</a>.</p>
-<p><dl class="footnote brackets">
-<dt class="label" id="polikar2006ensemble"><span class="brackets">4</span><span class="fn-backref">(<a href="#id4">1</a>,<a href="#id5">2</a>)</span></dt>
-<dd><p>Robi Polikar. Ensemble based systems in decision making. <em>IEEE Circuits and systems magazine</em>, 6(3):21–45, 2006.</p>
+<dt id="pusion.evaluation.evaluation_metrics.kappa_statistic">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">kappa_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.kappa_statistic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the kappa score for decision outputs of two classifiers according to Kuncheva
+<a class="footnote-reference brackets" href="#kuncheva2014combining" id="id4">2</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Kappa score.</p>
 </dd>
 </dl>
-</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.disagreement">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">disagreement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.disagreement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the disagreement for decision outputs of two classifiers, i.e. the percentage of samples which are
+correctly classified by exactly one of the classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Disagreement score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.double_fault">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">double_fault</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.double_fault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the double fault for decision outputs of two classifiers, i.e. the percentage of samples which are
+misclassified by both classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Double fault score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.abs_correlation">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">abs_correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.abs_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the absolute correlation score for decision outputs of two classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.abs_q_statistic">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">abs_q_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.abs_q_statistic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the absolute Q statistic score for decision outputs of two classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y1</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the first classifier.</p></li>
+<li><p><strong>y2</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Crisp multiclass decision outputs by the second classifier.</p></li>
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_correlation">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_correlation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of the pairwise absolute correlation scores over all decision outputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -591,8 +692,7 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 <dl class="py function">
 <dt id="pusion.evaluation.evaluation_metrics.pairwise_q_statistic">
 <code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_q_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_q_statistic" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the average of pairwise Q-statistic scores over all decision outputs according to Polikar
-<a class="footnote-reference brackets" href="#polikar2006ensemble" id="id5">4</a>.</p>
+<dd><p>Calculate the average of the pairwise absolute Q-statistic scores over all decision outputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -604,6 +704,81 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Pairwise correlation score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_kappa_statistic</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise Kappa scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise kappa score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_disagreement">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_disagreement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_disagreement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise disagreement scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise disagreement score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_double_fault">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_double_fault</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_double_fault" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise double fault scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered as true.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise double fault score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.evaluation.evaluation_metrics.pairwise_euclidean_distance">
+<code class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></code><code class="sig-name descname"><span class="pre">pairwise_euclidean_distance</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_euclidean_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average of pairwise euclidean distance between decision matrices for the given classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pairwise euclidean distance.</p>
 </dd>
 </dl>
 </dd></dl>
