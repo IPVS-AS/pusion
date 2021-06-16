@@ -147,8 +147,9 @@ def balanced_multiclass_accuracy(y_true, y_pred):
             class assignments.
     :return: Accuracy.
     """
-    y_true = multiclass_assignments_to_labels(y_true)
-    y_pred = multiclass_assignments_to_labels(y_pred)
+    if y_true.ndim > 1 or y_pred.ndim > 1:
+        y_true = multiclass_assignments_to_labels(y_true)
+        y_pred = multiclass_assignments_to_labels(y_pred)
     return balanced_accuracy_score(y_true, y_pred)
 
 
