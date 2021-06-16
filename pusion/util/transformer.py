@@ -75,6 +75,8 @@ def multiclass_predictions_to_decisions(predictions):
     :param predictions: `numpy.array` of shape `(n_samples, n_classes)`. Continuous predictions.
     :return: `numpy.array` of the same shape as ``predictions``. Crisp decision outputs.
     """
+    if predictions.ndim == 1:
+        return predictions
     decisions = np.zeros_like(predictions)
     decisions[np.arange(len(decisions)), predictions.argmax(axis=1)] = 1
     return decisions
@@ -152,7 +154,7 @@ def transform_label_tensor_to_class_assignment_tensor(label_tensor, n_classes):
     return assignments
 
 
-def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes):
+def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes=None):
     """
     Transform labels to multiclass assignments. A vector of shape `(n_samples,)`, with element-wise labels is converted
     to the assignment matrix of shape `(n_samples, n_classes)`.
@@ -161,8 +163,13 @@ def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes):
     :param n_classes: Number of classes to be considered.
     :return: `numpy.array` of shape `(n_samples, n_classes)`. Multiclass assignments.
     """
-    assignments = transform_label_tensor_to_class_assignment_tensor(np.array([label_vector]), n_classes)
-    return assignments.squeeze()
+    label_vector = np.array(label_vector)
+    if n_classes is None:
+        n_classes = np.max(label_vector) + 1
+
+    assignments = np.zeros((len(label_vector), n_classes), dtype=int)
+    assignments[np.arange(len(label_vector)), label_vector] = 1
+    return assignments
 
 
 def multilabel_to_multiclass_assignments(decision_tensor):
