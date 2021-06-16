@@ -48,11 +48,11 @@ dataset_files = [
 data = load_native_files_as_data(dataset_files)
 
 y_ensemble_valid = [np.roll(data[i]['Y_test_predictions'], shift=1, axis=1) for i in range(len(dataset_files))]
-y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
+y_ensemble_valid = tensorize(y_ensemble_valid)
 y_valid = np.roll(data[0]['Y_test'], shift=1, axis=1)
 
 y_ensemble_test = [np.roll(data[i]['Y_test_for_fusion_predictions'], shift=1, axis=1) for i in range(len(dataset_files))]
-y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+y_ensemble_test = tensorize(y_ensemble_test)
 y_test = np.roll(data[0]['Y_test_for_fusion'], shift=1, axis=1)
 
 coverage = []

@@ -88,8 +88,8 @@ def generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, 
     y_test = transform_label_vector_to_class_assignment_matrix(y_test, n_classes)
 
     # Transform to numpy tensors if possible
-    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
-    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+    y_ensemble_valid = tensorize(y_ensemble_valid)
+    y_ensemble_test = tensorize(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
@@ -188,8 +188,8 @@ def generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classe
             y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
-    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
-    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+    y_ensemble_valid = tensorize(y_ensemble_valid)
+    y_ensemble_test = tensorize(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
@@ -278,8 +278,8 @@ def generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, 
             y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
-    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
-    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+    y_ensemble_valid = tensorize(y_ensemble_valid)
+    y_ensemble_test = tensorize(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
@@ -375,8 +375,8 @@ def generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classe
             y_ensemble_test.append(y_pred)
 
     # Transform to numpy tensors if possible
-    y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
-    y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+    y_ensemble_valid = tensorize(y_ensemble_valid)
+    y_ensemble_test = tensorize(y_ensemble_test)
 
     return y_ensemble_valid, y_valid, y_ensemble_test, y_test
 
@@ -479,7 +479,7 @@ def shrink_to_coverage(decision_tensor, coverage):
         # assign the normal class for samples with no assignment.
         sdt = intercept_normal_class(sdt, override=True)
         decision_outputs.append(sdt)
-    return decision_outputs_to_decision_tensor(decision_outputs)
+    return tensorize(decision_outputs)
 
 
 def split_into_train_and_validation_data(decision_tensor, true_assignments, validation_size=0.5):
@@ -514,7 +514,7 @@ def split_into_train_and_validation_data(decision_tensor, true_assignments, vali
         decision_tensor_train.append(decision_matrix[train_indices])
         decision_tensor_validation.append(decision_matrix[validation_indices])
 
-    return decision_outputs_to_decision_tensor(decision_tensor_train), \
-        decision_outputs_to_decision_tensor(true_assignments_train), \
-        decision_outputs_to_decision_tensor(decision_tensor_validation), \
-        decision_outputs_to_decision_tensor(true_assignments_validation)
+    return tensorize(decision_tensor_train), \
+           tensorize(true_assignments_train), \
+           tensorize(decision_tensor_validation), \
+           tensorize(true_assignments_validation)

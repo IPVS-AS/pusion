@@ -94,7 +94,7 @@ def multilabel_prediction_tensor_to_decision_tensor(predictions):
     for i, pred_matrix in enumerate(predictions):
         # decision_tensor[i] = multiclass_predictions_to_decisions(pred_matrix)
         decision_outputs.append(multilabel_predictions_to_decisions(pred_matrix))
-    return decision_outputs_to_decision_tensor(decision_outputs)
+    return tensorize(decision_outputs)
 
 
 def multiclass_prediction_tensor_to_decision_tensor(predictions):
@@ -109,7 +109,7 @@ def multiclass_prediction_tensor_to_decision_tensor(predictions):
     for i, pred_matrix in enumerate(predictions):
         # decision_tensor[i] = multiclass_predictions_to_decisions(pred_matrix)
         decision_outputs.append(multiclass_predictions_to_decisions(pred_matrix))
-    return decision_outputs_to_decision_tensor(decision_outputs)
+    return tensorize(decision_outputs)
 
 
 def decision_tensor_to_configs(decision_outputs):
@@ -234,7 +234,7 @@ def multiclass_to_multilabel_assignments(decision_tensor):
     return ml_decision_tensor
 
 
-def decision_outputs_to_decision_tensor(decision_outputs):
+def tensorize(decision_outputs):
     """
     Convert `list` decision outputs to `numpy.array` decision tensor, if possible.
     """
@@ -283,4 +283,4 @@ def intercept_normal_class_in_tensor(decision_tensor, override=False):
     normalized_decision_outputs = []
     for i in range(len(decision_tensor)):
         normalized_decision_outputs.append(intercept_normal_class(decision_tensor[i], override))
-    return decision_outputs_to_decision_tensor(normalized_decision_outputs)
+    return tensorize(normalized_decision_outputs)

@@ -60,11 +60,11 @@ dataset_files = [
 data = load_native_files_as_data(dataset_files)
 
 y_ensemble_valid = [data[i]['Y_test_predictions'] for i in range(len(dataset_files))]
-y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)
+y_ensemble_valid = tensorize(y_ensemble_valid)
 y_valid = data[0]['Y_test']
 
 y_ensemble_test = [data[i]['Y_test_for_fusion_predictions'] for i in range(len(dataset_files))]
-y_ensemble_test = decision_outputs_to_decision_tensor(y_ensemble_test)
+y_ensemble_test = tensorize(y_ensemble_test)
 y_test = data[0]['Y_test_for_fusion']
 
 
