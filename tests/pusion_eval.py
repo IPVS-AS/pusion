@@ -312,16 +312,6 @@ eval_dict['combiners_min_performance_improvement'] = \
 eval_dict['combiners_max_performance_improvement'] = \
     [t for t in zip(combiners_names, [np.max(combiner_wise_perf_differences[c]) for c in combiners])]
 
-# TODO delete breakpoint code
-# arr = None
-# arr_j_labels = []
-# for i, comb in enumerate(combiners):
-#     if arr is None:
-#         arr = np.full((len(combiner_wise_perf_differences[comb]), len(combiners)), np.nan)
-#     arr[:, i] = np.around(combiner_wise_perf_differences[comb], 4)
-#     arr_j_labels.append(comb.SHORT_NAME)
-# print()
-
 plt.figure(figsize=(10, 4.8))
 bp = plt.boxplot(combiners_improvements, showmeans=True, meanprops=meanprops, patch_artist=True)
 for box in bp['boxes']:
