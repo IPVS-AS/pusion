@@ -41,6 +41,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y)
 classifiers = [
     MLPClassifier(random_state=1),
     MLPClassifier(random_state=2),
+    MLPClassifier(random_state=3),
     # KNeighborsClassifier(3),
     # KNeighborsClassifier(5),
     # KNeighborsClassifier(7),
@@ -51,7 +52,7 @@ for i, classifier in enumerate(classifiers):
     classifier.fit(X_train, y_train)
 
 
-decision_outputs = np.full((len(classifiers), len(y_test), 2), np.nan)
+decision_outputs = np.full((len(classifiers), y_test.shape[0], y_test.shape[1]), np.nan)
 for i, classifier in enumerate(classifiers):
     print("Predicting with classifier", i, "...")
     decision_outputs[i] = classifier.predict(X_test)
