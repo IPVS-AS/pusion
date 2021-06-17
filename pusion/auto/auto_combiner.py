@@ -28,6 +28,7 @@ class AutoCombiner(GenericCombiner):
     def __init__(self):
         super().__init__()
         self.selected_combiner = None
+        self.validation_size = 0.5
 
     def train(self, decision_tensor, true_assignments):
         """
@@ -46,7 +47,8 @@ class AutoCombiner(GenericCombiner):
         """
 
         # Split into train and validation data.
-        dt_train, ta_train, dt_valid, ta_valid = split_into_train_and_validation_data(decision_tensor, true_assignments)
+        dt_train, ta_train, dt_valid, ta_valid = split_into_train_and_validation_data(decision_tensor, true_assignments,
+                                                                                      self.validation_size)
         # Encapsulated training phase.
         super().train(dt_train, ta_train)
         # Encapsulated evaluation phase.
@@ -83,6 +85,14 @@ class AutoCombiner(GenericCombiner):
             return self.selected_combiner.combine(decision_tensor)
         else:
             raise TypeError("No selection performed. Use train() before combining to obtain an automatic selection.")
+
+    def set_validation_size(self, validation_size):
+        """
+        Set the validation size, based on which the training data is split and the best combiner is selected.
+
+        :param validation_size: A `float` between `0` and `1.0`. Ratio of the validation data set.
+        """
+        self.validation_size = validation_size
 
     def get_selected_combiner(self):
         """

@@ -41,6 +41,18 @@ class DecisionProcessor:
         if isinstance(self.combiner, EvidenceBasedCombiner):
             self.combiner.set_evidence(evidence)
 
+    def set_data_split_ratio(self, validation_size):
+        """
+        Set the size of the validation data used by the AutoCombiner to evaluate all applicable fusion methods in order
+        to select the combiner with the best classification performance.
+        Accordingly, the other data of size `1-validation_size` is used to train all individual combiners.
+
+        :param validation_size: A `float` between `0` and `1.0`. Ratio of the validation data set.
+        """
+        if isinstance(self.combiner, AutoCombiner):
+            self.combiner.set_validation_size(validation_size)
+        raise TypeError("No AutoCombiner configuration.")
+
     def train(self, y_ensemble_valid, y_valid):
         """
         Train the combiner model determined by the configuration.
