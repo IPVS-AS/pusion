@@ -33,16 +33,14 @@ random_state = 1
 data = np.loadtxt("/int/datasets/sdd/Sensorless_drive_diagnosis.txt", delimiter=' ')
 
 X = data[:, :-1]
-y = data[:, -1]
+y = transform_label_vector_to_class_assignment_matrix(data[:, -1])
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
-y_train = transform_label_vector_to_class_assignment_matrix(y_train)
-y_test = transform_label_vector_to_class_assignment_matrix(y_test)
 
 classifiers = [
-    MLPClassifier(max_iter=5000, random_state=1),
-    MLPClassifier(max_iter=5000, random_state=2),
+    MLPClassifier(random_state=1),
+    MLPClassifier(random_state=2),
     # KNeighborsClassifier(3),
     # KNeighborsClassifier(5),
     # KNeighborsClassifier(7),
