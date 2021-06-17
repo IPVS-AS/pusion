@@ -33,7 +33,7 @@ random_state = 1
 data = np.loadtxt("/int/datasets/sdd/Sensorless_drive_diagnosis.txt", delimiter=' ')
 
 X = data[:, :-1]
-y = transform_label_vector_to_class_assignment_matrix(data[:, -1])
+y = transform_label_vector_to_class_assignment_matrix(data[:, -1] - 1)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y)
 
