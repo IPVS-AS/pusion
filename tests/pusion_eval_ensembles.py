@@ -34,7 +34,7 @@ perf_metrics = (p.PerformanceMetric.ACCURACY, p.PerformanceMetric.MICRO_F1_SCORE
 # data3 = load_native_files_as_data(['datasets/ensembles_generated_cr_multiclass_classification.pickle'])
 # data4 = load_native_files_as_data(['datasets/ensembles_generated_cr_multilabel_classification.pickle'])
 
-data = load_native_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])[0]
+data = load_pickle_files_as_data(['datasets/ensembles_generated_multiclass_classification.pickle'])[0]
 
 # Flag for complementary-redundant decision outputs
 cr = False

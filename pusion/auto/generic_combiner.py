@@ -7,8 +7,8 @@ from pusion.util.processes import *
 
 class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedCombiner):
     """
-    `GenericCombiner` (GC) allows for automatic decision fusion using all methods provided by the framework, which are
-    applicable to the given problem. The key feature of this combiner is the transparency in terms of it's outer
+    The `GenericCombiner` (GC) allows for automatic decision fusion using all methods provided by the framework, which
+    are applicable to the given problem. The key feature of this combiner is the transparency in terms of it's outer
     behaviour. Based on the usage (i.e. method calls) and the automatically detected configuration,
     the `GenericCombiner` preselects all compatible methods from `pusion.core`. The main purpose is to retrieve fusion
     results obtained by the all applicable methods. The main difference to the `AutoCombiner` is that decision fusion
@@ -87,6 +87,21 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
             self.train_seq(decision_tensor, true_assignments)
 
     def train_par(self, decision_tensor, true_assignments):
+        """
+        Train the Generic Combiner by training individual combiners in parallel.
+        This method detects the configuration based on the ``decision_tensor`` and trains all trainable combiners
+        that are applicable to this configuration.
+
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
+                the training procedure.
+        """
         self.__add_combiner_type(UtilityBasedCombiner)
         self.__add_combiner_type(TrainableCombiner)
         self.problem = determine_problem(decision_tensor)
@@ -115,6 +130,21 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
             self.multi_combiner_train_runtimes.append((i, t_elapsed))
 
     def train_seq(self, decision_tensor, true_assignments):
+        """
+        Train the Generic Combiner by training individual combiners in sequence.
+        This method detects the configuration based on the ``decision_tensor`` and trains all trainable combiners
+        that are applicable to this configuration.
+
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
+                Matrix of either crisp or continuous class assignments which are considered true for each sample during
+                the training procedure.
+        """
         self.__add_combiner_type(UtilityBasedCombiner)
         self.__add_combiner_type(TrainableCombiner)
         self.problem = determine_problem(decision_tensor)
@@ -152,6 +182,22 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
             return self.combine_seq(decision_tensor)
 
     def combine_par(self, decision_tensor):
+        """
+        Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+        This procedure involves combining decision outputs by each individual method which is applicable
+        to the detected configuration. Each combine procedure is spawned in a separate thread and thus performed
+        in parallel.
+
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: list of `numpy.array` of shape `(n_samples, n_classifiers)`.
+                Fusion results obtained by selected fusion methods.
+                The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
+        """
         self.__add_combiner_type(UtilityBasedCombiner)
         self.problem = determine_problem(decision_tensor)
         self.assignment_type = determine_assignment_type(decision_tensor)
@@ -180,6 +226,21 @@ class GenericCombiner(TrainableCombiner, EvidenceBasedCombiner, UtilityBasedComb
         return self.multi_combiner_decision_tensor
 
     def combine_seq(self, decision_tensor):
+        """
+        Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+        This procedure involves combining decision outputs by each individual method which is applicable
+        to the detected configuration. Each combine procedure is initiated in sequence.
+
+        :param decision_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)` or a `list` of
+                `numpy.array` elements of shape `(n_samples, n_classes')`, where `n_classes'` is classifier-specific
+                due to the coverage.
+
+                Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+        :return: list of `numpy.array` of shape `(n_samples, n_classifiers)`.
+                Fusion results obtained by selected fusion methods.
+                The list is aligned with the list of preselected fusion methods (retrievable by ``get_combiners()``).
+        """
         self.__add_combiner_type(UtilityBasedCombiner)
         self.problem = determine_problem(decision_tensor)
         self.assignment_type = determine_assignment_type(decision_tensor)

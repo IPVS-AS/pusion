@@ -62,7 +62,7 @@ dataset_files = [
     # '/int/DFF_DL_data/models_for_fusion/Time-SE-ResNet_DF3_07.pickle',
 ]
 
-data = load_native_files_as_data(dataset_files)
+data = load_pickle_files_as_data(dataset_files)
 
 y_ensemble_valid = [data[i]['Y_test_predictions'] for i in range(len(dataset_files))]
 y_ensemble_valid = tensorize(y_ensemble_valid)

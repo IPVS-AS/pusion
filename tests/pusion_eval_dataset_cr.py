@@ -65,7 +65,7 @@ dataset_files = [
     '/int/DL_data/models_for_fusion/multiclass_resnet_DF05.pickle',
 ]
 
-data = load_native_files_as_data(dataset_files)
+data = load_pickle_files_as_data(dataset_files)
 
 # y_ensemble_valid = [data[i]['Y_predictions'] for i in range(len(dataset_files))]
 # y_ensemble_valid = decision_outputs_to_decision_tensor(y_ensemble_valid)

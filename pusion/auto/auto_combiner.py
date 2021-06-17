@@ -6,7 +6,7 @@ from pusion.util.generator import *
 
 class AutoCombiner(GenericCombiner):
     """
-    `AutoCombiner` allows for automatic decision fusion using all methods provided by the framework, which are
+    The `AutoCombiner` allows for automatic decision fusion using all methods provided by the framework, which are
     applicable to the given problem. The key feature of this combiner is the transparency in terms of it's outer
     behaviour. Based on the usage (i.e. method calls) and the automatically detected configuration,
     the `AutoCombiner` preselects all compatible methods from `pusion.core`. The main purpose is to retrieve fusion
