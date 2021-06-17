@@ -163,7 +163,7 @@ def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes=No
     :param n_classes: Number of classes to be considered.
     :return: `numpy.array` of shape `(n_samples, n_classes)`. Multiclass assignments.
     """
-    label_vector = np.array(label_vector)
+    label_vector = np.array(label_vector, dtype=int)
     if n_classes is None:
         n_classes = np.max(label_vector) + 1
 
