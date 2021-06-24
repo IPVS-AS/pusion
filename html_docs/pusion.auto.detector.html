@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.auto.detector module &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pusion.control package" href="pusion.control.html" />
+    <link rel="prev" title="pusion.auto.generic_combiner" href="pusion.auto.generic_combiner.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pusion.auto.auto_combiner.html">pusion.auto.auto_combiner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.auto.generic_combiner.html">pusion.auto.generic_combiner</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.auto.detector module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.core.html">pusion.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.util.html">pusion.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.auto.html">pusion.auto package</a> &raquo;</li>
+        
+      <li>pusion.auto.detector module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.auto.detector.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.auto.detector">
+<span id="pusion-auto-detector-module"></span><h1>pusion.auto.detector module<a class="headerlink" href="#module-pusion.auto.detector" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="pusion.auto.detector.determine_problem">
+<code class="sig-prename descclassname"><span class="pre">pusion.auto.detector.</span></code><code class="sig-name descname"><span class="pre">determine_problem</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.detector.determine_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the classification problem based on the decision outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>string</cite> constant <cite>‘MULTI_CLASS’</cite> or <cite>‘MULTI_LABEL’</cite>. See <cite>pusion.util.constants.Problem</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.auto.detector.determine_assignment_type">
+<code class="sig-prename descclassname"><span class="pre">pusion.auto.detector.</span></code><code class="sig-name descname"><span class="pre">determine_assignment_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.detector.determine_assignment_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the assignment type based on the decision outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>string</cite> constant <cite>‘CRISP’</cite> or <cite>‘CONTINUOUS’</cite>. See <cite>pusion.util.constants.AssignmentType</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.auto.detector.determine_coverage_type">
+<code class="sig-prename descclassname"><span class="pre">pusion.auto.detector.</span></code><code class="sig-name descname"><span class="pre">determine_coverage_type</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.detector.determine_coverage_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the coverage type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>string</cite> constant <cite>‘REDUNDANT’</cite>, <cite>‘COMPLEMENTARY’</cite>  or <cite>‘COMPLEMENTARY_REDUNDANT’</cite>.
+See <cite>pusion.util.constants.CoverageType</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pusion.auto.detector.determine_pac">
+<code class="sig-prename descclassname"><span class="pre">pusion.auto.detector.</span></code><code class="sig-name descname"><span class="pre">determine_pac</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.detector.determine_pac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the PAC-tuple (problem, assignment type and coverage type) based on the given decision outputs and
+coverage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of string constants representing the PAC. See <cite>pusion.util.constants.Problem</cite>,
+<cite>pusion.util.constants.AssignmentType</cite> and <cite>pusion.util.constants.CoverageType</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pusion.control.html" class="btn btn-neutral float-right" title="pusion.control package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.auto.generic_combiner.html" class="btn btn-neutral float-left" title="pusion.auto.generic_combiner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS).
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
