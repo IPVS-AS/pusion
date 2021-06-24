@@ -10,8 +10,9 @@ compatibility of individual fusion methods to the given problem. Pusion handles 
 and also tolerates different forms of classification outputs. These include the multiclass and multilabel
 classification, as well as crisp and continuous class assignments.
 
-The framework is originally designed for combining fault detection and diagnosis methods, but it’s application is not
+The framework is originally designed for combining fault detection and diagnosis methods, but its application is not
 limited to this area.
 
 ## Full Documentation
-The full documentation is available on [GitLab Pages](https://adob.gitlab.io/decision-fusion-framework).
+The full HTML documentation is available on [GitLab Pages](https://adob.gitlab.io/decision-fusion-framework) or in project's
+`html_docs` folder (accessible by a web browser when cloned).
