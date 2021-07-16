@@ -87,7 +87,7 @@ final fusion is performed on the test dataset (without true labels).
 Evaluation
 ----------
 
-In addition to the previous example, we are able to evaluate both, the ensemble's and the combiner's classification
+In addition to the previous example, we are able to evaluate both, the ensemble and the combiner classification
 performance using the evaluation methods provided by the framework.
 The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
 for the combiner as well as for the ensemble.
@@ -272,5 +272,5 @@ Output:
 
 
 .. warning::
-    Combiner's output is always redundant, which means that all classes are covered for each sample.
+    Combiner output is always redundant, which means that all classes are covered for each sample.
     To make a reasonable comparison between the combiner and the ensemble use ``evaluate_cr_*`` methods for both.
