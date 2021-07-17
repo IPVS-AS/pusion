@@ -21,10 +21,13 @@ The following code shows an illustrative and simple example of using pusion for 
     ensemble_out = np.array([classifier_a, classifier_b, classifier_c])
 
     # Initialize the general framework interface
-    dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+    dp = p.DecisionProcessor(p.Configuration(method=p.Method.MACRO_MAJORITY_VOTE,
+                                             problem=p.Problem.MULTI_CLASS,
+                                             assignment_type=p.AssignmentType.CRISP,
+                                             coverage_type=p.CoverageType.REDUNDANT))
 
     # Fuse the ensemble classification outputs
-    fused_decisions = dp.combine(ensemble_out)
+    fused_decisions = np.array(dp.combine(ensemble_out))
 
     print(fused_decisions)
 
@@ -258,7 +261,7 @@ The framework provides also a specific evaluation methodology for complementary-
     # Evaluate the fusion
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiner())
-    eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb, coverage)
+    eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
     print(eval_combiner.get_report())
 
 Output:

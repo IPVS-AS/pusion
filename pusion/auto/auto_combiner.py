@@ -60,7 +60,7 @@ class AutoCombiner(GenericCombiner):
         self.selected_combiner = self.combiners[performance_per_combiner.argmax()]
         # Clear temporarily obtained fusion results.
         self.multi_combiner_decision_tensor = []
-        # Train on the whole dataset again?
+        # Here, the AutoCombiner could be trained on the whole dataset again.
         # super().train(decision_tensor, true_assignments)
 
     def combine(self, decision_tensor):
