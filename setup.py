@@ -8,13 +8,13 @@ setup(
     author="Admir Obralija",
     license="MIT",
     install_requires=[
-        'numpy',
-        'scipy',
-        'scikit-learn',
-        'pandas',
-        'matplotlib',
-        'setuptools',
-        'pickle5'
+        'numpy~=1.20.2',
+        'scipy~=1.6.2',
+        'scikit-learn~=0.24.1',
+        'setuptools~=54.2.0',
+        'pandas~=1.2.3',
+        'matplotlib~=3.4.1',
+        'pickle5~=0.0.11'
     ],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
