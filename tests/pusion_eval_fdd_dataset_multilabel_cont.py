@@ -2,18 +2,12 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import scikitplot as skplt
 
 import pusion as p
-from pusion.auto.detector import determine_assignment_type
-from pusion.evaluation.evaluation_metrics import *
 from pusion.evaluation.evaluation import Evaluation
 from pusion.input_output.file_input_output import *
-from pusion.util.generator import split_into_train_and_validation_data
 from pusion.util.transformer import *
-from matplotlib.ticker import MaxNLocator
 
 warnings.filterwarnings('error')  # halt on warning
 

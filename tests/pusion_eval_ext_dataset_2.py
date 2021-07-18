@@ -1,19 +1,13 @@
 import time
-import warnings
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import scikitplot as skplt
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 
 import pusion as p
-from pusion import transform_label_vector_to_class_assignment_matrix
-from pusion.auto.detector import determine_assignment_type
-from pusion.evaluation.evaluation_metrics import *
 from pusion.evaluation.evaluation import Evaluation
+from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
 from pusion.util.generator import split_into_train_and_validation_data
 from pusion.util.transformer import *

@@ -2,22 +2,8 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
 
 import pusion as p
-from pusion.core.combiner import UtilityBasedCombiner, TrainableCombiner
 from pusion.evaluation.evaluation import Evaluation
 from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
