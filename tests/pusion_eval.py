@@ -2,22 +2,10 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
 
 import pusion as p
-from pusion.core.combiner import UtilityBasedCombiner, TrainableCombiner
 from pusion.evaluation.evaluation import Evaluation
 from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
@@ -84,11 +72,7 @@ for i in range(n_runs):
         np.random.seed(random_state)
 
     classifiers = [
-        # KNeighborsClassifier(1),
         # KNeighborsClassifier(3),
-        # KNeighborsClassifier(5),
-        # KNeighborsClassifier(7),
-        # KNeighborsClassifier(9),
         # DecisionTreeClassifier(max_depth=5),  # MLK
         # RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),  # MLK
         MLPClassifier(max_iter=5000, random_state=1, hidden_layer_sizes=(20, 20, 20)),  # MLK
@@ -98,34 +82,14 @@ for i in range(n_runs):
         MLPClassifier(max_iter=5000, random_state=5, hidden_layer_sizes=(20, 20, 20)),  # MLK
         # LinearDiscriminantAnalysis(),
         # LogisticRegression(),
-        # SVC(),
-        # SVC(kernel="linear"),
-        # SVC(kernel="linear"),
-        # SVC(kernel="poly"),
         # SVC(kernel="rbf"),
         # SVC(kernel="sigmoid"),
-        # SVC(gamma=2, C=1),
         # GaussianProcessClassifier(1.0 * RBF(1.0)),
         # DecisionTreeClassifier(max_depth=3),
-        # DecisionTreeClassifier(max_depth=2),
-        # DecisionTreeClassifier(max_depth=3),
-        # DecisionTreeClassifier(max_depth=4),
-        # DecisionTreeClassifier(max_depth=5),
-        # RandomForestClassifier(max_depth=1, n_estimators=10, random_state=1),
         # RandomForestClassifier(max_depth=3, n_estimators=9, random_state=1),
-        # RandomForestClassifier(max_depth=5, n_estimators=8, random_state=1),
-        # RandomForestClassifier(max_depth=7, n_estimators=7, random_state=1),
-        # RandomForestClassifier(max_depth=10, n_estimators=6, random_state=1),
-        # AdaBoostClassifier(),
         # GaussianNB(),
         # QuadraticDiscriminantAnalysis(),
-        # AdaBoostClassifier(n_estimators=10),
-        # AdaBoostClassifier(n_estimators=10),
-        # AdaBoostClassifier(n_estimators=10),
         # AdaBoostClassifier(n_estimators=20),
-        # AdaBoostClassifier(n_estimators=30),
-        # AdaBoostClassifier(n_estimators=40),
-        # AdaBoostClassifier(n_estimators=50),
     ]
 
     coverage = coverage_list[i]
@@ -221,17 +185,6 @@ for i in range(n_runs):
 # === Plot properties ==================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
 plt.rcParams.update({'font.size': 13})
-# SMALL_SIZE = 8
-# MEDIUM_SIZE = 10
-# BIGGER_SIZE = 12
-#
-# plt.rc('font', size=BIGGER_SIZE)          # controls default text sizes
-# plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
-# plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
-# plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-# plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-# plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
-# plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 
 def extend_x_ticks_upper_bound(plot):
