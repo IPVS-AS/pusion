@@ -101,8 +101,7 @@ for the combiner as well as for the ensemble.
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
         p.PerformanceMetric.MICRO_F1_SCORE,
-        p.PerformanceMetric.MICRO_PRECISION,
-        p.PerformanceMetric.MICRO_RECALL
+        p.PerformanceMetric.MICRO_PRECISION
     ]
 
     print("============= Ensemble ===============")
@@ -122,13 +121,13 @@ Output:
 .. code:: text
 
     ============= Ensemble ===============
-                                         accuracy     f1  precision  recall
-    MLPClassifier [0]                       0.810  0.810      0.810   0.810
-    MLPClassifier [1]                       0.800  0.800      0.800   0.800
-    MLPClassifier [2]                       0.792  0.792      0.792   0.792
+                                         accuracy     f1  precision
+    MLPClassifier [0]                       0.810  0.810      0.810
+    MLPClassifier [1]                       0.800  0.800      0.800
+    MLPClassifier [2]                       0.792  0.792      0.792
     ============== Combiner ==============
-                                         accuracy     f1  precision  recall
-    DempsterShaferCombiner                  0.816  0.816      0.816   0.816
+                                         accuracy     f1  precision
+    DempsterShaferCombiner                  0.816  0.816      0.816
 
 
 Auto Combiner
@@ -162,8 +161,8 @@ Output:
           Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
               Optimal combiner: CosineSimilarityCombiner
     Classification performance:
-                                         accuracy  micro_f1  micro_precision  micro_recall
-    AutoCombiner                            0.836     0.836            0.836         0.836
+                                         accuracy  micro_f1  micro_precision
+    AutoCombiner                            0.836     0.836            0.836
     ==========================================================================================
 
 Generic Combiner
@@ -202,19 +201,19 @@ Output:
           Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
               Optimal combiner: WeightedVotingCombiner
     Classification performance:
-                                         accuracy  micro_f1  micro_precision  micro_recall
-    CosineSimilarityCombiner                0.836     0.836            0.836         0.836
-    MacroMajorityVoteCombiner               0.836     0.836            0.836         0.836
-    MicroMajorityVoteCombiner               0.836     0.836            0.836         0.836
-    SimpleAverageCombiner                   0.836     0.836            0.836         0.836
-    BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840         0.822
-    DecisionTemplatesCombiner               0.836     0.836            0.836         0.836
-    KNNCombiner                             0.826     0.836            0.846         0.826
-    DempsterShaferCombiner                  0.836     0.836            0.836         0.836
-    MaximumLikelihoodCombiner               0.834     0.834            0.834         0.834
-    NaiveBayesCombiner                      0.836     0.836            0.836         0.836
-    NeuralNetworkCombiner                   0.826     0.832            0.838         0.826
-    WeightedVotingCombiner                  0.836     0.836            0.836         0.836
+                                         accuracy  micro_f1  micro_precision
+    CosineSimilarityCombiner                0.836     0.836            0.836
+    MacroMajorityVoteCombiner               0.836     0.836            0.836
+    MicroMajorityVoteCombiner               0.836     0.836            0.836
+    SimpleAverageCombiner                   0.836     0.836            0.836
+    BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840
+    DecisionTemplatesCombiner               0.836     0.836            0.836
+    KNNCombiner                             0.826     0.836            0.846
+    DempsterShaferCombiner                  0.836     0.836            0.836
+    MaximumLikelihoodCombiner               0.834     0.834            0.834
+    NaiveBayesCombiner                      0.836     0.836            0.836
+    NeuralNetworkCombiner                   0.826     0.832            0.838
+    WeightedVotingCombiner                  0.836     0.836            0.836
     ==========================================================================================
 
 CR classification
@@ -269,8 +268,7 @@ The framework provides also a specific evaluation methodology for complementary-
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
         p.PerformanceMetric.MICRO_F1_SCORE,
-        p.PerformanceMetric.MICRO_PRECISION,
-        p.PerformanceMetric.MICRO_RECALL
+        p.PerformanceMetric.MICRO_PRECISION
     ]
 
     # Evaluate ensemble classifiers
@@ -292,8 +290,8 @@ Output:
 
 .. code:: text
 
-                                         accuracy  micro_f1  micro_precision  micro_recall
-    Ensemble                                0.804     0.804            0.804         0.804
+                                         accuracy  micro_f1  micro_precision
+    Ensemble                                0.804     0.804            0.804
     ================================= AutoCombiner - Report ==================================
                        Problem: MULTI_LABEL
                Assignment type: CRISP
@@ -302,8 +300,8 @@ Output:
           Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
               Optimal combiner: CRDecisionTemplatesCombiner
     Classification performance:
-                                         accuracy  micro_f1  micro_precision  micro_recall
-    AutoCombiner                            0.813     0.813            0.813         0.813
+                                         accuracy  micro_f1  micro_precision
+    AutoCombiner                            0.813     0.813            0.813
     ==========================================================================================
 
 

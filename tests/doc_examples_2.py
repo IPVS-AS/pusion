@@ -36,8 +36,7 @@ y_comb = dp.combine(y_ensemble_test)
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
     p.PerformanceMetric.MICRO_F1_SCORE,
-    p.PerformanceMetric.MICRO_PRECISION,
-    p.PerformanceMetric.MICRO_RECALL
+    p.PerformanceMetric.MICRO_PRECISION
 ]
 
 # Evaluate ensemble classifiers
