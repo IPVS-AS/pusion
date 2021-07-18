@@ -2,16 +2,12 @@ import time
 import warnings
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import scikitplot as skplt
 
 import pusion as p
-from pusion.auto.detector import determine_assignment_type
-from pusion.evaluation.evaluation_metrics import *
 from pusion.evaluation.evaluation import Evaluation
+from pusion.evaluation.evaluation_metrics import *
 from pusion.input_output.file_input_output import *
-from pusion.util.generator import split_into_train_and_validation_data
 from pusion.util.transformer import *
 
 warnings.filterwarnings('error')  # halt on warning
@@ -68,15 +64,6 @@ y_ensemble_test = tensorize(y_ensemble_test)
 y_test = data[0]['Y_test_for_fusion']
 
 
-# decision_outputs = [
-#     data[0]['Y_test_predictions'],
-#     data[1]['Y_test_predictions'],
-#     data[2]['Y_test_predictions'],
-#     data[3]['Y_test_predictions'],
-#     data[4]['Y_test_predictions'],
-# ]
-# true_assignments = np.array(data[0]['Y_test'])
-
 coverage = [
     [0,  1,  2,  3],
     [0,  1,  2,  3],
@@ -88,9 +75,6 @@ coverage = [
 cr = False
 
 np.random.seed(random_state)
-
-# y_ensemble_test, y_test, y_ensemble_valid, y_valid = \
-#     split_into_train_and_validation_data(decision_outputs, true_assignments, validation_size=.5)
 
 y_ensemble_test = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_test)
 y_ensemble_valid = multiclass_prediction_tensor_to_decision_tensor(y_ensemble_valid)
@@ -116,17 +100,6 @@ else:
 
 print(eval_classifiers.get_report())
 
-# ---- Mean confidence on continuous ensemble outputs
-# eval_classifiers_confidence = Evaluation(p.PerformanceMetric.MEAN_CONFIDENCE)
-# if cr:
-#     eval_classifiers_confidence.set_instances(['Ensemble'])
-#     eval_classifiers_confidence.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
-# else:
-#     eval_classifiers_confidence.set_instances([('ResNet ' + str(i + 1)) for i in range(len(y_ensemble_test))])
-#     eval_classifiers_confidence.evaluate(y_test, y_ensemble_test)
-#
-# print(eval_classifiers_confidence.get_report())
-
 
 # ---- GenericCombiner -------------------------------------------------------------------------------------------------
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
@@ -147,29 +120,6 @@ else:
     eval_combiner.evaluate(y_test, multi_comb_decision_outputs)
 print(eval_combiner.get_report())
 
-# ---- Mean confidence on continuous combiner outputs
-# eval_combiner_confidence = Evaluation(p.PerformanceMetric.MEAN_CONFIDENCE)
-# eval_combiner_confidence.set_instances(dp.get_combiners())
-# multi_comb_continuous_outputs = dp.get_multi_combiner_decision_output()
-# if cr:
-#     eval_combiner_confidence.evaluate_cr_multi_combiner_decision_outputs(y_test, multi_comb_continuous_outputs)
-# else:
-#     eval_combiner_confidence.evaluate(y_test, multi_comb_continuous_outputs)
-# print(eval_combiner_confidence.get_report())
-
-
-# # ---- ROC curves for classifiers
-# for i, do in enumerate(y_ensemble_test):
-#     skplt.metrics.plot_roc_curve(multiclass_assignments_to_labels(y_test), do)
-#     save(plt, "000_classifier_" + str(i) + "_roc_curve", eval_id + "/roc")
-#
-# # ---- ROC curves for combiners with continuous outputs
-# for do, comb in zip(multi_comb_continuous_outputs, dp.get_combiners()):
-#     if determine_assignment_type(do) == p.AssignmentType.CONTINUOUS:
-#         # skplt.metrics.plot_roc_curve(multiclass_assignments_to_labels(y_test), do)
-#         # plt.title(comb.SHORT_NAME)
-#         # save(plt, "001_combiner_" + comb.SHORT_NAME + "_roc_curve", eval_id + "/roc")
-#         print("CONT. OUT: ", comb.SHORT_NAME)
 
 # === Plots ============================================================================================================
 meanprops = dict(markerfacecolor='black', markeredgecolor='white')
