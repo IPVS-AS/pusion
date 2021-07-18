@@ -13,6 +13,7 @@ Package requirements
 - setuptools >= 54.2.0
 - pandas >= 1.2.3
 - matplotlib >= 3.4.1
+- pickle5 >= 0.0.11
 
 Preparation
 -----------
