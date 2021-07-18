@@ -119,7 +119,7 @@ for the combiner as well as for the ensemble.
 
 Output:
 
-.. code::
+.. code:: text
 
     ============= Ensemble ===============
                                          accuracy     f1  precision  recall
@@ -146,15 +146,25 @@ the configuration.
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiner())
     eval_combiner.evaluate(y_test, y_comb)
-    print(eval_combiner.get_report())
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    AutoCombiner                            0.816  0.816      0.816   0.816
-
+    ================================= AutoCombiner - Report ==================================
+                       Problem: MULTI_CLASS
+               Assignment type: CRISP
+                 Coverage type: REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+              Optimal combiner: CosineSimilarityCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision  micro_recall
+    AutoCombiner                            0.836     0.836            0.836         0.836
+    ==========================================================================================
 
 Generic Combiner
 ----------------
@@ -171,7 +181,9 @@ methods and their respective performances.
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiners())
     eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
-    print(eval_combiner.get_report())
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
 
 .. note::
 
@@ -180,21 +192,30 @@ methods and their respective performances.
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    CosineSimilarityCombiner                0.816  0.816      0.816   0.816
-    MacroMajorityVoteCombiner               0.816  0.816      0.816   0.816
-    MicroMajorityVoteCombiner               0.812  0.819      0.825   0.812
-    SimpleAverageCombiner                   0.812  0.819      0.825   0.812
-    BehaviourKnowledgeSpaceCombiner         0.776  0.795      0.815   0.776
-    DecisionTemplatesCombiner               0.818  0.818      0.818   0.818
-    DecisionTreeCombiner                    0.786  0.805      0.824   0.786
-    DempsterShaferCombiner                  0.816  0.816      0.816   0.816
-    MaximumLikelihoodCombiner               0.810  0.810      0.810   0.810
-    NaiveBayesCombiner                      0.814  0.814      0.814   0.814
-    NeuralNetworkCombiner                   0.780  0.811      0.844   0.780
-    WeightedVotingCombiner                  0.816  0.816      0.816   0.816
+    ================================ GenericCombiner - Report ================================
+                       Problem: MULTI_CLASS
+               Assignment type: CRISP
+                 Coverage type: REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+              Optimal combiner: WeightedVotingCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision  micro_recall
+    CosineSimilarityCombiner                0.836     0.836            0.836         0.836
+    MacroMajorityVoteCombiner               0.836     0.836            0.836         0.836
+    MicroMajorityVoteCombiner               0.836     0.836            0.836         0.836
+    SimpleAverageCombiner                   0.836     0.836            0.836         0.836
+    BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840         0.822
+    DecisionTemplatesCombiner               0.836     0.836            0.836         0.836
+    KNNCombiner                             0.826     0.836            0.846         0.826
+    DempsterShaferCombiner                  0.836     0.836            0.836         0.836
+    MaximumLikelihoodCombiner               0.834     0.834            0.834         0.834
+    NaiveBayesCombiner                      0.836     0.836            0.836         0.836
+    NeuralNetworkCombiner                   0.826     0.832            0.838         0.826
+    WeightedVotingCombiner                  0.836     0.836            0.836         0.836
+    ==========================================================================================
 
 CR classification
 -----------------
@@ -242,7 +263,7 @@ The following code example shows how to generate and combine such complementary-
 
 The framework provides also a specific evaluation methodology for complementary-redundant results.
 
-.. code::
+.. code:: python
 
     # Define classification performance metrics used for the evaluation
     eval_metrics = [
@@ -262,16 +283,28 @@ The framework provides also a specific evaluation methodology for complementary-
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiner())
     eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
-    print(eval_combiner.get_report())
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
+
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    Ensemble                                0.646  0.802      0.803   0.802
-                                         accuracy   f1  precision  recall
-    AutoCombiner                             0.67  0.8      0.835   0.769
+                                         accuracy  micro_f1  micro_precision  micro_recall
+    Ensemble                                0.804     0.804            0.804         0.804
+    ================================= AutoCombiner - Report ==================================
+                       Problem: MULTI_LABEL
+               Assignment type: CRISP
+                 Coverage type: COMPLEMENTARY_REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
+              Optimal combiner: CRDecisionTemplatesCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision  micro_recall
+    AutoCombiner                            0.813     0.813            0.813         0.813
+    ==========================================================================================
 
 
 .. warning::

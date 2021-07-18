@@ -49,7 +49,7 @@ print(eval_classifiers.get_report())
 # Evaluate the fusion
 eval_combiner = p.Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb, coverage)
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
 
 dp.set_evaluation(eval_combiner)
 print(dp.report())
