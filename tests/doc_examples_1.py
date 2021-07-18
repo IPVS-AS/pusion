@@ -61,7 +61,6 @@ print(eval_combiner.get_report())
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-print("============ AutoCombiner ============")
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
 dp.train(y_ensemble_valid, y_valid)
 y_comb = dp.combine(y_ensemble_test)
@@ -69,11 +68,12 @@ y_comb = dp.combine(y_ensemble_test)
 eval_combiner = p.Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiner())
 eval_combiner.evaluate(y_test, y_comb)
-print(eval_combiner.get_report())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-print("========== GenericCombiner ===========")
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
 dp.train(y_ensemble_valid, y_valid)
 dp.combine(y_ensemble_test)
@@ -81,4 +81,6 @@ dp.combine(y_ensemble_test)
 eval_combiner = p.Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiners())
 eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())

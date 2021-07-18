@@ -39,26 +39,8 @@ eval_classifiers.set_instances("Ensemble")
 eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 print(eval_classifiers.get_report())
 
-print("============ AutoCombiner ============")
-dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
-dp.set_parallel(False)
-dp.set_coverage(coverage)
-dp.train(y_ensemble_valid, y_valid)
-y_comb = dp.combine(y_ensemble_test)
 
-eval_combiner = Evaluation(*eval_metrics)
-eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
-print(eval_combiner.get_report())
-print("Selected:", type(dp.get_optimal_combiner()).__name__)
-
-print("--------------------------------------")
-eval_combiner = Evaluation(*eval_metrics)
-eval_combiner.set_instances(dp.get_combiners())
-eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
-
-print("========== GenericCombiner ===========")
+# ---- GenericCombiner -------------------------------------------------------------------------------------------------
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
 dp.set_coverage(coverage)
 dp.train(y_ensemble_valid, y_valid)
@@ -67,4 +49,20 @@ dp.combine(y_ensemble_test)
 eval_combiner = Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiners())
 eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+
+
+# ---- AutoCombiner ----------------------------------------------------------------------------------------------------
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+dp.set_coverage(coverage)
+dp.train(y_ensemble_valid, y_valid)
+y_comb = dp.combine(y_ensemble_test)
+
+eval_combiner = Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())

@@ -17,9 +17,9 @@ warnings.filterwarnings('error')
 
 # ---- Classifiers -----------------------------------------------------------------------------------------------------
 classifiers = [
-    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10,)),  # MLK
-    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10, 10)),  # MLK
-    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10, 10, 10)),  # MLK
+    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10,)),
+    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10, 10)),
+    MLPClassifier(max_iter=5000, hidden_layer_sizes=(10, 10, 10)),
 ]
 
 y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_ensemble_classification_outputs(
@@ -42,6 +42,7 @@ print(eval_classifiers.get_report())
 
 # ---- GenericCombiner -------------------------------------------------------------------------------------------------
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
+dp.set_parallel(False)
 
 t_begin = time.perf_counter()
 dp.train(y_ensemble_valid, y_valid)
@@ -52,12 +53,13 @@ dp.combine(y_ensemble_test)
 t_elapsed_combine = time.perf_counter() - t_begin
 
 # ---- Evaluate all combiners
-print("========== GenericCombiner ===========")
 eval_combiner = Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiners())
 eval_combiner.set_runtimes(dp.get_multi_combiner_runtimes())
 eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
 
 # ---- Report runtimes
 print("------------- Runtimes ---------------")
@@ -67,34 +69,27 @@ print("Total combine time:", t_elapsed_combine)
 
 
 # ---- AutoCombiner ----------------------------------------------------------------------------------------------------
-# dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
-#
-# t_begin = time.perf_counter()
-# dp.train(y_ensemble_valid, y_valid)
-# t_elapsed_train = time.perf_counter() - t_begin
-#
-# t_begin = time.perf_counter()
-# y_comb = dp.combine(y_ensemble_test)
-# t_elapsed_combine = time.perf_counter() - t_begin
-#
-# # ---- Evaluate AutoCombiner
-# print("============ AutoCombiner ============")
-# eval_combiner = Evaluation(*eval_metrics)
-# eval_combiner.set_instances(dp.get_combiner())
-# eval_combiner.evaluate(y_test, y_comb)
-# print(eval_combiner.get_report())
-#
-# # ---- Evaluate internal combiners
-# print("--------------------------------------")
-# eval_combiner = Evaluation(*eval_metrics)
-# eval_combiner.set_instances(dp.get_combiners())
-# eval_combiner.set_runtimes(dp.get_multi_combiner_runtimes())
-# eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
-# print(eval_combiner.get_report())
-#
-# # ---- Report runtimes
-# print("------------- Runtimes ---------------")
-# print(eval_combiner.get_runtime_report())
-# print("Total train time:", t_elapsed_train)
-# print("Total combine time:", t_elapsed_combine)
-# print()
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+dp.set_parallel(False)
+
+t_begin = time.perf_counter()
+dp.train(y_ensemble_valid, y_valid)
+t_elapsed_train = time.perf_counter() - t_begin
+
+t_begin = time.perf_counter()
+y_comb = dp.combine(y_ensemble_test)
+t_elapsed_combine = time.perf_counter() - t_begin
+
+# ---- Evaluate AutoCombiner
+eval_combiner = Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+
+# ---- Report runtimes
+print("------------- Runtimes ---------------")
+print("Total train time:", t_elapsed_train)
+print("Total combine time:", t_elapsed_combine)
+print()
