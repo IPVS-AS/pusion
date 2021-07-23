@@ -21,10 +21,13 @@ The following code shows an illustrative and simple example of using pusion for 
     ensemble_out = np.array([classifier_a, classifier_b, classifier_c])
 
     # Initialize the general framework interface
-    dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+    dp = p.DecisionProcessor(p.Configuration(method=p.Method.MACRO_MAJORITY_VOTE,
+                                             problem=p.Problem.MULTI_CLASS,
+                                             assignment_type=p.AssignmentType.CRISP,
+                                             coverage_type=p.CoverageType.REDUNDANT))
 
     # Fuse the ensemble classification outputs
-    fused_decisions = dp.combine(ensemble_out)
+    fused_decisions = np.array(dp.combine(ensemble_out))
 
     print(fused_decisions)
 
@@ -87,7 +90,7 @@ final fusion is performed on the test dataset (without true labels).
 Evaluation
 ----------
 
-In addition to the previous example, we are able to evaluate both, the ensemble's and the combiner's classification
+In addition to the previous example, we are able to evaluate both, the ensemble and the combiner classification
 performance using the evaluation methods provided by the framework.
 The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
 for the combiner as well as for the ensemble.
@@ -98,8 +101,7 @@ for the combiner as well as for the ensemble.
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
         p.PerformanceMetric.MICRO_F1_SCORE,
-        p.PerformanceMetric.MICRO_PRECISION,
-        p.PerformanceMetric.MICRO_RECALL
+        p.PerformanceMetric.MICRO_PRECISION
     ]
 
     print("============= Ensemble ===============")
@@ -116,16 +118,16 @@ for the combiner as well as for the ensemble.
 
 Output:
 
-.. code::
+.. code:: text
 
     ============= Ensemble ===============
-                                         accuracy     f1  precision  recall
-    MLPClassifier [0]                       0.810  0.810      0.810   0.810
-    MLPClassifier [1]                       0.800  0.800      0.800   0.800
-    MLPClassifier [2]                       0.792  0.792      0.792   0.792
+                                         accuracy     f1  precision
+    MLPClassifier [0]                       0.810  0.810      0.810
+    MLPClassifier [1]                       0.800  0.800      0.800
+    MLPClassifier [2]                       0.792  0.792      0.792
     ============== Combiner ==============
-                                         accuracy     f1  precision  recall
-    DempsterShaferCombiner                  0.816  0.816      0.816   0.816
+                                         accuracy     f1  precision
+    DempsterShaferCombiner                  0.816  0.816      0.816
 
 
 Auto Combiner
@@ -143,15 +145,25 @@ the configuration.
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiner())
     eval_combiner.evaluate(y_test, y_comb)
-    print(eval_combiner.get_report())
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    AutoCombiner                            0.816  0.816      0.816   0.816
-
+    ================================= AutoCombiner - Report ==================================
+                       Problem: MULTI_CLASS
+               Assignment type: CRISP
+                 Coverage type: REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+              Optimal combiner: CosineSimilarityCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision
+    AutoCombiner                            0.836     0.836            0.836
+    ==========================================================================================
 
 Generic Combiner
 ----------------
@@ -168,7 +180,9 @@ methods and their respective performances.
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiners())
     eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
-    print(eval_combiner.get_report())
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
 
 .. note::
 
@@ -177,21 +191,30 @@ methods and their respective performances.
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    CosineSimilarityCombiner                0.816  0.816      0.816   0.816
-    MacroMajorityVoteCombiner               0.816  0.816      0.816   0.816
-    MicroMajorityVoteCombiner               0.812  0.819      0.825   0.812
-    SimpleAverageCombiner                   0.812  0.819      0.825   0.812
-    BehaviourKnowledgeSpaceCombiner         0.776  0.795      0.815   0.776
-    DecisionTemplatesCombiner               0.818  0.818      0.818   0.818
-    DecisionTreeCombiner                    0.786  0.805      0.824   0.786
-    DempsterShaferCombiner                  0.816  0.816      0.816   0.816
-    MaximumLikelihoodCombiner               0.810  0.810      0.810   0.810
-    NaiveBayesCombiner                      0.814  0.814      0.814   0.814
-    NeuralNetworkCombiner                   0.780  0.811      0.844   0.780
-    WeightedVotingCombiner                  0.816  0.816      0.816   0.816
+    ================================ GenericCombiner - Report ================================
+                       Problem: MULTI_CLASS
+               Assignment type: CRISP
+                 Coverage type: REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+              Optimal combiner: WeightedVotingCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision
+    CosineSimilarityCombiner                0.836     0.836            0.836
+    MacroMajorityVoteCombiner               0.836     0.836            0.836
+    MicroMajorityVoteCombiner               0.836     0.836            0.836
+    SimpleAverageCombiner                   0.836     0.836            0.836
+    BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840
+    DecisionTemplatesCombiner               0.836     0.836            0.836
+    KNNCombiner                             0.826     0.836            0.846
+    DempsterShaferCombiner                  0.836     0.836            0.836
+    MaximumLikelihoodCombiner               0.834     0.834            0.834
+    NaiveBayesCombiner                      0.836     0.836            0.836
+    NeuralNetworkCombiner                   0.826     0.832            0.838
+    WeightedVotingCombiner                  0.836     0.836            0.836
+    ==========================================================================================
 
 CR classification
 -----------------
@@ -239,14 +262,13 @@ The following code example shows how to generate and combine such complementary-
 
 The framework provides also a specific evaluation methodology for complementary-redundant results.
 
-.. code::
+.. code:: python
 
     # Define classification performance metrics used for the evaluation
     eval_metrics = [
         p.PerformanceMetric.ACCURACY,
         p.PerformanceMetric.MICRO_F1_SCORE,
-        p.PerformanceMetric.MICRO_PRECISION,
-        p.PerformanceMetric.MICRO_RECALL
+        p.PerformanceMetric.MICRO_PRECISION
     ]
 
     # Evaluate ensemble classifiers
@@ -258,19 +280,31 @@ The framework provides also a specific evaluation methodology for complementary-
     # Evaluate the fusion
     eval_combiner = p.Evaluation(*eval_metrics)
     eval_combiner.set_instances(dp.get_combiner())
-    eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb, coverage)
-    print(eval_combiner.get_report())
+    eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
+
+    dp.set_evaluation(eval_combiner)
+    print(dp.report())
+
 
 Output:
 
-.. code::
+.. code:: text
 
-                                         accuracy     f1  precision  recall
-    Ensemble                                0.646  0.802      0.803   0.802
-                                         accuracy   f1  precision  recall
-    AutoCombiner                             0.67  0.8      0.835   0.769
+                                         accuracy  micro_f1  micro_precision
+    Ensemble                                0.804     0.804            0.804
+    ================================= AutoCombiner - Report ==================================
+                       Problem: MULTI_LABEL
+               Assignment type: CRISP
+                 Coverage type: COMPLEMENTARY_REDUNDANT
+       Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+          Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
+              Optimal combiner: CRDecisionTemplatesCombiner
+    Classification performance:
+                                         accuracy  micro_f1  micro_precision
+    AutoCombiner                            0.813     0.813            0.813
+    ==========================================================================================
 
 
 .. warning::
-    Combiner's output is always redundant, which means that all classes are covered for each sample.
+    Combiner output is always redundant, which means that all classes are covered for each sample.
     To make a reasonable comparison between the combiner and the ensemble use ``evaluate_cr_*`` methods for both.

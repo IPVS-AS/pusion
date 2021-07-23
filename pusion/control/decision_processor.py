@@ -114,7 +114,7 @@ class DecisionProcessor:
         if type(self.combiner) is GenericCombiner and self.evaluation is None:
             raise TypeError("No evaluation set for determining the optimal method using GenericCombiner.")
         if type(self.combiner) is GenericCombiner:
-            return self.evaluation.get_top_n_instances(1)[0]
+            return self.evaluation.get_top_n_instances(1)[0][0]
         elif type(self.combiner) is AutoCombiner:
             return self.combiner.get_selected_combiner()
         else:
@@ -140,7 +140,31 @@ class DecisionProcessor:
         """
         :return: The textual evaluation report.
         """
-        return self.evaluation.get_report()
+        if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
+            problem, assignment_type, coverage_type = self.combiner.get_pac()
+            combiner_type_selection = self.combiner.get_combiner_type_selection()
+            optimal_comb = self.get_optimal_combiner()
+
+            report_dict = {
+                'Problem': problem,
+                'Assignment type': assignment_type,
+                'Coverage type': coverage_type,
+                'Combiner type selection': ', '.join([ct.__name__ for ct in combiner_type_selection]),
+                'Compatible combiners': ', '.join([type(comb).__name__ for comb in self.get_combiners()]),
+                'Optimal combiner': type(optimal_comb).__name__,
+                'Classification performance': '\n' + str(self.evaluation.get_report())
+            }
+
+            report_str = " " + type(self.combiner).__name__ + " - Report "
+            report_str = report_str.center(90, '=') + "\n"
+            tab_len = max([len(s) for s in report_dict.keys()])
+            for k, v in report_dict.items():
+                format_str = "{:>" + str(tab_len) + "}: {}\n"
+                report_str += format_str.format(k, v)
+            report_str += '=' * 90
+
+            return report_str
+        raise TypeError("report() is not callable for a core combiner.")
 
     def info(self):
         """

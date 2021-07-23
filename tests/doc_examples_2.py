@@ -36,8 +36,7 @@ y_comb = dp.combine(y_ensemble_test)
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
     p.PerformanceMetric.MICRO_F1_SCORE,
-    p.PerformanceMetric.MICRO_PRECISION,
-    p.PerformanceMetric.MICRO_RECALL
+    p.PerformanceMetric.MICRO_PRECISION
 ]
 
 # Evaluate ensemble classifiers
@@ -49,5 +48,7 @@ print(eval_classifiers.get_report())
 # Evaluate the fusion
 eval_combiner = p.Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb, coverage)
-print(eval_combiner.get_report())
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())

@@ -188,10 +188,13 @@
 <span class="n">ensemble_out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">classifier_a</span><span class="p">,</span> <span class="n">classifier_b</span><span class="p">,</span> <span class="n">classifier_c</span><span class="p">])</span>
 
 <span class="c1"># Initialize the general framework interface</span>
-<span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">AUTO</span><span class="p">))</span>
+<span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">Configuration</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Method</span><span class="o">.</span><span class="n">MACRO_MAJORITY_VOTE</span><span class="p">,</span>
+                                         <span class="n">problem</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">Problem</span><span class="o">.</span><span class="n">MULTI_CLASS</span><span class="p">,</span>
+                                         <span class="n">assignment_type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">AssignmentType</span><span class="o">.</span><span class="n">CRISP</span><span class="p">,</span>
+                                         <span class="n">coverage_type</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">CoverageType</span><span class="o">.</span><span class="n">REDUNDANT</span><span class="p">))</span>
 
 <span class="c1"># Fuse the ensemble classification outputs</span>
-<span class="n">fused_decisions</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ensemble_out</span><span class="p">)</span>
+<span class="n">fused_decisions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">ensemble_out</span><span class="p">))</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">fused_decisions</span><span class="p">)</span>
 </pre></div>
@@ -249,7 +252,7 @@ final fusion is performed on the test dataset (without true labels).</p>
 </div>
 <div class="section" id="evaluation">
 <h2>Evaluation<a class="headerlink" href="#evaluation" title="Permalink to this headline">¶</a></h2>
-<p>In addition to the previous example, we are able to evaluate both, the ensemble’s and the combiner’s classification
+<p>In addition to the previous example, we are able to evaluate both, the ensemble and the combiner classification
 performance using the evaluation methods provided by the framework.
 The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
 for the combiner as well as for the ensemble.</p>
@@ -257,8 +260,7 @@ for the combiner as well as for the ensemble.</p>
 <span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_F1_SCORE</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_RECALL</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span>
 <span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;============= Ensemble ===============&quot;</span><span class="p">)</span>
@@ -275,14 +277,14 @@ for the combiner as well as for the ensemble.</p>
 </pre></div>
 </div>
 <p>Output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">=============</span> <span class="n">Ensemble</span> <span class="o">===============</span>
-                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>                       <span class="mf">0.810</span>  <span class="mf">0.810</span>      <span class="mf">0.810</span>   <span class="mf">0.810</span>
-<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>                       <span class="mf">0.800</span>  <span class="mf">0.800</span>      <span class="mf">0.800</span>   <span class="mf">0.800</span>
-<span class="n">MLPClassifier</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>                       <span class="mf">0.792</span>  <span class="mf">0.792</span>      <span class="mf">0.792</span>   <span class="mf">0.792</span>
-<span class="o">==============</span> <span class="n">Combiner</span> <span class="o">==============</span>
-                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">DempsterShaferCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>============= Ensemble ===============
+                                     accuracy     f1  precision
+MLPClassifier [0]                       0.810  0.810      0.810
+MLPClassifier [1]                       0.800  0.800      0.800
+MLPClassifier [2]                       0.792  0.792      0.792
+============== Combiner ==============
+                                     accuracy     f1  precision
+DempsterShaferCombiner                  0.816  0.816      0.816
 </pre></div>
 </div>
 </div>
@@ -297,12 +299,23 @@ the configuration.</p>
 <span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">set_evaluation</span><span class="p">(</span><span class="n">eval_combiner</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">report</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>Output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">AutoCombiner</span>                            <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>================================= AutoCombiner - Report ==================================
+                   Problem: MULTI_CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: CosineSimilarityCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+AutoCombiner                            0.836     0.836            0.836
+==========================================================================================
 </pre></div>
 </div>
 </div>
@@ -317,7 +330,9 @@ methods and their respective performances.</p>
 <span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiners</span><span class="p">())</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">dp</span><span class="o">.</span><span class="n">get_multi_combiner_decision_output</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">set_evaluation</span><span class="p">(</span><span class="n">eval_combiner</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">report</span><span class="p">())</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -326,19 +341,28 @@ methods and their respective performances.</p>
 applicable combiner.</p>
 </div>
 <p>Output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">CosineSimilarityCombiner</span>                <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
-<span class="n">MacroMajorityVoteCombiner</span>               <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
-<span class="n">MicroMajorityVoteCombiner</span>               <span class="mf">0.812</span>  <span class="mf">0.819</span>      <span class="mf">0.825</span>   <span class="mf">0.812</span>
-<span class="n">SimpleAverageCombiner</span>                   <span class="mf">0.812</span>  <span class="mf">0.819</span>      <span class="mf">0.825</span>   <span class="mf">0.812</span>
-<span class="n">BehaviourKnowledgeSpaceCombiner</span>         <span class="mf">0.776</span>  <span class="mf">0.795</span>      <span class="mf">0.815</span>   <span class="mf">0.776</span>
-<span class="n">DecisionTemplatesCombiner</span>               <span class="mf">0.818</span>  <span class="mf">0.818</span>      <span class="mf">0.818</span>   <span class="mf">0.818</span>
-<span class="n">DecisionTreeCombiner</span>                    <span class="mf">0.786</span>  <span class="mf">0.805</span>      <span class="mf">0.824</span>   <span class="mf">0.786</span>
-<span class="n">DempsterShaferCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
-<span class="n">MaximumLikelihoodCombiner</span>               <span class="mf">0.810</span>  <span class="mf">0.810</span>      <span class="mf">0.810</span>   <span class="mf">0.810</span>
-<span class="n">NaiveBayesCombiner</span>                      <span class="mf">0.814</span>  <span class="mf">0.814</span>      <span class="mf">0.814</span>   <span class="mf">0.814</span>
-<span class="n">NeuralNetworkCombiner</span>                   <span class="mf">0.780</span>  <span class="mf">0.811</span>      <span class="mf">0.844</span>   <span class="mf">0.780</span>
-<span class="n">WeightedVotingCombiner</span>                  <span class="mf">0.816</span>  <span class="mf">0.816</span>      <span class="mf">0.816</span>   <span class="mf">0.816</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>================================ GenericCombiner - Report ================================
+                   Problem: MULTI_CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: WeightedVotingCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+CosineSimilarityCombiner                0.836     0.836            0.836
+MacroMajorityVoteCombiner               0.836     0.836            0.836
+MicroMajorityVoteCombiner               0.836     0.836            0.836
+SimpleAverageCombiner                   0.836     0.836            0.836
+BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840
+DecisionTemplatesCombiner               0.836     0.836            0.836
+KNNCombiner                             0.826     0.836            0.846
+DempsterShaferCombiner                  0.836     0.836            0.836
+MaximumLikelihoodCombiner               0.834     0.834            0.834
+NaiveBayesCombiner                      0.836     0.836            0.836
+NeuralNetworkCombiner                   0.826     0.832            0.838
+WeightedVotingCombiner                  0.836     0.836            0.836
+==========================================================================================
 </pre></div>
 </div>
 </div>
@@ -384,12 +408,11 @@ The following code example shows how to generate and combine such complementary-
 </pre></div>
 </div>
 <p>The framework provides also a specific evaluation methodology for complementary-redundant results.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define classification performance metrics used for the evaluation</span>
 <span class="n">eval_metrics</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">ACCURACY</span><span class="p">,</span>
     <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_F1_SCORE</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span><span class="p">,</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_RECALL</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">PerformanceMetric</span><span class="o">.</span><span class="n">MICRO_PRECISION</span>
 <span class="p">]</span>
 
 <span class="c1"># Evaluate ensemble classifiers</span>
@@ -401,20 +424,31 @@ The following code example shows how to generate and combine such complementary-
 <span class="c1"># Evaluate the fusion</span>
 <span class="n">eval_combiner</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">Evaluation</span><span class="p">(</span><span class="o">*</span><span class="n">eval_metrics</span><span class="p">)</span>
 <span class="n">eval_combiner</span><span class="o">.</span><span class="n">set_instances</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">get_combiner</span><span class="p">())</span>
-<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate_cr_decision_outputs</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">,</span> <span class="n">coverage</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">eval_combiner</span><span class="o">.</span><span class="n">get_report</span><span class="p">())</span>
+<span class="n">eval_combiner</span><span class="o">.</span><span class="n">evaluate_cr_decision_outputs</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_comb</span><span class="p">)</span>
+
+<span class="n">dp</span><span class="o">.</span><span class="n">set_evaluation</span><span class="p">(</span><span class="n">eval_combiner</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dp</span><span class="o">.</span><span class="n">report</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>Output:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                     <span class="n">accuracy</span>     <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">Ensemble</span>                                <span class="mf">0.646</span>  <span class="mf">0.802</span>      <span class="mf">0.803</span>   <span class="mf">0.802</span>
-                                     <span class="n">accuracy</span>   <span class="n">f1</span>  <span class="n">precision</span>  <span class="n">recall</span>
-<span class="n">AutoCombiner</span>                             <span class="mf">0.67</span>  <span class="mf">0.8</span>      <span class="mf">0.835</span>   <span class="mf">0.769</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                                     accuracy  micro_f1  micro_precision
+Ensemble                                0.804     0.804            0.804
+================================= AutoCombiner - Report ==================================
+                   Problem: MULTI_LABEL
+           Assignment type: CRISP
+             Coverage type: COMPLEMENTARY_REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
+          Optimal combiner: CRDecisionTemplatesCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+AutoCombiner                            0.813     0.813            0.813
+==========================================================================================
 </pre></div>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Combiner’s output is always redundant, which means that all classes are covered for each sample.
+<p>Combiner output is always redundant, which means that all classes are covered for each sample.
 To make a reasonable comparison between the combiner and the ensemble use <code class="docutils literal notranslate"><span class="pre">evaluate_cr_*</span></code> methods for both.</p>
 </div>
 </div>
@@ -434,7 +468,7 @@ To make a reasonable comparison between the combiner and the ensemble use <code 
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS), University of Stuttgart.
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

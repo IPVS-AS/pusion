@@ -1,11 +1,17 @@
 import warnings
 
+import pandas as pd
 from sklearn.neural_network import MLPClassifier
 
 import pusion as p
 from pusion.evaluation.evaluation import Evaluation
 
-warnings.filterwarnings('error')  # halt on error
+# display options
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+# halt on error
+warnings.filterwarnings('error')
 
 
 classifiers = [
@@ -17,8 +23,7 @@ classifiers = [
 eval_metrics = [
     p.PerformanceMetric.ACCURACY,
     p.PerformanceMetric.MICRO_F1_SCORE,
-    p.PerformanceMetric.MICRO_PRECISION,
-    p.PerformanceMetric.MICRO_RECALL
+    p.PerformanceMetric.MICRO_PRECISION
 ]
 
 coverage = p.generate_classification_coverage(n_classifiers=len(classifiers), n_classes=5, overlap=.6, normal_class=True)
@@ -33,26 +38,8 @@ eval_classifiers.set_instances("Ensemble")
 eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
 print(eval_classifiers.get_report())
 
-print("============ AutoCombiner ============")
-dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
-dp.set_parallel(False)
-dp.set_coverage(coverage)
-dp.train(y_ensemble_valid, y_valid)
-y_comb = dp.combine(y_ensemble_test)
 
-eval_combiner = Evaluation(*eval_metrics)
-eval_combiner.set_instances(dp.get_combiner())
-eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
-print(eval_combiner.get_report())
-print("Selected:", type(dp.get_optimal_combiner()).__name__)
-
-print("--------------------------------------")
-eval_combiner = Evaluation(*eval_metrics)
-eval_combiner.set_instances(dp.get_combiners())
-eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
-
-print("========== GenericCombiner ===========")
+# ---- GenericCombiner -------------------------------------------------------------------------------------------------
 dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
 dp.set_coverage(coverage)
 dp.train(y_ensemble_valid, y_valid)
@@ -61,4 +48,20 @@ dp.combine(y_ensemble_test)
 eval_combiner = Evaluation(*eval_metrics)
 eval_combiner.set_instances(dp.get_combiners())
 eval_combiner.evaluate_cr_multi_combiner_decision_outputs(y_test, dp.get_multi_combiner_decision_output())
-print(eval_combiner.get_report())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+
+
+# ---- AutoCombiner ----------------------------------------------------------------------------------------------------
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+dp.set_coverage(coverage)
+dp.train(y_ensemble_valid, y_valid)
+y_comb = dp.combine(y_ensemble_test)
+
+eval_combiner = Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
