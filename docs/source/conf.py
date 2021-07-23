@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = u'pusion'
-copyright = u'2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS)'
+copyright = u'2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS), University of Stuttgart'
 author = u'Admir Obralija'
 
 # The short X.Y version
@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
     'sphinxcontrib.bibtex',
+    'sphinx.ext.napoleon',
     # 'sphinx_paramlinks'
 ]
 
