@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.util.generator module &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pusion.util.transformer module" href="pusion.util.transformer.html" />
+    <link rel="prev" title="pusion.util package" href="pusion.util.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.core.html">pusion.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.util.html">pusion.util package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.util.generator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.util.transformer.html">pusion.util.transformer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.util.html">pusion.util package</a> &raquo;</li>
+        
+      <li>pusion.util.generator module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.util.generator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.util.generator">
+<span id="pusion-util-generator-module"></span><span id="generator-cref"></span><h1>pusion.util.generator module<a class="headerlink" href="#module-pusion.util.generator" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multiclass_ensemble_classification_outputs">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multiclass_ensemble_classification_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multiclass_ensemble_classification_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random multiclass, crisp and redundant classification outputs (assignments) for the given ensemble of
+classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifiers</strong> – Classifiers used to generate classification outputs.
+These need to implement <cite>fit</cite> and <cite>predict</cite> methods according to classifiers provided by <cite>sklearn</cite>.</p></li>
+<li><p><strong>n_classes</strong> – <cite>integer</cite>. Number of classes, predictions are made for.</p></li>
+<li><p><strong>n_samples</strong> – <cite>integer</cite>. Number of samples.</p></li>
+<li><p><strong>parallelize</strong> – If <cite>True</cite>, all classifiers are trained in parallel. Otherwise they are trained in sequence.</p></li>
+<li><p><strong>continuous_out</strong> – If <cite>True</cite>, class assignments in <cite>y_ensemble_valid</cite> and <cite>y_ensemble_test</cite> are given as
+probabilities. Default value is <cite>False</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of:
+- <cite>y_ensemble_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a validation dataset.
+- <cite>y_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the validation.
+- <cite>y_ensemble_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a test dataset.
+- <cite>y_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the test.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multiclass_cr_ensemble_classification_outputs">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multiclass_cr_ensemble_classification_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multiclass_cr_ensemble_classification_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random multiclass, crisp and complementary-redundant classification outputs (assignments) for the given
+ensemble of classifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifiers</strong> – Classifiers used to generate classification outputs.
+These need to implement <cite>fit</cite> and <cite>predict</cite> methods according to classifiers provided by <cite>sklearn</cite>.</p></li>
+<li><p><strong>n_classes</strong> – <cite>integer</cite>. Number of classes, predictions are made for.</p></li>
+<li><p><strong>n_samples</strong> – <cite>integer</cite>. Number of samples.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+If unset, redundant classification outputs are retrieved.</p></li>
+<li><p><strong>continuous_out</strong> – If <cite>True</cite>, class assignments in <cite>y_ensemble_valid</cite> and <cite>y_ensemble_test</cite> are given as
+probabilities. Default value is <cite>False</cite>.</p></li>
+<li><p><strong>parallelize</strong> – If <cite>True</cite>, all classifiers are trained in parallel. Otherwise they are trained in sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of:
+- <cite>y_ensemble_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a validation dataset.
+- <cite>y_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the validation.
+- <cite>y_ensemble_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a test dataset.
+- <cite>y_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the test.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multilabel_ensemble_classification_outputs">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multilabel_ensemble_classification_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multilabel_ensemble_classification_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
+the normal class included at index <cite>0</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifiers</strong> – Classifiers used to generate classification outputs.
+These need to implement <cite>fit</cite> and <cite>predict</cite> methods according to classifiers provided by <cite>sklearn</cite>.</p></li>
+<li><p><strong>n_classes</strong> – <cite>integer</cite>. Number of classes, predictions are made for with the normal class included.</p></li>
+<li><p><strong>n_samples</strong> – <cite>integer</cite>. Number of samples.</p></li>
+<li><p><strong>continuous_out</strong> – If <cite>True</cite>, class assignments in <cite>y_ensemble_valid</cite> and <cite>y_ensemble_test</cite> are given as
+probabilities. Default value is <cite>False</cite>.</p></li>
+<li><p><strong>parallelize</strong> – If <cite>True</cite>, all classifiers are trained in parallel. Otherwise they are trained in sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of:
+- <cite>y_ensemble_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a validation dataset.
+- <cite>y_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the validation.
+- <cite>y_ensemble_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a test dataset.
+- <cite>y_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the test.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multilabel_cr_ensemble_classification_outputs">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multilabel_cr_ensemble_classification_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">continuous_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multilabel_cr_ensemble_classification_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random multilabel, crisp and complementary-redundant classification outputs (assignments) for the given
+ensemble of classifiers with the normal class included at index <cite>0</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifiers</strong> – Classifiers used to generate classification outputs.
+These need to implement <cite>fit</cite> and <cite>predict</cite> methods according to classifiers provided by <cite>sklearn</cite>.</p></li>
+<li><p><strong>n_classes</strong> – <cite>integer</cite>. Number of classes, predictions are made for with the normal class included.</p></li>
+<li><p><strong>n_samples</strong> – <cite>integer</cite>. Number of samples.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+If unset, redundant classification outputs are retrieved.</p></li>
+<li><p><strong>continuous_out</strong> – If <cite>True</cite>, class assignments in <cite>y_ensemble_valid</cite> and <cite>y_ensemble_test</cite> are given as
+probabilities. Default value is <cite>False</cite>.</p></li>
+<li><p><strong>parallelize</strong> – If <cite>True</cite>, all classifiers are trained in parallel. Otherwise they are trained in sequence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of:
+- <cite>y_ensemble_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a validation dataset.
+- <cite>y_valid</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the validation.
+- <cite>y_ensemble_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Ensemble decision output matrix for
+as a test dataset.
+- <cite>y_test</cite>: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True class assignments for the test.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multiclass_confusion_matrices">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multiclass_confusion_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multiclass_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multiclass confusion matrices out of the given decision tensor and true assignments.
+Continuous outputs are converted to multiclass assignments using the MAX rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_samples)</cite>. Confusion matrices per classifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_multilabel_cr_confusion_matrices">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_multilabel_cr_confusion_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_multilabel_cr_confusion_matrices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate multilabel confusion matrices for complementary-redundant multilabel classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of multilabel confusion matrices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.generate_classification_coverage">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">generate_classification_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_classifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.generate_classification_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random complementary redundant class indices for each classifier <cite>0..(n_classifiers-1)</cite>.
+The coverage is drawn from normal distribution for all classifiers.
+However, it is guaranteed that each classifier covers at least one class regardless of the distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_classifiers</strong> – Number of classifiers representing the classifier <cite>0..(n_classifiers-1)</cite>.</p></li>
+<li><p><strong>n_classes</strong> – Number of classes representing the class label <cite>0..(n_classes-1)</cite>.</p></li>
+<li><p><strong>overlap</strong> – Indicator between <cite>0</cite> and <cite>1</cite> for overall classifier overlapping in terms of classes.
+If <cite>0</cite>, only complementary class indices are obtained.
+If <cite>1</cite>, the overlapping is fully redundant.</p></li>
+<li><p><strong>normal_class</strong> – If <cite>True</cite>, a class for the normal state is included for all classifiers as class index <cite>0</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.shrink_to_coverage">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">shrink_to_coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.shrink_to_coverage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shrink the given decision tensor to decision outputs according to the given coverage.
+Assumption: the normal class is covered by each classifier at index <cite>0</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>list</cite> of <cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is
+classifier-specific due to the coverage.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.generator.split_into_train_and_validation_data">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.generator.</span></span><span class="sig-name descname"><span class="pre">split_into_train_and_validation_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.generator.split_into_train_and_validation_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the decision outputs (tensor) from multiple classifiers as well as the true assignments randomly into train
+and validation datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of decision outputs by different classifiers per sample.</p></li>
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of true class assignments.</p></li>
+<li><p><strong>validation_size</strong> – Proportion between <cite>0</cite> and <cite>1</cite> for the size of the validation data set.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>tuple</cite> of
+(1) <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples’, n_classes)</cite>,
+(2) <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples’)</cite>,
+(3) <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples’’, n_classes)</cite>,
+(4) <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples’’)</cite>, with <cite>n_samples’</cite> as the number of training
+samples and <cite>n_samples’’</cite> as the number of validation samples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pusion.util.transformer.html" class="btn btn-neutral float-right" title="pusion.util.transformer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.util.html" class="btn btn-neutral float-left" title="pusion.util package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS), University of Stuttgart.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

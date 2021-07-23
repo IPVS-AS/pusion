@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Overview &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Install Pusion" href="install.html" />
+    <link rel="prev" title="pusion – A framework for decision fusion" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-methods">Core methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-input-and-output">Data input and output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#auto-fusion">Auto fusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generic-fusion">Generic fusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#further-functionalities">Further functionalities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pusion.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>In general, there exist two main approaches to combine multiple classifiers in order to obtain reasonable classification
+outputs for unseen samples: the classifier selection and the classifier fusion.
+The latter one is followed by the presented framework and illustrated in <a class="reference internal" href="#fig-context"><span class="std std-numref">Fig. 1</span></a>.</p>
+<div class="figure align-default" id="id1">
+<span id="fig-context"></span><img alt="_images/framework_context.svg" src="_images/framework_context.svg" /><p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Architectural embedding of the decision fusion framework</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>However, there are significant properties arising from such classifier ensembles as parameters which need to be
+considered in the whole decision fusion process.
+These parameters are forming a configuration which consists of:</p>
+<ul class="simple">
+<li><p>Decision fusion method (<cite>combiner</cite>)</p></li>
+<li><p>Classification problem</p></li>
+<li><p>Class assignment type</p></li>
+<li><p>Classification coverage</p></li>
+</ul>
+<p>The <cite>combiner</cite> states an explicit method provided by the framework which should be applied on the input data set.
+Available core methods are listed in the following section.</p>
+<p>The <cite>classification problem</cite> refers either to a multiclass or to a multilabel classification problem.
+In the multiclass case, a sample is always classified into one class, while in the multilabel case, more than one class
+may be assigned to a sample.</p>
+<p>Pusion operates on classification data which is given by class assignments.
+The class assignment describes memberships to each individual class for a sample.
+A <cite>class assignment type</cite> is either crisp or continuous. Crisp assignments are equivalent to labels
+and continuous assignments represent probabilities for each class being true.</p>
+<p>The <cite>classification coverage</cite> states for each input classifier, which classes it is able to decide.
+A classifier ensemble may yield a redundant, complementary or complementary-redundant coverage.</p>
+</div>
+<div class="section" id="core-methods">
+<h2>Core methods<a class="headerlink" href="#core-methods" title="Permalink to this headline">¶</a></h2>
+<p>The following core decision fusion methods are supported by <cite>pusion</cite> and classified according to the evidence resolution
+they accept. With lower evidence resolution, a weaker a-priori information about individual classifiers can be taken
+into account during the fusion process.
+Utility-based methods do not take any further information about classifiers into account.
+In cases where no evidence is available for a certain classification data set, a utility-based method is a reasonable
+choice.
+Evidence-based methods are recommended in cases where evidence (e.g. confusion matrices) but no training data is
+available for each classifier.
+Trainable methods provide the highest evidence resolution, since decision outputs are required from the ensemble for
+each sample during the training phase.
+Therefore, each <cite>trainable combiner</cite> is able to calculate any kind of evidence based on the training data and is even
+able to analyse the behaviour of each classification method from the ensemble.</p>
+<p>Utility-based methods (low evidence resolution):</p>
+<ul class="simple">
+<li><p>Borda Count (<a class="reference internal" href="pusion.core.borda_count_combiner.html#bc-cref"><span class="std std-ref">BC</span></a>)</p></li>
+<li><p>Cosine Similarity (<a class="reference internal" href="pusion.core.cosine_similarity_combiner.html#cos-cref"><span class="std std-ref">COS</span></a>)</p></li>
+<li><p>Macro Majority Vote (<a class="reference internal" href="pusion.core.macro_majority_vote_combiner.html#mamv-cref"><span class="std std-ref">MAMV</span></a>)</p></li>
+<li><p>Micro Majority Vote (<a class="reference internal" href="pusion.core.micro_majority_vote_combiner.html#mimv-cref"><span class="std std-ref">MIMV</span></a>)</p></li>
+<li><p>Simple Average (<a class="reference internal" href="pusion.core.simple_average_combiner.html#avg-cref"><span class="std std-ref">AVG</span></a>)</p></li>
+</ul>
+<p>Evidence-based methods (medium evidence resolution):</p>
+<ul class="simple">
+<li><p>Naive Bayes (<a class="reference internal" href="pusion.core.naive_bayes_combiner.html#nb-cref"><span class="std std-ref">NB</span></a>)</p></li>
+<li><p>Weighted Voting (<a class="reference internal" href="pusion.core.weighted_voting_combiner.html#wv-cref"><span class="std std-ref">WV</span></a>)</p></li>
+</ul>
+<p>Trainable methods (highest evidence resolution):</p>
+<ul class="simple">
+<li><p>Behaviour Knowledge Space (<a class="reference internal" href="pusion.core.behaviour_knowledge_space_combiner.html#bks-cref"><span class="std std-ref">BKS</span></a>)</p></li>
+<li><p>Decision Templates (<a class="reference internal" href="pusion.core.decision_templates_combiner.html#dt-cref"><span class="std std-ref">DT</span></a>)</p></li>
+<li><p>k Nearest Neighbors (<a class="reference internal" href="pusion.core.k_nearest_neighbors_combiner.html#knn-cref"><span class="std std-ref">KNN</span></a>)</p></li>
+<li><p>Dempster Shafer (<a class="reference internal" href="pusion.core.dempster_shafer_combiner.html#ds-cref"><span class="std std-ref">DS</span></a>)</p></li>
+<li><p>Maximum Likelihood (<a class="reference internal" href="pusion.core.maximum_likelihood_combiner.html#mle-cref"><span class="std std-ref">MLE</span></a>)</p></li>
+<li><p>Neural Network (<a class="reference internal" href="pusion.core.neural_network_combiner.html#nn-cref"><span class="std std-ref">NN</span></a>)</p></li>
+</ul>
+</div>
+<div class="section" id="data-input-and-output">
+<h2>Data input and output<a class="headerlink" href="#data-input-and-output" title="Permalink to this headline">¶</a></h2>
+<p>The input type used for classification data is generic and applies to all provided decision fusion methods.
+It is given by a 3D <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html">numpy.ndarray</a> tensor,
+which is illustrated in <a class="reference internal" href="#fig-input-tensor-illustration"><span class="std std-numref">Fig. 2</span></a>.</p>
+<div class="figure align-default" id="id2">
+<span id="fig-input-tensor-illustration"></span><img alt="_images/input_tensor_illustration.svg" src="_images/input_tensor_illustration.svg" /><p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">Illustration of the input tensor for a multilabel problem with crisp assignments
+(3 samples, 4 classes, 2 classifiers).</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+<p>The same applies also to the pusion’s return, except that the output matrix is a 2D <cite>numpy.ndarray</cite>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case of complementary-redundant decisions, the coverage needs to be specified besides ordinary python lists,
+which are used as an alternative to the <cite>numpy.ndarray</cite>.</p>
+</div>
+</div>
+<div class="section" id="auto-fusion">
+<h2>Auto fusion<a class="headerlink" href="#auto-fusion" title="Permalink to this headline">¶</a></h2>
+<p>The framework provides an additional fusion method <a class="reference internal" href="pusion.auto.auto_combiner.html#ac-cref"><span class="std std-ref">AutoCombiner</span></a> which is able to the detect the configuration
+based on the input classification data and to automatically select the fusion method with the best classification
+performance for the given problem.
+The <cite>AutoCombiner</cite> bundles all methods provided by the framework and probes each of them for the application on the
+given classification data.
+The <cite>AutoCombiner</cite> is transparent to the user as each of the core fusion methods.</p>
+</div>
+<div class="section" id="generic-fusion">
+<h2>Generic fusion<a class="headerlink" href="#generic-fusion" title="Permalink to this headline">¶</a></h2>
+<p>In contrast to the <cite>AutoCombiner</cite>, the <a class="reference internal" href="pusion.auto.generic_combiner.html#gc-cref"><span class="std std-ref">GenericCombiner</span></a> retrieves fusion results obtained by all
+compatible core methods by means of a <cite>numpy.ndarray</cite> tensor. In this case, the evaluation as well as the method
+selection is handed over to the user.</p>
+</div>
+<div class="section" id="further-functionalities">
+<h2>Further functionalities<a class="headerlink" href="#further-functionalities" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Classification data and coverage generation (see module <a class="reference internal" href="pusion.util.generator.html#generator-cref"><span class="std std-ref">generator</span></a>)</p></li>
+<li><p>Useful transformations for decision outputs, e.g. multilabel to multiclass conversion
+(see module <a class="reference internal" href="pusion.util.transformer.html#transformer-cref"><span class="std std-ref">transformer</span></a>)</p></li>
+<li><p>Evaluation methods for different classification and coverage types (see class <a class="reference internal" href="pusion.evaluation.evaluation.html#eval-cref"><span class="std std-ref">Evaluation</span></a>)</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="install.html" class="btn btn-neutral float-right" title="Install Pusion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="pusion – A framework for decision fusion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS), University of Stuttgart.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

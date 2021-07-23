@@ -1,0 +1,486 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>pusion.evaluation.evaluation module &mdash; pusion  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/pusion.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pusion.evaluation.evaluation_metrics module" href="pusion.evaluation.evaluation_metrics.html" />
+    <link rel="prev" title="pusion.evaluation package" href="pusion.evaluation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html">
+          
+
+          
+            
+            <img src="_static/pusion_logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install Pusion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="pusion.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pusion.auto.html">pusion.auto package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.control.html">pusion.control package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.core.html">pusion.core package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pusion.evaluation.html">pusion.evaluation package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pusion.evaluation.evaluation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pusion.evaluation.evaluation_metrics.html">pusion.evaluation.evaluation_metrics module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.model.html">pusion.model package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pusion.util.html">pusion.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage_and_examples.html">Usage and Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pusion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="pusion.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="pusion.evaluation.html">pusion.evaluation package</a> &raquo;</li>
+        
+      <li>pusion.evaluation.evaluation module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pusion.evaluation.evaluation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pusion.evaluation.evaluation">
+<span id="pusion-evaluation-evaluation-module"></span><span id="eval-cref"></span><h1>pusion.evaluation.evaluation module<a class="headerlink" href="#module-pusion.evaluation.evaluation" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation.</span></span><span class="sig-name descname"><span class="pre">Evaluation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p><a class="reference internal" href="#pusion.evaluation.evaluation.Evaluation" title="pusion.evaluation.evaluation.Evaluation"><code class="xref py py-class docutils literal notranslate"><span class="pre">Evaluation</span></code></a> provides methods for evaluating decision outputs (i.e. combiners and classifiers) with different
+problems and coverage types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>argv</strong> – Performance metric functions.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the decision outputs with already set classification performance metrics.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This evaluation is only applicable on redundant multiclass or multilabel decision outputs.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different classifiers per sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs">
+<span class="sig-name descname"><span class="pre">evaluate_cr_decision_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate complementary-redundant decision outputs with already set classification performance metrics.
+The outputs of each classifier for each class is considered as a binary output and thus, the performance is
+calculated class-wise and averaged across all classes, which are covered by individual classifiers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This evaluation is applicable on complementary-redundant ensemble classifier outputs.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.evaluate_cr_multi_combiner_decision_outputs">
+<span class="sig-name descname"><span class="pre">evaluate_cr_multi_combiner_decision_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_multi_combiner_decision_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate decision outputs of multiple CR combiners with already set classification performance metrics.
+The evaluation is performed by <a class="reference internal" href="#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs" title="pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs"><code class="xref py py-func docutils literal notranslate"><span class="pre">evaluate_cr_decision_outputs()</span></code></a> for each combiner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_combiners, n_samples, n_classes)</cite>.
+Tensor of crisp decision outputs by different combiners per sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.class_wise_mean_score">
+<span class="sig-name descname"><span class="pre">class_wise_mean_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decision_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coverage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.class_wise_mean_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the class-wise mean score with the given metric for the given classification outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
+Matrix of crisp class assignments which are considered true for the evaluation.</p></li>
+<li><p><strong>decision_outputs</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite> or a <cite>list</cite> of
+<cite>numpy.array</cite> elements of shape <cite>(n_samples, n_classes’)</cite>, where <cite>n_classes’</cite> is classifier-specific
+due to the coverage.</p></li>
+<li><p><strong>coverage</strong> – <cite>list</cite> of <cite>list</cite> elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.</p></li>
+<li><p><strong>metric</strong> – The score metric.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classes,)</cite>. The mean score per class across all classifiers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_report">
+<span class="sig-name descname"><span class="pre">get_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_report" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A summary <cite>Report</cite> of performed evaluations including all involved instances and performance metrics.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_runtime_report">
+<span class="sig-name descname"><span class="pre">get_runtime_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_runtime_report" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A summary <cite>Report</cite> of train and combine runtimes for all involved instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_instances">
+<span class="sig-name descname"><span class="pre">get_instances</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_instances" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <cite>list</cite> of instances (i.e. combiner or classifiers) been evaluated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <cite>list</cite> of performance metrics been used for evaluation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_performance_matrix">
+<span class="sig-name descname"><span class="pre">get_performance_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_performance_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><cite>numpy.array</cite> of shape <cite>(n_instances, n_metrics)</cite>. Performance matrix containing performance values
+for each set instance row-wise and each set performance metric column-wise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_runtime_matrix">
+<span class="sig-name descname"><span class="pre">get_runtime_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_runtime_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><cite>numpy.array</cite> of shape <cite>(n_instances, 2)</cite>. Runtime matrix containing runtimes
+for each set instance row-wise. The column at index <cite>0</cite> describes train times and the column at index
+<cite>1</cite> describes combine times.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_top_n_instances">
+<span class="sig-name descname"><span class="pre">get_top_n_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_top_n_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve top <cite>n</cite> best instances according to the given <cite>metric</cite> in a sorted order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – <cite>integer</cite>. Number of instances to be retrieved. If unset, all instances are retrieved.</p></li>
+<li><p><strong>metric</strong> – The metric all instances are sorted by. If unset, the first metric is used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Evaluated top <cite>n</cite> instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_top_instances">
+<span class="sig-name descname"><span class="pre">get_top_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_top_instances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve best performing instances according to the given <cite>metric</cite>.
+Multiple instances may be returned having the identical best performance score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metric</strong> – The metric all instances were evaluated with. If unset, the first metric is used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Evaluated top instances according to their performance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.get_instance_performance_tuples">
+<span class="sig-name descname"><span class="pre">get_instance_performance_tuples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.get_instance_performance_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve (instance, performance) tuples created for to the given <cite>metric</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metric</strong> – The metric all instances are evaluated by. If unset, the first set metric is used.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>list</cite> of (instance, performance) tuples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.set_metrics">
+<span class="sig-name descname"><span class="pre">set_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">argv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.set_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>argv</strong> – Performance metric functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.set_instances">
+<span class="sig-name descname"><span class="pre">set_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.set_instances" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>instances</strong> – An instance or a <cite>list</cite> of instances to be evaluated, e.g. classifiers or combiners.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation.Evaluation.set_runtimes">
+<span class="sig-name descname"><span class="pre">set_runtimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runtimes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation.Evaluation.set_runtimes" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>runtimes</strong> – A <cite>tuple</cite> of two lists of tuples describing the train and combine runtimes respectively.
+Each runtime list is aligned with the list of set instances.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="pusion.evaluation.evaluation_metrics.html" class="btn btn-neutral float-right" title="pusion.evaluation.evaluation_metrics module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pusion.evaluation.html" class="btn btn-neutral float-left" title="pusion.evaluation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems (IPVS), University of Stuttgart.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
