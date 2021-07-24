@@ -30,10 +30,10 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run commands
         run: |
-          apt-get update
-          apt-get install -y python3 python3-pip
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
           pip3 install .
           pip3 install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
           docs/make html
-          docs/make html PAPER=a4
+          docs/make latex PAPER=a4
           
