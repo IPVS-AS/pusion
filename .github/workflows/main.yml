@@ -49,7 +49,7 @@ jobs:
 
       - name: Run bat script on Bash
         shell: bash
-        run: sudo ./docs/make.bat
+        run: sudo ./docs/make.bat html
       #./home/runner/work/pusion/pusion/docs/make html
       #./make html
       #./make latex PAPER=a4
