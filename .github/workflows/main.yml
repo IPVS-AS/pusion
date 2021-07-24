@@ -48,8 +48,8 @@ jobs:
           pip3 install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
 
       - name: Run bat script on Bash
-          shell: bash
-          run: ./docs/make.bat
+        shell: bash
+        run: ./docs/make.bat
       #./home/runner/work/pusion/pusion/docs/make html
       #./make html
       #./make latex PAPER=a4
