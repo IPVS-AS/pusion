@@ -27,12 +27,12 @@ jobs:
       - name: Run a one-line script
         run: echo Make Sphinx Docs!
 
-      - uses: IPVS-AS/pusion@master
+      - uses: IPVS-AS/pusion@main
         with:
           docs-folder: "docs/"
           build-command: "sphinx-build -b html . _build"
 
-      - uses: IPVS-AS/pusion@master
+      - uses: IPVS-AS/pusion@main
         with:
           docs-folder: "docs/"
           pre-build-command: "sudo apt-get update -y && sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
