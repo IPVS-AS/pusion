@@ -1,4 +1,4 @@
-<img src="docs/source/_static/images/pusion_logo.svg" alt="drawing" width="500"/>
+<img src="docs/source/_static/images/pusion_logo.svg" alt="drawing" width="400"/>
 
 # _pusion_ – Decision Fusion Framework
 
