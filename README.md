@@ -1,18 +1,14 @@
-![Pusion Framework](docs/source/_static/images/pusion_logo_medium.png)
+![Pusion Framework](docs/source/_static/images/pusion_logo.svg)
+<img src="docs/source/_static/images/pusion_logo.png" alt="drawing" width="100"/>
 
-# _pusion_ – A framework for decision fusion
+# _pusion_ – Decision Fusion Framework
 
-Pusion is a flexible framework for combining multiple classifier’s decisions in Python.
+Pusion (**P**ython **U**niversal Fu**sion**) is a generic and flexible framework written in Python for combining multiple classifier’s decision outcomes.
 
-The framework accommodates a variety of fusion methods adapted from ensemble techniques and pattern recognition.
-The general purpose is to improve the classification performance over the input classifiers and to determine the
-compatibility of individual fusion methods to the given problem. Pusion handles an unlimited number of classifiers
-and also tolerates different forms of classification outputs. These include the multiclass and multilabel
-classification, as well as crisp and continuous class assignments.
+The framework comprises a variety of decision fusion methods adapted from the field of ensemble techniques and pattern recognition. The general purpose of the framework is to improve classification performance over input classifiers and to determine the compatibility of individual decision fusion methods for a given problem. 
+Pusion handles an unlimited number of classifiers and also tolerates various forms of classification output. These include multiclass and multilabel classification, as well as crisp and continuous class assignments (see [documentation](https://ipvs-as.github.io/pusion) for more details).
+The framework was originally designed for combining fault detection and fault diagnosis methods, but its application is not limited to this domain.
 
-The framework is originally designed for combining fault detection and diagnosis methods, but its application is not
-limited to this area.
 
 ## Full Documentation
-The full HTML documentation is available on [GitLab Pages](https://adob.gitlab.io/decision-fusion-framework) or in project's
-`html_docs` folder (accessible by a web browser when cloned).
+The full HTML documentation is available on [GitHub Pages](https://ipvs-as.github.io/pusion) or in the project's `docs/build/` folder.
