@@ -22,7 +22,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: ./docs@main
+      #- uses: ./docs@main
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Make Sphinx Docs!
@@ -34,6 +34,7 @@ jobs:
           sudo apt-get install -y python3 python3-pip
           pip3 install .
           pip3 install sphinx sphinx_rtd_theme sphinxcontrib-bibtex
+          ./home/runner/work/pusion/pusion/docs/make html
           ./make html
           ./make latex PAPER=a4
           
