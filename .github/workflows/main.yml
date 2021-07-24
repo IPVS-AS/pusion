@@ -28,15 +28,15 @@ jobs:
         run: echo Make Sphinx Docs!
 
       - uses: IPVS-AS/pusion@master
-          with:
-            docs-folder: "docs/"
-            build-command: "sphinx-build -b html . _build"
+        with:
+          docs-folder: "docs/"
+          build-command: "sphinx-build -b html . _build"
 
       - uses: IPVS-AS/pusion@master
-          with:
-            docs-folder: "docs/"
-            pre-build-command: "sudo apt-get update -y && sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
-            build-command: "make latexpdf"
+        with:
+          docs-folder: "docs/"
+          pre-build-command: "sudo apt-get update -y && sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
+          build-command: "make latexpdf"
 
       # Runs a set of commands using the runners shell
       - name: Run commands
