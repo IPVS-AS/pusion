@@ -1,5 +1,4 @@
-![Pusion Framework](docs/source/_static/images/pusion_logo.svg)
-<img src="docs/source/_static/images/pusion_logo.png" alt="drawing" width="100"/>
+<img src="docs/source/_static/images/pusion_logo.svg" alt="drawing" width="500"/>
 
 # _pusion_ – Decision Fusion Framework
 
