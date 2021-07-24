@@ -1,7 +1,7 @@
-pusion -- A framework for decision fusion
+pusion -- Decision Fusion Framework
 =========================================
 
-Pusion is a flexible framework for combining multi-classifier decisions in Python.
+Pusion (Python Universal Fusion) is a flexible framework for combining multi-classifier decisions in Python.
 
 The framework accommodates a variety of fusion methods adapted from ensemble techniques and pattern recognition.
 The general purpose is to improve the classification performance over the input classifiers and to determine the

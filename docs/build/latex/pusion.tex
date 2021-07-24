@@ -60,7 +60,7 @@
 
 
 \title{pusion Documentation}
-\date{Jul 23, 2021}
+\date{Jul 24, 2021}
 \release{}
 \author{Admir Obralija}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -77,18 +77,18 @@
 
 
 \sphinxAtStartPar
-Pusion is a flexible framework for combining multiple classifier’s decisions in Python.
+Pusion (Python Universal Fusion) is a flexible framework for combining multi\sphinxhyphen{}classifier decisions in Python.
 
 \sphinxAtStartPar
 The framework accommodates a variety of fusion methods adapted from ensemble techniques and pattern recognition.
 The general purpose is to improve the classification performance over the input classifiers and to determine the
 compatibility of individual fusion methods to the given problem.
 Pusion handles an unlimited number of classifiers and also tolerates different forms of classification outputs.
-These include the multiclass and multilabel classification, as well as crisp and continuous class assignments.
+This includes the multiclass and multilabel classification, as well as crisp and continuous class assignments.
 
 \sphinxAtStartPar
-The framework is originally designed for combining fault detection and diagnosis methods, but it’s application is not
-limited to this area.
+The framework is originally designed for combining fault detection and diagnosis methods.
+However, its application is not limited to this area.
 
 \sphinxAtStartPar
 This documentation includes the following sections:
@@ -263,8 +263,8 @@ which are used as an alternative to the \sphinxtitleref{numpy.ndarray}.
 \end{sphinxadmonition}
 
 
-\section{Auto fusion}
-\label{\detokenize{overview:auto-fusion}}
+\section{AutoFusion}
+\label{\detokenize{overview:autofusion}}
 \sphinxAtStartPar
 The framework provides an additional fusion method {\hyperref[\detokenize{pusion.auto.auto_combiner:ac-cref}]{\sphinxcrossref{\DUrole{std,std-ref}{AutoCombiner}}}} which is able to the detect the configuration
 based on the input classification data and to automatically select the fusion method with the best classification
@@ -337,6 +337,10 @@ pandas \textgreater{}= 1.2.3
 \item {} 
 \sphinxAtStartPar
 matplotlib \textgreater{}= 3.4.1
+
+\item {} 
+\sphinxAtStartPar
+pickle5 \textgreater{}= 0.0.11
 
 \end{itemize}
 
@@ -5467,10 +5471,13 @@ The following code shows an illustrative and simple example of using pusion for 
 \PYG{n}{ensemble\PYGZus{}out} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{n}{classifier\PYGZus{}a}\PYG{p}{,} \PYG{n}{classifier\PYGZus{}b}\PYG{p}{,} \PYG{n}{classifier\PYGZus{}c}\PYG{p}{]}\PYG{p}{)}
 
 \PYG{c+c1}{\PYGZsh{} Initialize the general framework interface}
-\PYG{n}{dp} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{DecisionProcessor}\PYG{p}{(}\PYG{n}{p}\PYG{o}{.}\PYG{n}{Configuration}\PYG{p}{(}\PYG{n}{method}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{Method}\PYG{o}{.}\PYG{n}{AUTO}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{dp} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{DecisionProcessor}\PYG{p}{(}\PYG{n}{p}\PYG{o}{.}\PYG{n}{Configuration}\PYG{p}{(}\PYG{n}{method}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{Method}\PYG{o}{.}\PYG{n}{MACRO\PYGZus{}MAJORITY\PYGZus{}VOTE}\PYG{p}{,}
+                                         \PYG{n}{problem}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{Problem}\PYG{o}{.}\PYG{n}{MULTI\PYGZus{}CLASS}\PYG{p}{,}
+                                         \PYG{n}{assignment\PYGZus{}type}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{AssignmentType}\PYG{o}{.}\PYG{n}{CRISP}\PYG{p}{,}
+                                         \PYG{n}{coverage\PYGZus{}type}\PYG{o}{=}\PYG{n}{p}\PYG{o}{.}\PYG{n}{CoverageType}\PYG{o}{.}\PYG{n}{REDUNDANT}\PYG{p}{)}\PYG{p}{)}
 
 \PYG{c+c1}{\PYGZsh{} Fuse the ensemble classification outputs}
-\PYG{n}{fused\PYGZus{}decisions} \PYG{o}{=} \PYG{n}{dp}\PYG{o}{.}\PYG{n}{combine}\PYG{p}{(}\PYG{n}{ensemble\PYGZus{}out}\PYG{p}{)}
+\PYG{n}{fused\PYGZus{}decisions} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{combine}\PYG{p}{(}\PYG{n}{ensemble\PYGZus{}out}\PYG{p}{)}\PYG{p}{)}
 
 \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{fused\PYGZus{}decisions}\PYG{p}{)}
 \end{sphinxVerbatim}
@@ -5535,7 +5542,7 @@ final fusion is performed on the test dataset (without true labels).
 \section{Evaluation}
 \label{\detokenize{usage_and_examples:evaluation}}
 \sphinxAtStartPar
-In addition to the previous example, we are able to evaluate both, the ensemble’s and the combiner’s classification
+In addition to the previous example, we are able to evaluate both, the ensemble and the combiner classification
 performance using the evaluation methods provided by the framework.
 The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
 for the combiner as well as for the ensemble.
@@ -5545,8 +5552,7 @@ for the combiner as well as for the ensemble.
 \PYG{n}{eval\PYGZus{}metrics} \PYG{o}{=} \PYG{p}{[}
     \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{ACCURACY}\PYG{p}{,}
     \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}F1\PYGZus{}SCORE}\PYG{p}{,}
-    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}PRECISION}\PYG{p}{,}
-    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}RECALL}
+    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}PRECISION}
 \PYG{p}{]}
 
 \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{============= Ensemble ===============}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -5566,14 +5572,14 @@ for the combiner as well as for the ensemble.
 Output:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{=} \PYG{n}{Ensemble} \PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{=}
-                                     \PYG{n}{accuracy}     \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{MLPClassifier} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}                       \PYG{l+m+mf}{0.810}  \PYG{l+m+mf}{0.810}      \PYG{l+m+mf}{0.810}   \PYG{l+m+mf}{0.810}
-\PYG{n}{MLPClassifier} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}                       \PYG{l+m+mf}{0.800}  \PYG{l+m+mf}{0.800}      \PYG{l+m+mf}{0.800}   \PYG{l+m+mf}{0.800}
-\PYG{n}{MLPClassifier} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}                       \PYG{l+m+mf}{0.792}  \PYG{l+m+mf}{0.792}      \PYG{l+m+mf}{0.792}   \PYG{l+m+mf}{0.792}
-\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==} \PYG{n}{Combiner} \PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}\PYG{o}{==}
-                                     \PYG{n}{accuracy}     \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{DempsterShaferCombiner}                  \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
+============= Ensemble ===============
+                                     accuracy     f1  precision
+MLPClassifier [0]                       0.810  0.810      0.810
+MLPClassifier [1]                       0.800  0.800      0.800
+MLPClassifier [2]                       0.792  0.792      0.792
+============== Combiner ==============
+                                     accuracy     f1  precision
+DempsterShaferCombiner                  0.816  0.816      0.816
 \end{sphinxVerbatim}
 
 
@@ -5591,15 +5597,26 @@ the configuration.
 \PYG{n}{eval\PYGZus{}combiner} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{Evaluation}\PYG{p}{(}\PYG{o}{*}\PYG{n}{eval\PYGZus{}metrics}\PYG{p}{)}
 \PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{set\PYGZus{}instances}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{get\PYGZus{}combiner}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 \PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}comb}\PYG{p}{)}
-\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{get\PYGZus{}report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n}{dp}\PYG{o}{.}\PYG{n}{set\PYGZus{}evaluation}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 \end{sphinxVerbatim}
 
 \sphinxAtStartPar
 Output:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-                                     \PYG{n}{accuracy}     \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{AutoCombiner}                            \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
+================================= AutoCombiner \PYGZhy{} Report ==================================
+                   Problem: MULTI\PYGZus{}CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: CosineSimilarityCombiner
+Classification performance:
+                                     accuracy  micro\PYGZus{}f1  micro\PYGZus{}precision
+AutoCombiner                            0.836     0.836            0.836
+==========================================================================================
 \end{sphinxVerbatim}
 
 
@@ -5617,7 +5634,9 @@ methods and their respective performances.
 \PYG{n}{eval\PYGZus{}combiner} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{Evaluation}\PYG{p}{(}\PYG{o}{*}\PYG{n}{eval\PYGZus{}metrics}\PYG{p}{)}
 \PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{set\PYGZus{}instances}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{get\PYGZus{}combiners}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 \PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{evaluate}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{dp}\PYG{o}{.}\PYG{n}{get\PYGZus{}multi\PYGZus{}combiner\PYGZus{}decision\PYGZus{}output}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
-\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{get\PYGZus{}report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+
+\PYG{n}{dp}\PYG{o}{.}\PYG{n}{set\PYGZus{}evaluation}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 \end{sphinxVerbatim}
 
 \begin{sphinxadmonition}{note}{Note:}
@@ -5630,19 +5649,28 @@ applicable combiner.
 Output:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-                                     \PYG{n}{accuracy}     \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{CosineSimilarityCombiner}                \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
-\PYG{n}{MacroMajorityVoteCombiner}               \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
-\PYG{n}{MicroMajorityVoteCombiner}               \PYG{l+m+mf}{0.812}  \PYG{l+m+mf}{0.819}      \PYG{l+m+mf}{0.825}   \PYG{l+m+mf}{0.812}
-\PYG{n}{SimpleAverageCombiner}                   \PYG{l+m+mf}{0.812}  \PYG{l+m+mf}{0.819}      \PYG{l+m+mf}{0.825}   \PYG{l+m+mf}{0.812}
-\PYG{n}{BehaviourKnowledgeSpaceCombiner}         \PYG{l+m+mf}{0.776}  \PYG{l+m+mf}{0.795}      \PYG{l+m+mf}{0.815}   \PYG{l+m+mf}{0.776}
-\PYG{n}{DecisionTemplatesCombiner}               \PYG{l+m+mf}{0.818}  \PYG{l+m+mf}{0.818}      \PYG{l+m+mf}{0.818}   \PYG{l+m+mf}{0.818}
-\PYG{n}{DecisionTreeCombiner}                    \PYG{l+m+mf}{0.786}  \PYG{l+m+mf}{0.805}      \PYG{l+m+mf}{0.824}   \PYG{l+m+mf}{0.786}
-\PYG{n}{DempsterShaferCombiner}                  \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
-\PYG{n}{MaximumLikelihoodCombiner}               \PYG{l+m+mf}{0.810}  \PYG{l+m+mf}{0.810}      \PYG{l+m+mf}{0.810}   \PYG{l+m+mf}{0.810}
-\PYG{n}{NaiveBayesCombiner}                      \PYG{l+m+mf}{0.814}  \PYG{l+m+mf}{0.814}      \PYG{l+m+mf}{0.814}   \PYG{l+m+mf}{0.814}
-\PYG{n}{NeuralNetworkCombiner}                   \PYG{l+m+mf}{0.780}  \PYG{l+m+mf}{0.811}      \PYG{l+m+mf}{0.844}   \PYG{l+m+mf}{0.780}
-\PYG{n}{WeightedVotingCombiner}                  \PYG{l+m+mf}{0.816}  \PYG{l+m+mf}{0.816}      \PYG{l+m+mf}{0.816}   \PYG{l+m+mf}{0.816}
+================================ GenericCombiner \PYGZhy{} Report ================================
+                   Problem: MULTI\PYGZus{}CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: WeightedVotingCombiner
+Classification performance:
+                                     accuracy  micro\PYGZus{}f1  micro\PYGZus{}precision
+CosineSimilarityCombiner                0.836     0.836            0.836
+MacroMajorityVoteCombiner               0.836     0.836            0.836
+MicroMajorityVoteCombiner               0.836     0.836            0.836
+SimpleAverageCombiner                   0.836     0.836            0.836
+BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840
+DecisionTemplatesCombiner               0.836     0.836            0.836
+KNNCombiner                             0.826     0.836            0.846
+DempsterShaferCombiner                  0.836     0.836            0.836
+MaximumLikelihoodCombiner               0.834     0.834            0.834
+NaiveBayesCombiner                      0.836     0.836            0.836
+NeuralNetworkCombiner                   0.826     0.832            0.838
+WeightedVotingCombiner                  0.836     0.836            0.836
+==========================================================================================
 \end{sphinxVerbatim}
 
 
@@ -5698,8 +5726,7 @@ The framework provides also a specific evaluation methodology for complementary\
 \PYG{n}{eval\PYGZus{}metrics} \PYG{o}{=} \PYG{p}{[}
     \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{ACCURACY}\PYG{p}{,}
     \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}F1\PYGZus{}SCORE}\PYG{p}{,}
-    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}PRECISION}\PYG{p}{,}
-    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}RECALL}
+    \PYG{n}{p}\PYG{o}{.}\PYG{n}{PerformanceMetric}\PYG{o}{.}\PYG{n}{MICRO\PYGZus{}PRECISION}
 \PYG{p}{]}
 
 \PYG{c+c1}{\PYGZsh{} Evaluate ensemble classifiers}
@@ -5711,23 +5738,34 @@ The framework provides also a specific evaluation methodology for complementary\
 \PYG{c+c1}{\PYGZsh{} Evaluate the fusion}
 \PYG{n}{eval\PYGZus{}combiner} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{Evaluation}\PYG{p}{(}\PYG{o}{*}\PYG{n}{eval\PYGZus{}metrics}\PYG{p}{)}
 \PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{set\PYGZus{}instances}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{get\PYGZus{}combiner}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
-\PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{evaluate\PYGZus{}cr\PYGZus{}decision\PYGZus{}outputs}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}comb}\PYG{p}{,} \PYG{n}{coverage}\PYG{p}{)}
-\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{get\PYGZus{}report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
+\PYG{n}{eval\PYGZus{}combiner}\PYG{o}{.}\PYG{n}{evaluate\PYGZus{}cr\PYGZus{}decision\PYGZus{}outputs}\PYG{p}{(}\PYG{n}{y\PYGZus{}test}\PYG{p}{,} \PYG{n}{y\PYGZus{}comb}\PYG{p}{)}
+
+\PYG{n}{dp}\PYG{o}{.}\PYG{n}{set\PYGZus{}evaluation}\PYG{p}{(}\PYG{n}{eval\PYGZus{}combiner}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{dp}\PYG{o}{.}\PYG{n}{report}\PYG{p}{(}\PYG{p}{)}\PYG{p}{)}
 \end{sphinxVerbatim}
 
 \sphinxAtStartPar
 Output:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-                                     \PYG{n}{accuracy}     \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{Ensemble}                                \PYG{l+m+mf}{0.646}  \PYG{l+m+mf}{0.802}      \PYG{l+m+mf}{0.803}   \PYG{l+m+mf}{0.802}
-                                     \PYG{n}{accuracy}   \PYG{n}{f1}  \PYG{n}{precision}  \PYG{n}{recall}
-\PYG{n}{AutoCombiner}                             \PYG{l+m+mf}{0.67}  \PYG{l+m+mf}{0.8}      \PYG{l+m+mf}{0.835}   \PYG{l+m+mf}{0.769}
+                                     accuracy  micro\PYGZus{}f1  micro\PYGZus{}precision
+Ensemble                                0.804     0.804            0.804
+================================= AutoCombiner \PYGZhy{} Report ==================================
+                   Problem: MULTI\PYGZus{}LABEL
+           Assignment type: CRISP
+             Coverage type: COMPLEMENTARY\PYGZus{}REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
+          Optimal combiner: CRDecisionTemplatesCombiner
+Classification performance:
+                                     accuracy  micro\PYGZus{}f1  micro\PYGZus{}precision
+AutoCombiner                            0.813     0.813            0.813
+==========================================================================================
 \end{sphinxVerbatim}
 
 \begin{sphinxadmonition}{warning}{Warning:}
 \sphinxAtStartPar
-Combiner’s output is always redundant, which means that all classes are covered for each sample.
+Combiner output is always redundant, which means that all classes are covered for each sample.
 To make a reasonable comparison between the combiner and the ensemble use \sphinxcode{\sphinxupquote{evaluate\_cr\_*}} methods for both.
 \end{sphinxadmonition}
 

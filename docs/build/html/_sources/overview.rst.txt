@@ -97,7 +97,7 @@ The same applies also to the pusion's return, except that the output matrix is a
    In case of complementary-redundant decisions, the coverage needs to be specified besides ordinary python lists,
    which are used as an alternative to the `numpy.ndarray`.
 
-Auto fusion
+AutoFusion
 -----------
 The framework provides an additional fusion method :ref:`AutoCombiner <ac-cref>` which is able to the detect the configuration
 based on the input classification data and to automatically select the fusion method with the best classification
