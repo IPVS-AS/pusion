@@ -10,89 +10,70 @@ from pusion.util.transformer import multiclass_assignments_to_labels, multilabel
 ###### TBC end ###################################################################################################
 ##################################################################################################################
 
-# Y_predictions = curr_data['Y_predictions']
-# Y_arg_max_predictions = np.zeros_like(Y_predictions)
-# Y_arg_max_predictions[np.array(range(len(Y_predictions[:,1]))), np.argmax(Y_predictions, axis=1)] = 1
-# Y_predictions_classes = np.argmax(Y_predictions, axis=1)
-#
-# Y_test = curr_data['Y_test']
-# Y_test_classes = np.argmax(Y_test, axis=1)
-
-
-# TODO TBC
-def multi_label_brier_score_micro(y_target, y_predictions):
+# always 0. for some reason
+def multi_label_brier_score_micro(y_true, y_pred):
     '''
-    Calculated the brier score for multiclass problems according to Brier 1950
-    :param y_target:
-    :param y_predictions:
-    :return:
+    Calculate the brier score for multi-label problems according to Brier 1950
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The micro brier score.
     '''
 
-    y_pred_flatten = y_predictions.flatten()
-    y_target_flatten = y_target.flatten()
-    a = np.sum((y_pred_flatten - y_target_flatten)**2)
-    a = a/y_pred_flatten.shape[0]
+    y_pred_flatten = y_pred.flatten()
+    y_target_flatten = y_true.flatten()
+    result = np.sum((y_pred_flatten - y_target_flatten) ** 2) / y_pred_flatten.shape[0]
+    result = result / y_pred_flatten.shape[0]
 
-    c = brier_score_loss(y_target_flatten, y_pred_flatten)
-
-    return a
+    return result
 
 
-
-# TODO TBC Brier score multi-label
-def multi_label_brier_score(y_target, y_predictions):
+def multi_label_brier_score(y_true, y_pred):
     '''
-    Calculated the brier score for multiclass problems according to Brier 1950
-    :param y_target:
-    :param y_predictions:
-    :return:
+    Calculate the brier score for multiclass problems according to Brier 1950
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The brier score.
     '''
 
-    a = (y_predictions-y_target)**2
-    a = np.sum(a, axis=1)
-    a = np.sum(a)
-    a = a/y_target.shape[0]
+    result = np.mean(np.sum((y_pred - y_true) ** 2, axis=1))
 
-    b = np.mean(np.sum((y_predictions - y_target) ** 2, axis=1))
-
-    return b
+    return result
 
 
-
-# TODO TBC Brier score multiclass
-def multiclass_brier_score(y_target, y_predictions):
+def multiclass_brier_score(y_true, y_pred):
     '''
-    Calculated the brier score for multiclass problems according to Brier 1950
-    :param y_target:
-    :param y_predictions:
-    :return:
+    Calculate the brier score for multi-label problems according to Brier 1950
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The brier score.
     '''
 
-    a = (y_predictions-y_target)**2
-    a = np.sum(a, axis=1)
-    a = np.sum(a)
-    a = a/y_target.shape[0]
+    result = np.mean(np.sum((y_pred - y_true) ** 2, axis=1))
 
-    b = np.mean(np.sum((y_predictions - y_target) ** 2, axis=1))
-
-    return b
+    return result
 
 
-
-# TODO FAR for multi-label AND multiclass classification, check the formular for correctness
-def getFAR(y, y_pred, pos_normal_class) -> float:
+def getFAR(y_true, y_pred, pos_normal_class = 0) -> float:
+    '''
+    Calculate the false alarm rate for multiclass and multi-label problems.
+    FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param pos_normal_class: the position of the 'normal class' in :param y_true and :param y_pred. Default is `0`
+    :return: The false alarm rate.
+    '''
     # False Alarm rate
     # FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
 
-    y_normal = y[:, pos_normal_class]
+    y_true_normal = y_true[:, pos_normal_class]
     y_pred_normal = y_pred[:, pos_normal_class]
 
-    temp_vec = y_normal * y_pred_normal
-    num_all_normal_class_samples = np.sum(y_normal)
+    temp_vec = y_true_normal * y_pred_normal
+    num_all_normal_class_samples = np.sum(y_true_normal)
     num_normal_class_samples_incorrectly_classified = num_all_normal_class_samples - np.sum(temp_vec)
 
     # for testing
-    # yr = yr = np.array([y_normal, y_pred_normal])
+    # yr = yr = np.array([y_true_normal, y_pred_normal])
     # a = np.unique(yr, axis=1, return_counts=True)
 
     far = (num_normal_class_samples_incorrectly_classified / num_all_normal_class_samples)
@@ -100,26 +81,25 @@ def getFAR(y, y_pred, pos_normal_class) -> float:
     return far
 
 
-
-# TODO FDR for multi-label and multiclass classification TBC , check formular for correctness
-def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) -> float:
+def getFDR(y_true, y_pred, pos_normal_class = 0, type: str = None, counting: str = None) -> float:
     '''
     fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
     In multilabel classification, the function considers the faulty subset, i. e., if the entire set
     of predicted faulty labels for a sample strictly match with the true set of faulty labels.
-    :param y:
-    :param y_pred:
-    :param pos_normal_class:
-    :param type:
+    :param counting: 'subset' or 'minor'. The way how the faulty subsets should be counted. TODO correct?
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param pos_normal_class: the position of the `normal class` in :param y_true and :param y_pred.
+    :param type: `multiclass` or `multi-label`. The problem type.
     :return:
     '''
 
     if type == 'multiclass':
-        faulty_samples_indeces = np.where(y[:, pos_normal_class] == 0)[0]
-        faulty_samples = y[faulty_samples_indeces, :]
-        pred_samples_at_faulty_indices = y_pred[faulty_samples_indeces, :]
+        faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+        faulty_samples = y_true[faulty_samples_indices, :]
+        pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
 
-        total_num_of_faulty_samples = len(faulty_samples_indeces)
+        total_num_of_faulty_samples = len(faulty_samples_indices)
 
         a = faulty_samples != pred_samples_at_faulty_indices
         b = np.sum(a, axis=1)
@@ -132,13 +112,13 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
 
     elif type == 'multi-label':
         if counting == 'subset':
-            faulty_samples_indeces = np.where(y[:, pos_normal_class] == 0)[0]
-            faulty_samples = y[faulty_samples_indeces, :]
-            pred_samples_at_faulty_indices = y_pred[faulty_samples_indeces, :]
+            faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+            faulty_samples = y_true[faulty_samples_indices, :]
+            pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
 
             # check faulty samples
             fs1 = faulty_samples[:, 0:pos_normal_class]
-            fs2 = faulty_samples[:, pos_normal_class+1:]
+            fs2 = faulty_samples[:, pos_normal_class + 1:]
             fs = np.concatenate([fs1, fs2], axis=1)
 
             # make sure that no sample with ['normal', 0, 0, 0, ..., 0] is contained
@@ -151,7 +131,7 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
             if fs.shape[0] != faulty_samples.shape[0]:
                 print("Not same length!")
 
-            #fs = faulty_samples #######
+            # fs = faulty_samples #######
             total_num_of_faulty_samples = fs.shape[0]
 
             fs_pred = pred_samples_at_faulty_indices[fs_indices[0], :]
@@ -159,7 +139,7 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
             fpreds2 = fs_pred[:, pos_normal_class + 1:]
             fpreds = np.concatenate([fpreds1, fpreds2], axis=1)
 
-            #fpreds = pred_samples_at_faulty_indices ##########
+            # fpreds = pred_samples_at_faulty_indices ##########
             a = fs != fpreds
             b = np.sum(a, axis=1)
             uniques, counts = np.unique(b, return_counts=True)
@@ -169,9 +149,9 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
             fdr = (num_of_correctly_classified_faulty_samples / total_num_of_faulty_samples)
 
         elif counting == 'minor':
-            faulty_samples_indeces = np.where(y[:, pos_normal_class] == 0)[0]
-            faulty_samples = y[faulty_samples_indeces, :]
-            pred_samples_at_faulty_indices = y_pred[faulty_samples_indeces, :]
+            faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+            faulty_samples = y_true[faulty_samples_indices, :]
+            pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
 
             # check faulty samples
             fs1 = faulty_samples[:, 0:pos_normal_class]
@@ -190,9 +170,10 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
 
                 num_faulty_labels = num_faulty_labels + np.sum(fs_col, axis=0)
                 temp_mult = fs_col * fs_preds_col
-                num_correctly_classified_faulty_labels = num_correctly_classified_faulty_labels + np.sum(temp_mult, axis=0)
+                num_correctly_classified_faulty_labels = num_correctly_classified_faulty_labels + np.sum(temp_mult,
+                                                                                                         axis=0)
 
-            fdr = (num_correctly_classified_faulty_labels/num_faulty_labels)
+            fdr = (num_correctly_classified_faulty_labels / num_faulty_labels)
 
         else:
             args = ('subset', 'minor')
@@ -204,169 +185,340 @@ def getFDR(y, y_pred, pos_normal_class, type: str = None, counting: str = None) 
     return fdr
 
 
-
-# TODO TBD precision metric with average 'weighted' for multiclass
 def multiclass_weighted_precision(y_true, y_pred):
     """
-    TBD
-    :param y_true:
-    :param y_pred:
-    :return:
+    Calculate the precision for a multiclass problem with a `weighted` average.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
     """
-    return precision_score(Y_test_classes, Y_predictions_classes, average='weighted')
+    return precision_score(y_true, y_pred, average='weighted')
 
 
-
-# TODO TBD precision metric with average 'weighted' for multilabel
-precision_weighted = precision_score(y_true=Y_test, y_pred=Y_predictions_rounded, average='weighted')
-
-
-
-# TODO TBD class-wise precision metric with average 'None' for multiclass
-precision_class_wise = sk.metrics.precision_score(Y_test_classes, Y_predictions_classes, average=None)
-
-
-# TODO TBD class-wise precision metric with average 'None' for multi-label
-precision_class_wise = precision_score(y_true=Y_test, y_pred=Y_predictions_rounded, average=None)
+def multi_label_weighted_precision(y_true, y_pred):
+    """
+    Calculate the precision for a multi-label problem with a `weighted` average.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    return precision_score(y_true, y_pred, average='weighted')
 
 
-
-# TODO TBD recall metric with average 'weighted' for multiclass
-sk.metrics.recall_score(Y_test_classes, Y_predictions_classes, average='weighted') # Weighted recall is equal to accuracy. Cf. sk learn doc
-
-
-# TODO TBD recall metric with average 'weighted' for multilabel
-recall_weighted = recall_score(y_true=Y_test, y_pred=Y_predictions_rounded, average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
-
-
-
-# TODO TBD class-wise recall metric with average 'None' for multiclass
-recall_class_wise = sk.metrics.recall_score(Y_test_classes, Y_predictions_classes, average=None)
+def multiclass_class_wise_precision(y_true, y_pred):
+    """
+    Calculate the precision for a multiclass problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    return precision_score(y_true, y_pred, average=None)
 
 
-
-# TODO TBD class-wise recall metric with average 'None' for multi-label
-recall_class_wise = recall_score(y_true=Y_test, y_pred=Y_predictions_rounded, average=None)
-
-
-
-# TODO roc auc score multiclass with average 'weighted
-roc_auc_weighted_ovr = sk.metrics.roc_auc_score(y_true=Y_test_classes, y_score=Y_predictions, average='weighted', multi_class='ovr')
-
-
-
-# TODO roc auc score multi-label with average 'weighted'
-# pytorch auc roc metric
-pytorch_auc_roc_weighted = torchmetrics.functional.auroc(Y_predictions_torch,
-                                                         Y_target_torch,
-                                                         num_classes=num_classes,
-                                                         average='weighted').numpy().item()
+def multi_label_class_wise_precision(y_true, y_pred):
+    """
+    Calculate the precision for a multi-label problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    return precision_score(y_true, y_pred, average=None)
 
 
-# TODO roc auc score multi-label with average 'None'
-# pytorch auc roc metric
-pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(Y_predictions_torch,
-                                                           Y_target_torch,
-                                                           num_classes=num_classes,
-                                                           average=None)
-pytorch_auc_roc_class_wise = [val.numpy().item() for val in pytorch_auc_roc_class_wise]
+def multiclass_recall(y_true, y_pred):
+    """
+    Calculate the recall for a multiclass problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The recall score.
+    """
+    return recall_score(y_true, y_pred,
+                        average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
 
 
-# TODO class wise average precision multiclass
-pytorch_average_precision_score = torchmetrics.functional.average_precision(Y_pred_torch,
-                                                                            Y_target_class_torch,
-                                                                            num_classes=num_classes,
-                                                                            average=None)
-pytorch_average_precision_score = [val.numpy() for val in pytorch_average_precision_score]
-pytorch_average_precision_score = [npa.item() for npa in pytorch_average_precision_score]
+def multi_label_recall(y_true, y_pred):
+    """
+    Calculate the recall for a multi-label problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The recall score.
+    """
+    return recall_score(y_true, y_pred,
+                        average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
 
 
-# TODO weighted average precision multiclass
-pytorch_average_precision_score_weighted = torchmetrics.functional.average_precision(Y_pred_torch,
-                                                                                     Y_target_class_torch,
-                                                                                     num_classes=num_classes,
-                                                                                     average='weighted')
-pytorch_average_precision_score_weighted = pytorch_average_precision_score_weighted.numpy().item()
+def multiclass_class_wise_recall(y_true, y_pred):
+    """
+    Calculate the recall for a multiclass problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: Sequence of recall scores (for each class).
+    """
+    return recall_score(y_true, y_pred, average=None)
 
 
+def multi_label_class_wise_recall(y_true, y_pred):
+    """
+    Calculate the recall for a multi-label problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: Sequence of recall scores (for each class).
+    """
+    return recall_score(y_true, y_pred, average=None)
 
-# TODO pytorch auc pr curve multiclass
-# pytorch auc pr curve
-def multiclass_auc_precisicion_recall_curve(y_true : np.ndarray, y_pred):
 
-    Y_pred_torch = torch.from_numpy(y_pred)
-    Y_target_torch = torch.from_numpy(Y_test)
+def multiclass_weighted_scikit_auc_roc_score(y_true, y_pred):
+    """
+    Compute the scikit auc roc score for a multi-label problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The auc roc score.
+    """
+    return roc_auc_score(y_true, y_pred, average='weighted', multi_class='ovr')
 
-    Y_pred_class_torch = torch.from_numpy(Y_predictions_classes)
-    Y_target_class_torch = torch.from_numpy(Y_test_classes)
 
-    pytorch_pr_curve_precison, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(Y_pred_torch,
-                                                                                                                                Y_target_class_torch,
-                                                                                                                                num_classes=num_classes)
+def multi_label_weighted_pytorch_auc_roc_score(y_true, y_pred):
+    """
+    Compute the pytorch auc roc score for a multi-label problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The auc roc score.
+    """
+    # pytorch auc roc metric
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    y_pred_torch = y_pred_torch.float()
+    return torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes, average='weighted').numpy().item()
+
+
+def multi_label_pytorch_auc_roc_score(y_true, y_pred):
+    """
+    Compute the pytorch auc roc score for a multi-label problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The auc roc score.
+    """
+    # pytorch auc roc metric
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    y_pred_torch = y_pred_torch.float()
+    pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes, average=None)
+    return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
+
+
+def multiclass_class_wise_avg_precision(y_true, y_pred):
+    """
+    Compute the class wise precision for a multiclass problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    pytorch_average_precision_score = torchmetrics.functional.average_precision(y_pred_torch,
+                                                                                y_true_torch,
+                                                                                num_classes=num_classes,
+                                                                                average=None)
+    pytorch_average_precision_score = [val.numpy() for val in pytorch_average_precision_score]
+    return [npa.item() for npa in pytorch_average_precision_score]
+
+
+def multiclass_weighted_avg_precision(y_true, y_pred):
+    """
+    Compute the precision for a multiclass problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    pytorch_average_precision_score_weighted = torchmetrics.functional.average_precision(y_pred_torch,
+                                                                                         y_true_torch,
+                                                                                         num_classes=num_classes,
+                                                                                         average='weighted')
+    return pytorch_average_precision_score_weighted.numpy().item()
+
+
+def multiclass_auc_precision_recall_curve(y_true, y_pred):
+    """
+    Compute the class wise auc precision recall curve for a multiclass problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The aggregated auc precision recall curve class wise.
+    """
+    #Y_pred_torch = torch.from_numpy(y_pred)
+    #Y_target_torch = torch.from_numpy(y_true)
+
+    #Y_pred_class_torch = torch.from_numpy(Y_predictions_classes)
+    #Y_target_class_torch = torch.from_numpy(Y_test_classes)
+
+    #pytorch_pr_curve_precision, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(
+    #    Y_pred_torch,
+    #    Y_target_class_torch,
+    #    num_classes=num_classes)
+
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    pytorch_pr_curve_precision, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(
+            y_pred_torch,
+            y_true_torch,
+            num_classes=num_classes)
+
+    agg_test_pytorch_auc_pr_curve_class_wise = []
     pytorch_auc_pr_curve_class_wise = dict()
-    for ten in range(len(pytorch_pr_curve_precison)):
+    for ten in range(len(pytorch_pr_curve_precision)):
         pytorch_auc_pr_curve_class_wise[ten] = torchmetrics.functional.auc(pytorch_pr_curve_recall[ten],
-                                                                         pytorch_pr_curve_precison[ten]).numpy().item()
+                                                                           pytorch_pr_curve_precision[
+                                                                               ten]).numpy().item()
     agg_test_pytorch_auc_pr_curve_class_wise.append(pytorch_auc_pr_curve_class_wise)
 
+    return agg_test_pytorch_auc_pr_curve_class_wise
 
 
-# TODO pytorch auc roc metric multiclass
-pytorch_auc_roc_weighted = torchmetrics.functional.auroc(Y_pred_torch,
-                                                         Y_target_class_torch,
-                                                         num_classes=num_classes,
-                                                         average='weighted').numpy().item()
-
-pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(Y_pred_torch,
-                                                           Y_target_class_torch,
-                                                           num_classes=num_classes,
-                                                           average=None)
-pytorch_auc_roc_class_wise = [val.numpy().item() for val in pytorch_auc_roc_class_wise]
-
+# to get highest prediction value
+# Y_predictions = curr_data['Y_predictions']
+# Y_arg_max_predictions = np.zeros_like(Y_predictions)
+# Y_arg_max_predictions[np.array(range(len(Y_predictions[:,1]))), np.argmax(Y_predictions, axis=1)] = 1
+# Y_predictions_classes = np.argmax(Y_predictions, axis=1)
+#
+# Y_test = curr_data['Y_test']
+# Y_test_classes = np.argmax(Y_test, axis=1)
+# `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+#     :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
 
 
-#TODO label ranking average precision score for multi-label
-test_lraps = label_ranking_average_precision_score(y_true=Y_test, y_score=Y_predictions)
+def multiclass_weighted_pytorch_auc_roc(y_true, y_pred):
+    """
+    Compute the pytorch auc roc for a multiclass problem with average `weighted`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The auc roc score.
+    """
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    y_pred_torch = y_pred_torch.float()
+    return torchmetrics.functional.auroc(y_pred_torch,
+                                         y_true_torch,
+                                         num_classes=num_classes,
+                                         average='weighted').numpy().item()
 
 
-#TODO label ranking loss multi-label
-test_multilabel_ranking_loss = label_ranking_loss(y_true=Y_test, y_score=Y_predictions)
+def multiclass_pytorch_auc_roc(y_true, y_pred):
+    """
+    Compute the pytorch auc roc for a multiclass problem with average `None`.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The auc roc score.
+    """
+    num_classes = y_pred.shape[1]
+    y_pred_torch = torch.from_numpy(y_pred)
+    y_true_torch = torch.from_numpy(y_true)
+    y_pred_torch = y_pred_torch.float()
+    pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch,
+                                                               y_true_torch,
+                                                               num_classes=num_classes,
+                                                               average=None)
+    return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
 
-# TODO Normalized Discounted Cumulative Gain multi-label
-test_ndcg = ndcg_score(y_true=Y_test, y_score=Y_predictions)
+def multi_label_ranking_avg_precision_score(y_true, y_pred):
+    """
+    Compute the label ranking based average precision score for a multi-label problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    """
+    return label_ranking_average_precision_score(y_true=y_true, y_score=y_pred)
 
 
-# TODO  top-1 accuracy for multiclass
-top_1_acc = sk.metrics.top_k_accuracy_score(Y_test_classes, Y_predictions, k=1, normalize=True, sample_weight=None, labels=None)
+def multi_label_ranking_loss(y_true, y_pred):
+    """
+    Compute the label ranking loss for a multi-label problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The precision score.
+    :return: The loss.
+    """
+    return label_ranking_loss(y_true=y_true, y_score=y_pred)
 
 
-# TODO top-3 accuracy for multiclass
-top_3_acc = sk.metrics.top_k_accuracy_score(Y_test_classes, Y_predictions, k=3, normalize=True, sample_weight=None, labels=None)
+def multi_label_normalized_discounted_cumulative_gain(y_true, y_pred):
+    """
+    Compute the normalized discounted cumulative gain for a multi-label problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The gain.
+    """
+    return ndcg_score(y_true=y_true, y_score=y_pred)
 
 
-# TODO  top-5 accuracy for multiclass
+
+def multiclass_top_1_accuracy(y_true, y_pred):
+    """
+    Compute the top-1 accuracy for a multiclass problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The accuracy score.
+    """
+
+    return top_k_accuracy_score(y_true, y_pred, k=1, normalize=True, sample_weight=None,
+                                           labels=None)
+
+
+
+def multiclass_top_3_accuracy(y_true, y_pred):
+    """
+    Compute the top-3 accuracy for a multiclass problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The accuracy score.
+    """
+
+    return top_k_accuracy_score(y_true, y_pred, k=3, normalize=True, sample_weight=None,
+                                           labels=None)
+
+
 def multiclass_top_5_accuracy(y_true, y_pred):
     """
-
-    :param y_true:
-    :param y_pred:
-    :return:
+    Compute the top-5 accuracy for a multiclass problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The accuracy score.
     """
+    y_true_index = np.argmax(y_true, axis=1)
+    lengths = y_true_index.shape # ?
     if len(y_true.shape) > 1:
         raise ValueError("Found input variables with inconsistent numbers of"
                          " samples: %r" % [int(l) for l in lengths])
 
-    top_5_acc = top_k_accuracy_score(y_true, y_pred, k=5, normalize=True, sample_weight=None, labels=None)
+    top_5_acc = top_k_accuracy_score(y_true_index, y_pred, k=5, normalize=True, sample_weight=None, labels=None)
     return top_5_acc
 
 
-# TODO multiclass log loss
-log_loss = sk.metrics.log_loss(Y_test_classes, Y_predictions)
+def multiclass_log_loss(y_true, y_pred):
+    """
+    The logarithmic loss for a multiclass problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The loss.
+    """
+    return log_loss(y_true, y_pred)
 
 
-# TODO multi-label log loss
-log_loss = sk.metrics.log_loss(Y_test_classes, Y_predictions)
+def multi_label_log_loss(y_true, y_pred):
+    """
+    The logarithmic loss for a multi-label problem.
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The loss.
+    """
+    return log_loss(y_true, y_pred)
 
 
 ##################################################################################################################
@@ -632,7 +784,7 @@ def __relations(y1, y2, y_true):
             c += 1  # c1 is wrong, c2 is correct.
         elif np.any(y1[i] != y_true[i]) and np.any(y_true[i] != y2[i]):
             d += 1  # both classifiers are wrong.
-    return a/n_samples, b/n_samples, c/n_samples, d/n_samples
+    return a / n_samples, b / n_samples, c / n_samples, d / n_samples
 
 
 def __pairwise_avg_score(decision_tensor, true_assignments, score_func):
@@ -701,7 +853,7 @@ def kappa_statistic(y1, y2, y_true):
     :return: Kappa score.
     """
     a, b, c, d = __relations(y1, y2, y_true)
-    return (2 * (a * d - b * c))/((a + b)*(b + d) + (a + c)*(c + d))
+    return (2 * (a * d - b * c)) / ((a + b) * (b + d) + (a + c) * (c + d))
 
 
 def disagreement(y1, y2, y_true):
@@ -867,7 +1019,6 @@ def pairwise_euclidean_distance(decision_tensor):
     for i, j in zip(indices[0], indices[1]):
         scores.append(np.mean(np.linalg.norm(decision_tensor[i] - decision_tensor[j], axis=1)))
     return np.mean(scores)
-
 
 # TODO implement False Alarm Rate metric as described in Tidriri et al. 2018
 

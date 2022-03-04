@@ -59,6 +59,36 @@ class PerformanceMetric:
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
     MEAN_CONFIDENCE = mean_confidence
     BALANCED_MULTICLASS_ACCURACY_SCORE = balanced_multiclass_accuracy
+    MULTI_LABEL_BRIER_SCORE_MICRO = multi_label_brier_score_micro
+    MULTI_LABEL_BRIER_SCORE = multi_label_brier_score
+    MULTICLASS_BRIER_SCORE = multiclass_brier_score
+    FALSE_ALARM_RATE = getFAR
+    FAULT_DETECTION_RATE = getFDR
+    MULTICLASS_WEIGHTED_PRECISION = multiclass_weighted_precision
+    MULTI_LABEL_WEIGHTED_PRECISION = multi_label_weighted_precision
+    MULTICLASS_CLASS_WISE_PRECISION = multiclass_class_wise_precision
+    MULTI_LABEL_CLASS_WISE_PRECISION = multi_label_class_wise_precision
+    MULTICLASS_RECALL = multiclass_recall
+    MULTI_LABEL_RECALL = multi_label_recall
+    MULTICLASS_CLASS_WISE_RECALL = multiclass_class_wise_recall
+    MULTI_LABEL_CLASS_WISE_RECALL = multi_label_class_wise_recall
+    MULTICLASS_WEIGHTED_SCIKIT_AUC_ROC_SCORE = multiclass_weighted_scikit_auc_roc_score
+    MULTI_LABEL_WEIGHTED_PYTORCH_AUC_ROC_SCORE = multi_label_weighted_pytorch_auc_roc_score
+    MULTI_LABEL_PYTORCH_AUC_ROC_SCORE = multi_label_pytorch_auc_roc_score
+    MULTICLASS_CLASS_WISE_AVG_PRECISION = multiclass_class_wise_avg_precision
+    MULTICLASS_WEIGHTED_AVG_PRECISION = multiclass_weighted_avg_precision
+    MULTICLASS_AUC_PRECISION_RECALL_CURVE = multiclass_auc_precision_recall_curve
+    MULTICLASS_WEIGHTED_PYTORCH_AUC_ROC = multiclass_weighted_pytorch_auc_roc
+    MULTICLASS_PYTORCH_AUC_ROC = multiclass_pytorch_auc_roc
+    MULTI_LABEL_RANKING_AVG_PRECISION_SCORE = multi_label_ranking_avg_precision_score
+    MULTI_LABEL_RANKING_LOSS = multi_label_ranking_loss
+    MULTI_LABEL_NORMALIZED_DISCOUNTED_CUMULATIVE_GAIN = multi_label_normalized_discounted_cumulative_gain
+    MULTICLASS_TOP_1_ACCURACY = multiclass_top_1_accuracy
+    MULTICLASS_TOP_3_ACCURACY = multiclass_top_3_accuracy
+    MULTICLASS_TOP_5_ACCURACY = multiclass_top_5_accuracy
+    MULTICLASS_LOG_LOSS = multiclass_log_loss
+    MULTI_LABEL_LOG_LOSS = multi_label_log_loss
+
 
 
 class DiversityMetric:
