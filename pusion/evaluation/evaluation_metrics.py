@@ -2,6 +2,7 @@ import numpy as np
 from pusion.util.constants import Problem
 from sklearn.metrics import *
 import torch, torchmetrics
+from typing import List
 from pusion.auto.detector import determine_problem
 from pusion.util.transformer import multiclass_assignments_to_labels, multilabel_to_multiclass_assignments
 
@@ -10,14 +11,19 @@ from pusion.util.transformer import multiclass_assignments_to_labels, multilabel
 ###### TBC end ###################################################################################################
 ##################################################################################################################
 
-# always 0. for some reason
-def multi_label_brier_score_micro(y_true, y_pred):
+def multi_label_brier_score_micro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     '''
     Calculate the brier score for multi-label problems according to Brier 1950
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The micro brier score.
     '''
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
 
     y_pred_flatten = y_pred.flatten()
     y_target_flatten = y_true.flatten()
@@ -27,7 +33,7 @@ def multi_label_brier_score_micro(y_true, y_pred):
     return result
 
 
-def multi_label_brier_score(y_true, y_pred):
+def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     '''
     Calculate the brier score for multiclass problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
@@ -35,25 +41,38 @@ def multi_label_brier_score(y_true, y_pred):
     :return: The brier score.
     '''
 
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     result = np.mean(np.sum((y_pred - y_true) ** 2, axis=1))
 
     return result
 
 
-def multiclass_brier_score(y_true, y_pred):
+def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     '''
     Calculate the brier score for multi-label problems according to Brier 1950
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The brier score.
     '''
 
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
+    # TODO: either we change axis to 0 (then mean is unnecessary) or we use a 2D input
     result = np.mean(np.sum((y_pred - y_true) ** 2, axis=1))
 
     return result
 
 
-def getFAR(y_true, y_pred, pos_normal_class = 0) -> float:
+def getFAR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0) -> float:
     '''
     Calculate the false alarm rate for multiclass and multi-label problems.
     FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
@@ -64,6 +83,12 @@ def getFAR(y_true, y_pred, pos_normal_class = 0) -> float:
     '''
     # False Alarm rate
     # FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
 
     y_true_normal = y_true[:, pos_normal_class]
     y_pred_normal = y_pred[:, pos_normal_class]
@@ -81,7 +106,8 @@ def getFAR(y_true, y_pred, pos_normal_class = 0) -> float:
     return far
 
 
-def getFDR(y_true, y_pred, pos_normal_class = 0, type: str = None, counting: str = None) -> float:
+def getFDR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0, type: str = None,
+           counting: str = None) -> float:
     '''
     fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
     In multilabel classification, the function considers the faulty subset, i. e., if the entire set
@@ -93,6 +119,12 @@ def getFDR(y_true, y_pred, pos_normal_class = 0, type: str = None, counting: str
     :param type: `multiclass` or `multi-label`. The problem type.
     :return:
     '''
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
 
     if type == 'multiclass':
         faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
@@ -185,137 +217,222 @@ def getFDR(y_true, y_pred, pos_normal_class = 0, type: str = None, counting: str
     return fdr
 
 
-def multiclass_weighted_precision(y_true, y_pred):
+def multiclass_weighted_precision(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculate the precision for a multiclass problem with a `weighted` average.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)`. Predicted labels or class assignments.
     :return: The precision score.
     """
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 1 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 1D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return precision_score(y_true, y_pred, average='weighted')
 
 
-def multi_label_weighted_precision(y_true, y_pred):
+def multi_label_weighted_precision(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculate the precision for a multi-label problem with a `weighted` average.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return precision_score(y_true, y_pred, average='weighted')
 
 
-def multiclass_class_wise_precision(y_true, y_pred):
+def multiclass_class_wise_precision(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
     """
     Calculate the precision for a multiclass problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)`. Predicted labels or class assignments.
     :return: The precision score.
     """
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 1 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 1D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return precision_score(y_true, y_pred, average=None)
 
 
-def multi_label_class_wise_precision(y_true, y_pred):
+def multi_label_class_wise_precision(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
     """
     Calculate the precision for a multi-label problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return precision_score(y_true, y_pred, average=None)
 
 
-def multiclass_recall(y_true, y_pred):
+def multiclass_recall(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculate the recall for a multiclass problem with average `weighted`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)`. Predicted labels or class assignments.
     :return: The recall score.
     """
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 1 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 1D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return recall_score(y_true, y_pred,
                         average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
 
 
-def multi_label_recall(y_true, y_pred):
+def multi_label_recall(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Calculate the recall for a multi-label problem with average `weighted`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The recall score.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return recall_score(y_true, y_pred,
                         average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
 
 
-def multiclass_class_wise_recall(y_true, y_pred):
+def multiclass_class_wise_recall(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
     """
     Calculate the recall for a multiclass problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)`. Predicted labels or class assignments.
     :return: Sequence of recall scores (for each class).
     """
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 1 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 1D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return recall_score(y_true, y_pred, average=None)
 
 
-def multi_label_class_wise_recall(y_true, y_pred):
+def multi_label_class_wise_recall(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
     """
     Calculate the recall for a multi-label problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: Sequence of recall scores (for each class).
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return recall_score(y_true, y_pred, average=None)
 
 
-def multiclass_weighted_scikit_auc_roc_score(y_true, y_pred):
+def multiclass_weighted_scikit_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the scikit auc roc score for a multi-label problem with average `weighted`.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
     """
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return roc_auc_score(y_true, y_pred, average='weighted', multi_class='ovr')
 
 
-def multi_label_weighted_pytorch_auc_roc_score(y_true, y_pred):
+def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `weighted`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-    num_classes = y_pred.shape[1]
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     y_pred_torch = y_pred_torch.float()
-    return torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes, average='weighted').numpy().item()
+    return torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
+                                         average='weighted').numpy().item()
 
 
-def multi_label_pytorch_auc_roc_score(y_true, y_pred):
+def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-    num_classes = y_pred.shape[1]
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     y_pred_torch = y_pred_torch.float()
-    pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes, average=None)
+    pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
+                                                               average=None)
     return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
 
-def multiclass_class_wise_avg_precision(y_true, y_pred):
+def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the class wise precision for a multiclass problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     """
-    num_classes = y_pred.shape[1]
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_average_precision_score = torchmetrics.functional.average_precision(y_pred_torch,
@@ -326,14 +443,21 @@ def multiclass_class_wise_avg_precision(y_true, y_pred):
     return [npa.item() for npa in pytorch_average_precision_score]
 
 
-def multiclass_weighted_avg_precision(y_true, y_pred):
+def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
     """
     Compute the precision for a multiclass problem with average `weighted`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     """
-    num_classes = y_pred.shape[1]
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_average_precision_score_weighted = torchmetrics.functional.average_precision(y_pred_torch,
@@ -343,31 +467,28 @@ def multiclass_weighted_avg_precision(y_true, y_pred):
     return pytorch_average_precision_score_weighted.numpy().item()
 
 
-def multiclass_auc_precision_recall_curve(y_true, y_pred):
+def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[
+    dict[int, float]]:
     """
     Compute the class wise auc precision recall curve for a multiclass problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The aggregated auc precision recall curve class wise.
     """
-    #Y_pred_torch = torch.from_numpy(y_pred)
-    #Y_target_torch = torch.from_numpy(y_true)
 
-    #Y_pred_class_torch = torch.from_numpy(Y_predictions_classes)
-    #Y_target_class_torch = torch.from_numpy(Y_test_classes)
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
 
-    #pytorch_pr_curve_precision, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(
-    #    Y_pred_torch,
-    #    Y_target_class_torch,
-    #    num_classes=num_classes)
-
-    num_classes = y_pred.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_pr_curve_precision, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(
-            y_pred_torch,
-            y_true_torch,
-            num_classes=num_classes)
+        y_pred_torch,
+        y_true_torch,
+        num_classes=num_classes)
 
     agg_test_pytorch_auc_pr_curve_class_wise = []
     pytorch_auc_pr_curve_class_wise = dict()
@@ -380,26 +501,21 @@ def multiclass_auc_precision_recall_curve(y_true, y_pred):
     return agg_test_pytorch_auc_pr_curve_class_wise
 
 
-# to get highest prediction value
-# Y_predictions = curr_data['Y_predictions']
-# Y_arg_max_predictions = np.zeros_like(Y_predictions)
-# Y_arg_max_predictions[np.array(range(len(Y_predictions[:,1]))), np.argmax(Y_predictions, axis=1)] = 1
-# Y_predictions_classes = np.argmax(Y_predictions, axis=1)
-#
-# Y_test = curr_data['Y_test']
-# Y_test_classes = np.argmax(Y_test, axis=1)
-# `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-#     :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
-
-
-def multiclass_weighted_pytorch_auc_roc(y_true, y_pred):
+def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
     """
     Compute the pytorch auc roc for a multiclass problem with average `weighted`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
     """
-    num_classes = y_pred.shape[1]
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     y_pred_torch = y_pred_torch.float()
@@ -409,14 +525,21 @@ def multiclass_weighted_pytorch_auc_roc(y_true, y_pred):
                                          average='weighted').numpy().item()
 
 
-def multiclass_pytorch_auc_roc(y_true, y_pred):
+def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the pytorch auc roc for a multiclass problem with average `None`.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param num_classes: The number of classes.
+    :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
     """
-    num_classes = y_pred.shape[1]
+
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     y_pred_torch = y_pred_torch.float()
@@ -427,97 +550,143 @@ def multiclass_pytorch_auc_roc(y_true, y_pred):
     return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
 
-def multi_label_ranking_avg_precision_score(y_true, y_pred):
+def multi_label_ranking_avg_precision_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the label ranking based average precision score for a multi-label problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return label_ranking_average_precision_score(y_true=y_true, y_score=y_pred)
 
 
-def multi_label_ranking_loss(y_true, y_pred):
+def multi_label_ranking_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the label ranking loss for a multi-label problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
     :return: The loss.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return label_ranking_loss(y_true=y_true, y_score=y_pred)
 
 
-def multi_label_normalized_discounted_cumulative_gain(y_true, y_pred):
+def multi_label_normalized_discounted_cumulative_gain(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the normalized discounted cumulative gain for a multi-label problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The gain.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return ndcg_score(y_true=y_true, y_score=y_pred)
 
 
-
-def multiclass_top_1_accuracy(y_true, y_pred):
+def multiclass_top_1_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the top-1 accuracy for a multiclass problem.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The accuracy score.
     """
 
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return top_k_accuracy_score(y_true, y_pred, k=1, normalize=True, sample_weight=None,
-                                           labels=None)
+                                labels=None)
 
 
-
-def multiclass_top_3_accuracy(y_true, y_pred):
+def multiclass_top_3_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the top-3 accuracy for a multiclass problem.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The accuracy score.
     """
 
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return top_k_accuracy_score(y_true, y_pred, k=3, normalize=True, sample_weight=None,
-                                           labels=None)
+                                labels=None)
 
 
-def multiclass_top_5_accuracy(y_true, y_pred):
+def multiclass_top_5_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the top-5 accuracy for a multiclass problem.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_pred: `numpy.array` of shape (n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The accuracy score.
     """
-    y_true_index = np.argmax(y_true, axis=1)
-    lengths = y_true_index.shape # ?
-    if len(y_true.shape) > 1:
-        raise ValueError("Found input variables with inconsistent numbers of"
-                         " samples: %r" % [int(l) for l in lengths])
 
-    top_5_acc = top_k_accuracy_score(y_true_index, y_pred, k=5, normalize=True, sample_weight=None, labels=None)
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+        raise ValueError(
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
+    top_5_acc = top_k_accuracy_score(y_true, y_pred, k=5, normalize=True, sample_weight=None, labels=None)
     return top_5_acc
 
 
-def multiclass_log_loss(y_true, y_pred):
+def multiclass_log_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     The logarithmic loss for a multiclass problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The loss.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return log_loss(y_true, y_pred)
 
 
-def multi_label_log_loss(y_true, y_pred):
+def multi_label_log_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     The logarithmic loss for a multi-label problem.
-    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
-    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The loss.
     """
+
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
     return log_loss(y_true, y_pred)
 
 
