@@ -172,6 +172,34 @@ def transform_label_vector_to_class_assignment_matrix(label_vector, n_classes=No
     return assignments
 
 
+def class_assignment_tensor_to_label_tensor(class_assignment_tensor):
+    """
+    Transform multiclass class assignments into a label tensor. A tensor of shape
+    `(n_classifiers, n_samples, n_classes)` is converted into a tensor of shape `(n_classifiers, n_samples)` holding the
+    class identifier (label) in each element.
+
+    :param class_assignment_tensor: `numpy.array` of shape `(n_classifiers, n_samples, n_classes)`.
+            Class assignment tensor (decision tensor).
+    :return: `numpy.array` of shape `(n_classifiers, n_samples)`. Label tensor.
+    """
+    class_assignment_tensor = np.array(class_assignment_tensor).astype(int)
+    return np.argmax(class_assignment_tensor == 1, axis=2)
+
+
+def class_assignment_matrix_to_label_vector(class_assignment_matrix):
+    """
+    Transform multiclass class assignments into a label vector. A matrix of shape
+    `(n_samples, n_classes)` is converted into a vector of shape `(n_samples,)` holding the class identifier (label)
+    in each element.
+
+    :param class_assignment_matrix: `numpy.array` of shape `(n_samples, n_classes)`. Class assignment matrix
+            (decision matrix).
+    :return: `numpy.array` of shape `(n_samples,)`. Label vector.
+    """
+    class_assignment_matrix = np.array(class_assignment_matrix).astype(int)
+    return np.argmax(class_assignment_matrix == 1, axis=1)
+
+
 def multilabel_to_multiclass_assignments(decision_tensor):
     """
     Transform the multilabel decision tensor to the equivalent multiclass decision tensor using the power set method.
