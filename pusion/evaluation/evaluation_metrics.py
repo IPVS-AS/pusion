@@ -29,7 +29,7 @@ def multi_label_brier_score_micro(y_true: np.ndarray, y_pred: np.ndarray) -> flo
     return result
 
 
-def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float: #TODO
     '''
     Calculate the brier score for multiclass problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
@@ -48,7 +48,7 @@ def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return result
 
 
-def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float:
     '''
     Calculate the brier score for multi-label problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
@@ -387,7 +387,7 @@ def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.nd
                                          average='weighted').numpy().item()
 
 # TODO float
-def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
+def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `None`.
     :param num_classes: The number of classes.
@@ -409,7 +409,7 @@ def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, nu
     return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
 # TODO float
-def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
+def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
     """
     Compute the class wise precision for a multiclass problem with average `None`.
     :param num_classes: The number of classes.
@@ -458,8 +458,7 @@ def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, nu
     return pytorch_average_precision_score_weighted.numpy().item()
 
 # TODO float
-def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[
-    dict[int, float]]:
+def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[dict[int, float]]:
     """
     Compute the class wise auc precision recall curve for a multiclass problem.
     :param num_classes: The number of classes.
@@ -515,7 +514,7 @@ def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, 
                                          average='weighted').numpy().item()
 
 # TODO float
-def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
+def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
     """
     Compute the pytorch auc roc for a multiclass problem with average `None`.
     :param num_classes: The number of classes.
