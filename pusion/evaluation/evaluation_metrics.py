@@ -7,10 +7,6 @@ from pusion.auto.detector import determine_problem
 from pusion.util.transformer import multiclass_assignments_to_labels, multilabel_to_multiclass_assignments
 
 
-##################################################################################################################
-###### TBC end ###################################################################################################
-##################################################################################################################
-
 def multi_label_brier_score_micro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     '''
     Calculate the brier score for multi-label problems according to Brier 1950
@@ -316,8 +312,7 @@ def multi_label_recall(y_true: np.ndarray, y_pred: np.ndarray) -> float:
             "got {} and {} instead.".format(y_true.shape, y_pred.shape)
         )
 
-    return recall_score(y_true, y_pred,
-                        average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
+    return recall_score(y_true, y_pred, average='weighted')  # Weighted recall is equal to accuracy. Cf. sk learn doc
 
 
 def multiclass_class_wise_recall(y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
@@ -684,9 +679,7 @@ def multi_label_log_loss(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     return log_loss(y_true, y_pred)
 
 
-##################################################################################################################
-###### TBC end ###################################################################################################
-##################################################################################################################
+
 
 def micro_precision(y_true, y_pred):
     """
@@ -818,6 +811,16 @@ def accuracy(y_true, y_pred):
     :return: Accuracy.
     """
     return accuracy_score(y_true, y_pred)
+
+
+def error_rate(y_true, y_pred):
+    """
+    Calculate the error rate, i. e. error_rate = 1-accuracy
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: Error Rate of typ `float`
+    """
+    return 1-accuracy_score(y_true, y_pred)
 
 
 def balanced_multiclass_accuracy(y_true, y_pred):
@@ -1183,6 +1186,3 @@ def pairwise_euclidean_distance(decision_tensor):
         scores.append(np.mean(np.linalg.norm(decision_tensor[i] - decision_tensor[j], axis=1)))
     return np.mean(scores)
 
-# TODO implement False Alarm Rate metric as described in Tidriri et al. 2018
-
-# TODO implement Fault Detection Rate metric as described in Tidriri et al. 2018

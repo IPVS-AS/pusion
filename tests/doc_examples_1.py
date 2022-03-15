@@ -1,5 +1,5 @@
 import pusion as p
-
+from pusion.util.generator import *
 import sklearn
 
 
@@ -11,10 +11,11 @@ classifiers = [
 ]
 
 # Generate samples for the ensemble
-y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_ensemble_classification_outputs(
+y_ensemble_valid, y_valid, y_ensemble_test, y_test = generate_multiclass_ensemble_classification_outputs(
     classifiers=classifiers,
     n_classes=5,
-    n_samples=2000)
+    n_samples=2000,
+    parallelize=False)
 
 # User defined configuration
 conf = p.Configuration(

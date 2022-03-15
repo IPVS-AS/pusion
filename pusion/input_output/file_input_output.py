@@ -3,7 +3,7 @@ import ntpath
 import shutil
 from pathlib import Path
 
-import pickle5
+import pickle
 
 
 def load_pickle_files_as_data(file_paths):

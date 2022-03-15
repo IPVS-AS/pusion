@@ -59,6 +59,7 @@ class PerformanceMetric:
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
     MEAN_CONFIDENCE = mean_confidence
     BALANCED_MULTICLASS_ACCURACY_SCORE = balanced_multiclass_accuracy
+    ERROR_RATE = error_rate
     MULTI_LABEL_BRIER_SCORE_MICRO = multi_label_brier_score_micro
     MULTI_LABEL_BRIER_SCORE = multi_label_brier_score
     MULTICLASS_BRIER_SCORE = multiclass_brier_score

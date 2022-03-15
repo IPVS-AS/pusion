@@ -136,6 +136,33 @@ class DecisionProcessor:
         """
         return self.combiner
 
+
+    # def get_evaluation_results(self):
+    #     """
+    #     getter method to return the evaluation results of the combiners contained in the decision processor.
+    #     :return: dict containing the evaluation reulsts of the combiners
+    #     """
+    #     if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
+    #         problem, assignment_type, coverage_type = self.combiner.get_pac()
+    #         combiner_type_selection = self.combiner.get_combiner_type_selection()
+    #         optimal_comb = self.get_optimal_combiner()
+    #
+    #         report_dict = {
+    #             'Problem': problem,
+    #             'Assignment type': assignment_type,
+    #             'Coverage type': coverage_type,
+    #             'Combiner type selection': ', '.join([ct.__name__ for ct in combiner_type_selection]),
+    #             'Compatible combiners': ', '.join([type(comb).__name__ for comb in self.get_combiners()]),
+    #             'Optimal combiner': type(optimal_comb).__name__,
+    #             'Classification performance': self.evaluation.get_performance_matrix(),
+    #             'Evaluation metrics': self.evaluation.get_metrics(),
+    #             'Instances': self.evaluation.get_instances()
+    #         }
+    #         return report_dict
+    #     raise TypeError("get_evaluation_results() is not callable.")
+
+
+
     def report(self):
         """
         :return: The textual evaluation report.
