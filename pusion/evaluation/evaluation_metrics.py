@@ -66,7 +66,6 @@ def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
             "got {} and {} instead.".format(y_true.shape, y_pred.shape)
         )
 
-    # TODO: either we change axis to 0 (then mean is unnecessary) or we use a 2D input
     result = np.mean(np.sum((y_pred - y_true) ** 2, axis=1))
 
     return result
@@ -117,7 +116,7 @@ def getFDR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0, ty
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :param pos_normal_class: the position of the `normal class` in :param y_true and :param y_pred.
     :param type: `multiclass` or `multi-label`. The problem type.
-    :return:
+    :return: The fault detection rate.
     '''
 
     if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
@@ -354,7 +353,7 @@ def multi_label_class_wise_recall(y_true: np.ndarray, y_pred: np.ndarray) -> np.
 
     return recall_score(y_true, y_pred, average=None)
 
-
+# TODO float
 def multiclass_weighted_scikit_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the scikit auc roc score for a multi-label problem with average `weighted`.
@@ -363,16 +362,16 @@ def multiclass_weighted_scikit_auc_roc_score(y_true: np.ndarray, y_pred: np.ndar
     :return: The auc roc score.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     return roc_auc_score(y_true, y_pred, average='weighted', multi_class='ovr')
 
-
-def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
+# TODO float
+def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int = 5) -> float:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `weighted`.
     :param num_classes: The number of classes.
@@ -381,20 +380,18 @@ def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.nd
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-
-    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true and y_pred need to be 2D and have the same shape, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true and y_pred need to be 2D and have the same shape, y_pred needs to have dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
-    y_pred_torch = y_pred_torch.float()
     return torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
                                          average='weighted').numpy().item()
 
-
+# TODO float
 def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `None`.
@@ -404,20 +401,19 @@ def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, nu
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true and y_pred need to be 2D and have the same shape, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true and y_pred need to be 2D and have the same shape, y_pred needs to have dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
-    y_pred_torch = y_pred_torch.float()
     pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
                                                                average=None)
     return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
-
+# TODO float
 def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the class wise precision for a multiclass problem with average `None`.
@@ -427,10 +423,10 @@ def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, 
     :return: The precision score.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
@@ -442,7 +438,7 @@ def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, 
     pytorch_average_precision_score = [val.numpy() for val in pytorch_average_precision_score]
     return [npa.item() for npa in pytorch_average_precision_score]
 
-
+# TODO float
 def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
     """
     Compute the precision for a multiclass problem with average `weighted`.
@@ -452,10 +448,10 @@ def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, nu
     :return: The precision score.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
@@ -466,7 +462,7 @@ def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, nu
                                                                                          average='weighted')
     return pytorch_average_precision_score_weighted.numpy().item()
 
-
+# TODO float
 def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[
     dict[int, float]]:
     """
@@ -477,10 +473,10 @@ def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray
     :return: The aggregated auc precision recall curve class wise.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
@@ -500,7 +496,7 @@ def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray
 
     return agg_test_pytorch_auc_pr_curve_class_wise
 
-
+# TODO float
 def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
     """
     Compute the pytorch auc roc for a multiclass problem with average `weighted`.
@@ -510,21 +506,20 @@ def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, 
     :return: The auc roc score.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
-    y_pred_torch = y_pred_torch.float()
     return torchmetrics.functional.auroc(y_pred_torch,
                                          y_true_torch,
                                          num_classes=num_classes,
                                          average='weighted').numpy().item()
 
-
+# TODO float
 def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> list[float]:
     """
     Compute the pytorch auc roc for a multiclass problem with average `None`.
@@ -534,15 +529,14 @@ def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_class
     :return: The auc roc score.
     """
 
-    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0]):
+    if not (y_true.ndim == 1 and y_pred.ndim == 2 and y_true.shape[0] == y_pred.shape[0] and np.issubdtype(y_pred.dtype, np.floating)):
         raise ValueError(
-            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples, "
-            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+            "y_true needs to be 1D and y_pred needs to be 2D with the same number of samples and dtype float, "
+            "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
-    y_pred_torch = y_pred_torch.float()
     pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch,
                                                                y_true_torch,
                                                                num_classes=num_classes,
