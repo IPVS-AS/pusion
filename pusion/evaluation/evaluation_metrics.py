@@ -67,15 +67,15 @@ def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float:
     return result
 
 
-def getFAR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0) -> float:
-    '''
+def far(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0) -> float:
+    """
     Calculate the false alarm rate for multiclass and multi-label problems.
     FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :param pos_normal_class: the position of the 'normal class' in :param y_true and :param y_pred. Default is `0`
     :return: The false alarm rate.
-    '''
+    """
     # False Alarm rate
     # FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
 
@@ -95,25 +95,51 @@ def getFAR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0) ->
     # for testing
     # yr = yr = np.array([y_true_normal, y_pred_normal])
     # a = np.unique(yr, axis=1, return_counts=True)
-
     far = (num_normal_class_samples_incorrectly_classified / num_all_normal_class_samples)
-
     return far
 
 
-def getFDR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0, type: str = None,
-           counting: str = None) -> float:
-    '''
+def multiclass_fdr(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """
+    fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The fault detection rate.
+    """
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
+
+    pos_normal_class = 0
+    faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+    faulty_samples = y_true[faulty_samples_indices, :]
+    pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
+
+    total_num_of_faulty_samples = len(faulty_samples_indices)
+
+    a = faulty_samples != pred_samples_at_faulty_indices
+    b = np.sum(a, axis=1)
+    uniques, counts = np.unique(b, return_counts=True)
+    numbers_of_preds = dict(zip(uniques, counts))
+
+    num_of_correctly_classified_faulty_samples = numbers_of_preds[0]
+
+    fdr = (num_of_correctly_classified_faulty_samples / total_num_of_faulty_samples)
+    return fdr
+
+
+def multilabel_subset_fdr(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """
     fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
     In multilabel classification, the function considers the faulty subset, i. e., if the entire set
     of predicted faulty labels for a sample strictly match with the true set of faulty labels.
-    :param counting: 'subset' or 'minor'. The way how the faulty subsets should be counted. TODO correct?
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
-    :param pos_normal_class: the position of the `normal class` in :param y_true and :param y_pred.
-    :param type: `multiclass` or `multi-label`. The problem type.
     :return: The fault detection rate.
-    '''
+    """
+    # TODO(old): counting: 'subset' or 'minor'. The way how the faulty subsets should be counted. TODO correct?
 
     if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
@@ -121,94 +147,88 @@ def getFDR(y_true: np.ndarray, y_pred: np.ndarray, pos_normal_class: int = 0, ty
             "got {} and {} instead.".format(y_true.shape, y_pred.shape)
         )
 
-    if type == 'multiclass':
-        faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
-        faulty_samples = y_true[faulty_samples_indices, :]
-        pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
+    pos_normal_class = 0
+    faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+    faulty_samples = y_true[faulty_samples_indices, :]
+    pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
 
-        total_num_of_faulty_samples = len(faulty_samples_indices)
+    # check faulty samples
+    fs1 = faulty_samples[:, 0:pos_normal_class]
+    fs2 = faulty_samples[:, pos_normal_class + 1:]
+    fs = np.concatenate([fs1, fs2], axis=1)
 
-        a = faulty_samples != pred_samples_at_faulty_indices
-        b = np.sum(a, axis=1)
-        uniques, counts = np.unique(b, return_counts=True)
-        numbers_of_preds = dict(zip(uniques, counts))
+    # make sure that no sample with ['normal', 0, 0, 0, ..., 0] is contained
+    # --> depends on the data set if label 'normal' == [0, 0, ..., 0]
+    # --> we assume that label 'normal' == [1, 0, 0, ..., 0]
+    fs_sum = np.sum(fs, axis=1)
+    fs_indices = np.where(fs_sum > 0)
+    fs = fs[fs_indices[0], :]
 
-        num_of_correctly_classified_faulty_samples = numbers_of_preds[0]
+    if fs.shape[0] != faulty_samples.shape[0]:
+        print("Not same length!")
 
-        fdr = (num_of_correctly_classified_faulty_samples / total_num_of_faulty_samples)
+    # fs = faulty_samples #######
+    total_num_of_faulty_samples = fs.shape[0]
 
-    elif type == 'multi-label':
-        if counting == 'subset':
-            faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
-            faulty_samples = y_true[faulty_samples_indices, :]
-            pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
+    fs_pred = pred_samples_at_faulty_indices[fs_indices[0], :]
+    fpreds1 = fs_pred[:, 0:pos_normal_class]
+    fpreds2 = fs_pred[:, pos_normal_class + 1:]
+    fpreds = np.concatenate([fpreds1, fpreds2], axis=1)
 
-            # check faulty samples
-            fs1 = faulty_samples[:, 0:pos_normal_class]
-            fs2 = faulty_samples[:, pos_normal_class + 1:]
-            fs = np.concatenate([fs1, fs2], axis=1)
+    # fpreds = pred_samples_at_faulty_indices ##########
+    a = fs != fpreds
+    b = np.sum(a, axis=1)
+    uniques, counts = np.unique(b, return_counts=True)
+    numbers_of_preds = dict(zip(uniques, counts))
 
-            # make sure that no sample with ['normal', 0, 0, 0, ..., 0] is contained
-            # --> depends on the data set if label 'normal' == [0, 0, ..., 0]
-            # --> we assume that label 'normal' == [1, 0, 0, ..., 0]
-            fs_sum = np.sum(fs, axis=1)
-            fs_indices = np.where(fs_sum > 0)
-            fs = fs[fs_indices[0], :]
+    num_of_correctly_classified_faulty_samples = numbers_of_preds[0]
+    fdr = (num_of_correctly_classified_faulty_samples / total_num_of_faulty_samples)
+    return fdr
 
-            if fs.shape[0] != faulty_samples.shape[0]:
-                print("Not same length!")
 
-            # fs = faulty_samples #######
-            total_num_of_faulty_samples = fs.shape[0]
+def multilabel_minor_fdr(y_true: np.ndarray, y_pred: np.ndarray) -> float:
+    """
+    fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+    In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+    of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+    :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The fault detection rate.
+    """
+    # TODO(old): counting: 'subset' or 'minor'. The way how the faulty subsets should be counted. TODO correct?
 
-            fs_pred = pred_samples_at_faulty_indices[fs_indices[0], :]
-            fpreds1 = fs_pred[:, 0:pos_normal_class]
-            fpreds2 = fs_pred[:, pos_normal_class + 1:]
-            fpreds = np.concatenate([fpreds1, fpreds2], axis=1)
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
+        raise ValueError(
+            "y_true and y_pred need to be 2D and have the same shape, "
+            "got {} and {} instead.".format(y_true.shape, y_pred.shape)
+        )
 
-            # fpreds = pred_samples_at_faulty_indices ##########
-            a = fs != fpreds
-            b = np.sum(a, axis=1)
-            uniques, counts = np.unique(b, return_counts=True)
-            numbers_of_preds = dict(zip(uniques, counts))
+    pos_normal_class = 0
+    faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
+    faulty_samples = y_true[faulty_samples_indices, :]
+    pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
 
-            num_of_correctly_classified_faulty_samples = numbers_of_preds[0]
-            fdr = (num_of_correctly_classified_faulty_samples / total_num_of_faulty_samples)
+    # check faulty samples
+    fs1 = faulty_samples[:, 0:pos_normal_class]
+    fs2 = faulty_samples[:, pos_normal_class + 1:]
+    fs = np.concatenate([fs1, fs2], axis=1)
 
-        elif counting == 'minor':
-            faulty_samples_indices = np.where(y_true[:, pos_normal_class] == 0)[0]
-            faulty_samples = y_true[faulty_samples_indices, :]
-            pred_samples_at_faulty_indices = y_pred[faulty_samples_indices, :]
+    fs_preds1 = pred_samples_at_faulty_indices[:, 0:pos_normal_class]
+    fs_preds2 = pred_samples_at_faulty_indices[:, pos_normal_class + 1:]
+    fs_preds = np.concatenate([fs_preds1, fs_preds2], axis=1)
 
-            # check faulty samples
-            fs1 = faulty_samples[:, 0:pos_normal_class]
-            fs2 = faulty_samples[:, pos_normal_class + 1:]
-            fs = np.concatenate([fs1, fs2], axis=1)
+    num_faulty_labels = 0
+    num_correctly_classified_faulty_labels = 0
+    for col in range(fs.shape[1]):
+        fs_col = fs[:, col]
+        fs_preds_col = fs_preds[:, col]
 
-            fs_preds1 = pred_samples_at_faulty_indices[:, 0:pos_normal_class]
-            fs_preds2 = pred_samples_at_faulty_indices[:, pos_normal_class + 1:]
-            fs_preds = np.concatenate([fs_preds1, fs_preds2], axis=1)
+        num_faulty_labels = num_faulty_labels + np.sum(fs_col, axis=0)
+        temp_mult = fs_col * fs_preds_col
+        num_correctly_classified_faulty_labels = num_correctly_classified_faulty_labels + np.sum(temp_mult,
+                                                                                                 axis=0)
 
-            num_faulty_labels = 0
-            num_correctly_classified_faulty_labels = 0
-            for col in range(fs.shape[1]):
-                fs_col = fs[:, col]
-                fs_preds_col = fs_preds[:, col]
-
-                num_faulty_labels = num_faulty_labels + np.sum(fs_col, axis=0)
-                temp_mult = fs_col * fs_preds_col
-                num_correctly_classified_faulty_labels = num_correctly_classified_faulty_labels + np.sum(temp_mult,
-                                                                                                         axis=0)
-
-            fdr = (num_correctly_classified_faulty_labels / num_faulty_labels)
-
-        else:
-            args = ('subset', 'minor')
-            raise ValueError(f"Expected argument `type` to be one of {args}" f" but got {type}")
-    else:
-        args = ('multiclass', 'multi-label')
-        raise ValueError(f"Expected argument `type` to be one of {args}" f" but got {type}")
-
+    fdr = (num_correctly_classified_faulty_labels / num_faulty_labels)
     return fdr
 
 

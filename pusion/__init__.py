@@ -1,14 +1,7 @@
-from pusion.control.decision_processor import DecisionProcessor
-from pusion.evaluation.evaluation import Evaluation
-from pusion.core import *
-from pusion.model.configuration import Configuration
-from pusion.util import *
-from pusion.util.constants import *
-from pusion.util.exceptions import *
-from pusion.evaluation.evaluation_metrics import *
-
 from pusion.auto.auto_combiner import AutoCombiner
 from pusion.auto.generic_combiner import GenericCombiner
+from pusion.control.decision_processor import DecisionProcessor
+from pusion.core import *
 from pusion.core.behaviour_knowledge_space_combiner import BehaviourKnowledgeSpaceCombiner
 from pusion.core.borda_count_combiner import BordaCountCombiner
 from pusion.core.cosine_similarity_combiner import CosineSimilarityCombiner
@@ -22,6 +15,12 @@ from pusion.core.naive_bayes_combiner import NaiveBayesCombiner
 from pusion.core.neural_network_combiner import NeuralNetworkCombiner
 from pusion.core.simple_average_combiner import SimpleAverageCombiner
 from pusion.core.weighted_voting_combiner import WeightedVotingCombiner
+from pusion.evaluation.evaluation import Evaluation
+from pusion.evaluation.evaluation_metrics import *
+from pusion.model.configuration import Configuration
+from pusion.util import *
+from pusion.util.constants import *
+from pusion.util.exceptions import *
 
 
 # Maintain this static attributes according to implemented methods for ease of framework usage,
@@ -63,8 +62,10 @@ class PerformanceMetric:
     MULTI_LABEL_BRIER_SCORE_MICRO = multi_label_brier_score_micro
     MULTI_LABEL_BRIER_SCORE = multi_label_brier_score
     MULTICLASS_BRIER_SCORE = multiclass_brier_score
-    FALSE_ALARM_RATE = getFAR
-    FAULT_DETECTION_RATE = getFDR
+    FALSE_ALARM_RATE = far
+    MULTICLASS_FDR = multiclass_fdr
+    MULTILABEL_SUBSET_FDR = multilabel_subset_fdr
+    MULTILABEL_MINOR_FDR = multilabel_minor_fdr
     MULTICLASS_WEIGHTED_PRECISION = multiclass_weighted_precision
     MULTI_LABEL_WEIGHTED_PRECISION = multi_label_weighted_precision
     MULTICLASS_CLASS_WISE_PRECISION = multiclass_class_wise_precision
