@@ -366,10 +366,9 @@ def multiclass_weighted_scikit_auc_roc_score(y_true: np.ndarray, y_pred: np.ndar
     return roc_auc_score(y_true, y_pred, average='weighted', multi_class='ovr')
 
 # TODO float
-def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int = 5) -> float:
+def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `weighted`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
@@ -381,16 +380,16 @@ def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.nd
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     return torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
                                          average='weighted').numpy().item()
 
 # TODO float
-def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
+def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray): # -> list[float]:
     """
     Compute the pytorch auc roc score for a multi-label problem with average `None`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
@@ -401,7 +400,7 @@ def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, nu
             "y_true and y_pred need to be 2D and have the same shape, y_pred needs to have dtype float, "
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
-
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch, y_true_torch, num_classes=num_classes,
@@ -409,10 +408,9 @@ def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray, nu
     return [val.numpy().item() for val in pytorch_auc_roc_class_wise]
 
 # TODO float
-def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
+def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray): # -> list[float]:
     """
     Compute the class wise precision for a multiclass problem with average `None`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
@@ -424,6 +422,7 @@ def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, 
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_average_precision_score = torchmetrics.functional.average_precision(y_pred_torch,
@@ -434,10 +433,9 @@ def multiclass_class_wise_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, 
     return [npa.item() for npa in pytorch_average_precision_score]
 
 # TODO float
-def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
+def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the precision for a multiclass problem with average `weighted`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The precision score.
@@ -449,6 +447,7 @@ def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, nu
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_average_precision_score_weighted = torchmetrics.functional.average_precision(y_pred_torch,
@@ -458,10 +457,9 @@ def multiclass_weighted_avg_precision(y_true: np.ndarray, y_pred: np.ndarray, nu
     return pytorch_average_precision_score_weighted.numpy().item()
 
 # TODO float
-def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[dict[int, float]]:
+def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray): # -> list[dict[int, float]]:
     """
     Compute the class wise auc precision recall curve for a multiclass problem.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The aggregated auc precision recall curve class wise.
@@ -473,6 +471,7 @@ def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_pr_curve_precision, pytorch_pr_curve_recall, pytorch_pr_curve_thres = torchmetrics.functional.precision_recall_curve(
@@ -491,10 +490,9 @@ def multiclass_auc_precision_recall_curve(y_true: np.ndarray, y_pred: np.ndarray
     return agg_test_pytorch_auc_pr_curve_class_wise
 
 # TODO float
-def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) -> float:
+def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     """
     Compute the pytorch auc roc for a multiclass problem with average `weighted`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
@@ -506,6 +504,7 @@ def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, 
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     return torchmetrics.functional.auroc(y_pred_torch,
@@ -514,10 +513,9 @@ def multiclass_weighted_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, 
                                          average='weighted').numpy().item()
 
 # TODO float
-def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int): # -> list[float]:
+def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray): # -> list[float]:
     """
     Compute the pytorch auc roc for a multiclass problem with average `None`.
-    :param num_classes: The number of classes.
     :param y_true: `numpy.array` of shape `(n_samples,)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The auc roc score.
@@ -529,6 +527,7 @@ def multiclass_pytorch_auc_roc(y_true: np.ndarray, y_pred: np.ndarray, num_class
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
     pytorch_auc_roc_class_wise = torchmetrics.functional.auroc(y_pred_torch,
