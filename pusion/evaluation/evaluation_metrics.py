@@ -9,12 +9,12 @@ from pusion.util.transformer import multiclass_assignments_to_labels, multilabel
 
 
 def multi_label_brier_score_micro(y_true: np.ndarray, y_pred: np.ndarray) -> float:
-    '''
+    """
     Calculate the brier score for multi-label problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The micro brier score.
-    '''
+    """
 
     if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
@@ -31,12 +31,12 @@ def multi_label_brier_score_micro(y_true: np.ndarray, y_pred: np.ndarray) -> flo
 
 
 def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float: #TODO
-    '''
+    """
     Calculate the brier score for multiclass problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The brier score.
-    '''
+    """
 
     if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
@@ -50,12 +50,12 @@ def multi_label_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float
 
 
 def multiclass_brier_score(y_true: np.ndarray, y_pred: np.ndarray):  # -> float:
-    '''
+    """
     Calculate the brier score for multi-label problems according to Brier 1950
     :param y_true: `numpy.array` of shape `(n_samples, n_classes)`. True labels or class assignments.
     :param y_pred: `numpy.array` of shape `(n_samples, n_classes)`. Predicted labels or class assignments.
     :return: The brier score.
-    '''
+    """
 
     if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
