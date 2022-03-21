@@ -404,12 +404,15 @@ def multi_label_weighted_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.nd
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
+    # TODO: quick fix done here.
+    # if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
             "y_true and y_pred need to be 2D and have the same shape, y_pred needs to have dtype float, "
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
 
+    y_pred = y_pred.astype(np.float)
     num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
@@ -425,11 +428,14 @@ def multi_label_pytorch_auc_roc_score(y_true: np.ndarray, y_pred: np.ndarray): #
     :return: The auc roc score.
     """
     # pytorch auc roc metric
-    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
+    # TODO: quick fix done here.
+    # if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape and np.issubdtype(y_pred.dtype, np.floating)):
+    if not (y_true.ndim == 2 and y_pred.ndim == 2 and y_true.shape == y_pred.shape):
         raise ValueError(
             "y_true and y_pred need to be 2D and have the same shape, y_pred needs to have dtype float, "
             "got {} and {} with dtype {} instead.".format(y_true.shape, y_pred.shape, y_pred.dtype)
         )
+    y_pred = y_pred.astype(np.float)
     num_classes = y_true.shape[1]
     y_pred_torch = torch.from_numpy(y_pred)
     y_true_torch = torch.from_numpy(y_true)
