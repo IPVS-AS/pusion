@@ -832,6 +832,18 @@ def macro_f1(y_true, y_pred):
     return f1_score(y_true, y_pred, average='macro')
 
 
+def weighted_f1(y_true, y_pred):
+    """
+    Calculate the macro F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall), weighted by the class support.
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or
+            class assignments.
+    :return: The weighted macro F1-score.
+    """
+    return f1_score(y_true, y_pred, average='weighted')
+
+
 def macro_f2(y_true, y_pred):
     """
     Calculate the macro F2-score (beta=2).

@@ -53,6 +53,7 @@ class PerformanceMetric:
     MACRO_RECALL = macro_recall
     MACRO_F1_SCORE = macro_f1
     MACRO_F2_SCORE = macro_f2
+    WEIGHTED_F1_SCORE = weighted_f1
     MACRO_JACCARD_SCORE = macro_jaccard
     HAMMING_LOSS = hamming
     ACCURACY = accuracy
