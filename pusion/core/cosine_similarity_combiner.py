@@ -1,6 +1,6 @@
 import numpy as np
 
-from scipy import spatial
+from sklearn.metrics.pairwise import cosine_similarity
 
 from pusion.core.combiner import UtilityBasedCombiner
 from pusion.util.transformer import decision_tensor_to_decision_profiles
@@ -50,15 +50,10 @@ class CosineSimilarityCombiner(UtilityBasedCombiner):
         """
         fused_decisions = np.zeros_like(decision_tensor[0])
         decision_profiles = decision_tensor_to_decision_profiles(decision_tensor)
-        for i in range(len(decision_profiles)):
-            dp = decision_profiles[i]
-            accumulated_cos_sim = np.zeros(len(dp))
-            for j in range(len(dp)):
-                for k in range(len(dp)):
-                    if j != k and np.any(dp[j]) and np.any(dp[k]):
-                        # Calculate the cosine distance (assumption: no zero elements)
-                        accumulated_cos_sim[j] = accumulated_cos_sim[j] + (1 - spatial.distance.cosine(dp[j], dp[k]))
-            fused_decisions[i] = dp[np.argmax(accumulated_cos_sim)]
+
+        for i, dp in enumerate(decision_profiles):
+            s = np.sum(cosine_similarity(dp), axis=0)
+            fused_decisions[i] = dp[np.argmax(s)]
         return fused_decisions
 
 
