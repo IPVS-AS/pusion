@@ -55,6 +55,7 @@ class PerformanceMetric:
     MACRO_F2_SCORE = macro_f2
     WEIGHTED_F1_SCORE = weighted_f1
     MACRO_JACCARD_SCORE = macro_jaccard
+    WEIGTED_JACCARD_SCORE = weighted_jaccard
     HAMMING_LOSS = hamming
     ACCURACY = accuracy
     MEAN_MULTILABEL_ACCURACY = mean_multilabel_confusion_matrix
