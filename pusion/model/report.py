@@ -41,3 +41,6 @@ class Report:
 
     def __str__(self):
         return str(DataFrame.from_dict(data=self.records, orient='index', columns=self.metric_names))
+
+    def get_data_frame(self):
+        return DataFrame.from_dict(data=self.records, orient='index', columns=self.metric_names)

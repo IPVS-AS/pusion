@@ -146,7 +146,7 @@ class Evaluation:
         """
         :return: A summary `Report` of performed evaluations including all involved instances and performance metrics.
         """
-        return Report(np.around(self.performance_matrix, 3), self.instances, self.metrics)
+        return Report(np.around(self.performance_matrix, 4), self.instances, self.metrics)
 
     def get_runtime_report(self):
         """

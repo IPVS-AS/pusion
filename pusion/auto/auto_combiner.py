@@ -30,7 +30,7 @@ class AutoCombiner(GenericCombiner):
         self.selected_combiner = None
         self.validation_size = 0.5
 
-    def train(self, decision_tensor, true_assignments):
+    def train(self, decision_tensor, true_assignments, **kwargs):
         """
         Train the AutoCombiner (AC) model. This method detects the configuration based on the ``decision_tensor`` and
         trains all trainable combiners that are applicable to this configuration.
@@ -47,15 +47,27 @@ class AutoCombiner(GenericCombiner):
         """
 
         # Split into train and validation data.
-        dt_train, ta_train, dt_valid, ta_valid = split_into_train_and_validation_data(decision_tensor, true_assignments,
-                                                                                      self.validation_size)
+        if 'test_data' in kwargs.keys():
+            dt_train = decision_tensor
+            ta_train = true_assignments
+            dt_valid = kwargs['test_data']['dt_valid']
+            ta_valid = kwargs['test_data']['ta_valid']
+        else:
+            dt_train, ta_train, dt_valid, ta_valid = split_into_train_and_validation_data(decision_tensor,
+                                                                                          true_assignments,
+                                                                                          self.validation_size)
+
         # Encapsulated training phase.
         super().train(dt_train, ta_train)
         # Encapsulated evaluation phase.
         super().combine(dt_valid)
+        # Todo save the decision fusion evaluation report within the AutoFusion procedure to be able to print the
+        #  overview of the performance of the tested decision fusion methods
         performance_per_combiner = np.zeros(len(self.combiners))
         for i in range(len(self.combiners)):
             comb_res = self.multi_combiner_decision_tensor[i]
+            # TODO add support for different evaluation metrics to select the best performing decision fusion algorithm
+            #  within AutoFusion, e. g. fbeta socre, significance tests, cutomized cost functions with weightings ...
             performance_per_combiner[i] = accuracy(ta_valid, comb_res)
         self.selected_combiner = self.combiners[performance_per_combiner.argmax()]
         # Clear temporarily obtained fusion results.
@@ -79,7 +91,7 @@ class AutoCombiner(GenericCombiner):
                 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
                 ``decision_tensor`` input tensor.
         """
-        super().combine(decision_tensor)  # TODO: Delete. Left for insights into performances of preselected combiners.
+        #super().combine(decision_tensor)  # Left for insights into performances of preselected combiners.
 
         if self.selected_combiner is not None:
             return self.selected_combiner.combine(decision_tensor)
