@@ -53,7 +53,7 @@ class DecisionProcessor:
             self.combiner.set_validation_size(validation_size)
         raise TypeError("No AutoCombiner configuration.")
 
-    def train(self, y_ensemble_valid, y_valid):
+    def train(self, y_ensemble_valid, y_valid, **kwargs):
         """
         Train the combiner model determined by the configuration.
 
@@ -70,9 +70,15 @@ class DecisionProcessor:
         :param y_valid: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
+
+        :param **kwargs: The `**kwargs` parameter may be used to use additional test data for the AutoFusion selection
+                procedure.
         """
         if isinstance(self.combiner, TrainableCombiner):
-            self.combiner.train(y_ensemble_valid, y_valid)
+            if isinstance(self.combiner, AutoCombiner):
+                self.combiner.train(y_ensemble_valid, y_valid, **kwargs)
+            else:
+                self.combiner.train(y_ensemble_valid, y_valid)
 
     def combine(self, y_ensemble_test):
         """
