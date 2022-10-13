@@ -80,7 +80,7 @@ final fusion is performed on the test dataset (without true labels).
     # Initialize the general framework interface
     dp = p.DecisionProcessor(conf)
 
-    # Train the selected BehaviourKnowledgeSpace combiner with the validation dataset
+    # Train the selected Dempster Shafer combiner with the validation dataset
     dp.train(y_ensemble_valid, y_valid)
 
     # Fuse the ensemble classification outputs (test dataset)
