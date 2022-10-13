@@ -868,6 +868,17 @@ def macro_jaccard(y_true, y_pred):
     return jaccard_score(y_true, y_pred, average='macro')
 
 
+def weighted_jaccard(y_true, y_pred):
+    """
+    Calculate the Jaccard-score for each label, and find their average, weighted by support, i. e., the number of true instances of each label instance.
+
+    :param y_true: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. True labels or class assignments.
+    :param y_pred: `numpy.array` of shape `(n_samples,)` or `(n_samples, n_classes)`. Predicted labels or class assignments.
+    :return: The macro Jaccard-score.
+    """
+    return jaccard_score(y_true, y_pred, average="weighted")
+
+
 def accuracy(y_true, y_pred):
     """
     Calculate the accuracy, i.e. (TP + TN) / (TP + FP + FN + TN).
@@ -1020,7 +1031,7 @@ def __relations(y1, y2, y_true):
     return a / n_samples, b / n_samples, c / n_samples, d / n_samples
 
 
-def __pairwise_avg_score(decision_tensor, true_assignments, score_func):
+def __pairwise_avg_score(decision_tensor, true_assignments, score_func, **kwargs):
     """
     A helper function for calculating pairwise average score statistics.
     """
@@ -1029,6 +1040,11 @@ def __pairwise_avg_score(decision_tensor, true_assignments, score_func):
     scores = []
     for i, j in zip(indices[0], indices[1]):
         scores.append(score_func(decision_tensor[i], decision_tensor[j], true_assignments))
+
+    if 'return_type' in kwargs:
+        if kwargs['return_type'] == 'list':
+            return indices, scores
+
     return np.mean(scores)
 
 
@@ -1155,7 +1171,7 @@ def abs_q_statistic(y1, y2, y_true):
     return np.abs((a * d - b * c) / (a * d + b * c))
 
 
-def pairwise_correlation(decision_tensor, true_assignments):
+def pairwise_correlation(decision_tensor, true_assignments, **kwargs):
     """
     Calculate the average of the pairwise absolute correlation scores over all decision outputs.
 
@@ -1168,7 +1184,7 @@ def pairwise_correlation(decision_tensor, true_assignments):
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
-    return __pairwise_avg_score(decision_tensor, true_assignments, abs_correlation)
+    return __pairwise_avg_score(decision_tensor, true_assignments, abs_correlation, **kwargs)
 
 
 def pairwise_q_statistic(decision_tensor, true_assignments):
@@ -1187,7 +1203,7 @@ def pairwise_q_statistic(decision_tensor, true_assignments):
     return __pairwise_avg_score(decision_tensor, true_assignments, abs_q_statistic)
 
 
-def pairwise_kappa_statistic(decision_tensor, true_assignments):
+def pairwise_kappa_statistic(decision_tensor, true_assignments, **kwargs):
     """
     Calculate the average of pairwise Kappa scores over all decision outputs.
     Multilabel class assignments are transformed to equivalent multiclass class assignments.
@@ -1201,7 +1217,7 @@ def pairwise_kappa_statistic(decision_tensor, true_assignments):
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
-    return __pairwise_avg_score(decision_tensor, true_assignments, kappa_statistic)
+    return __pairwise_avg_score(decision_tensor, true_assignments, kappa_statistic, **kwargs)
 
 
 def pairwise_disagreement(decision_tensor, true_assignments):
@@ -1221,7 +1237,7 @@ def pairwise_disagreement(decision_tensor, true_assignments):
     return __pairwise_avg_score(decision_tensor, true_assignments, disagreement)
 
 
-def pairwise_double_fault(decision_tensor, true_assignments):
+def pairwise_double_fault(decision_tensor, true_assignments, **kwargs):
     """
     Calculate the average of pairwise double fault scores over all decision outputs.
     Multilabel class assignments are transformed to equivalent multiclass class assignments.
@@ -1235,7 +1251,7 @@ def pairwise_double_fault(decision_tensor, true_assignments):
     if determine_problem(decision_tensor) == Problem.MULTI_LABEL:
         decision_tensor = multilabel_to_multiclass_assignments(decision_tensor)
         true_assignments = multilabel_to_multiclass_assignments(true_assignments)
-    return __pairwise_avg_score(decision_tensor, true_assignments, double_fault)
+    return __pairwise_avg_score(decision_tensor, true_assignments, double_fault, **kwargs)
 
 
 def pairwise_euclidean_distance(decision_tensor):
