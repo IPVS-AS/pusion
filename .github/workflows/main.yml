@@ -28,16 +28,16 @@ jobs:
         run: echo Make Sphinx Docs!
 
 
-      #- uses: IPVS-AS/pusion@main
-      #  with:
-      #    docs-folder: "docs/"
-      #    build-command: "sphinx-build -b html . _build"
+      - uses: IPVS-AS/pusion@main
+        with:
+          docs-folder: "docs/"
+          build-command: "sphinx-build -b html . _build"
 
-      #- uses: IPVS-AS/pusion@main
-      #  with:
-      #    docs-folder: "docs/"
-      #    pre-build-command: "sudo apt-get update -y && sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
-      #    build-command: "make latexpdf"
+      - uses: IPVS-AS/pusion@main
+        with:
+          docs-folder: "docs/"
+          pre-build-command: "sudo apt-get update -y && sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
+          build-command: "make latexpdf"
 
       # Runs a set of commands using the runners shell
       - name: Run commands
@@ -50,7 +50,7 @@ jobs:
       - name: Run bat script on Bash
         shell: bash
         run: sudo ./docs/make.bat html
-      #./home/runner/work/pusion/pusion/docs/make html
-      #./make html
-      #./make latex PAPER=a4
+      ./home/runner/work/pusion/pusion/docs/make html
+      ./make html
+      ./make latex PAPER=a4
           

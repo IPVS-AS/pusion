@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="pusion",
-    version="0.1.0",
+    version="0.2.0",
     description="Pusion (Python Universal Fusion) is a generic and flexible decision fusion framework written in Python for combining multiple classifier’s decision outcomes.",
     long_description=long_description,
     long_description_content_type="text/markdown",

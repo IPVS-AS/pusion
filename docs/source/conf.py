@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
-project = u'pusion'
-copyright = u'2021, Admir Obralija, Yannick Wilhelm. ' \
+project = u'pusion - Decision Fusion Framework'
+copyright = u'2022, Admir Obralija, Yannick Wilhelm. ' \
             u'Institute for Parallel and Distributed Systems, University of Stuttgart, Germany'
 author = u'Admir Obralija'
 
