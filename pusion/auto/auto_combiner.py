@@ -1,3 +1,4 @@
+import pusion as p
 from pusion.auto.detector import *
 from pusion.auto.generic_combiner import GenericCombiner
 from pusion.evaluation.evaluation_metrics import *
@@ -29,6 +30,7 @@ class AutoCombiner(GenericCombiner):
         super().__init__()
         self.selected_combiner = None
         self.validation_size = 0.5
+        self.eval_metric = p.PerformanceMetric.ACCURACY # default evaluation metric for the AutoFusion approach
 
     def train(self, decision_tensor, true_assignments, **kwargs):
         """
@@ -57,6 +59,10 @@ class AutoCombiner(GenericCombiner):
                                                                                           true_assignments,
                                                                                           self.validation_size)
 
+        # set specified evaluation metric
+        if 'eval_metric' in kwargs.keys():
+            self.eval_metric = kwargs['eval_metric']
+
         # Encapsulated training phase.
         super().train(dt_train, ta_train)
         # Encapsulated evaluation phase.
@@ -66,9 +72,10 @@ class AutoCombiner(GenericCombiner):
         performance_per_combiner = np.zeros(len(self.combiners))
         for i in range(len(self.combiners)):
             comb_res = self.multi_combiner_decision_tensor[i]
-            # TODO add support for different evaluation metrics to select the best performing decision fusion algorithm
+            # TODO add support for further evaluation metrics to select the best performing decision fusion algorithm
             #  within AutoFusion, e. g. fbeta socre, significance tests, cutomized cost functions with weightings ...
-            performance_per_combiner[i] = accuracy(ta_valid, comb_res)
+            #performance_per_combiner[i] = accuracy(ta_valid, comb_res)
+            performance_per_combiner[i] = self.eval_metric(ta_valid, comb_res)
         self.selected_combiner = self.combiners[performance_per_combiner.argmax()]
         # Clear temporarily obtained fusion results.
         self.multi_combiner_decision_tensor = []
@@ -111,3 +118,9 @@ class AutoCombiner(GenericCombiner):
         :return: The method selected by the `AutoCombiner`.
         """
         return self.selected_combiner
+
+    def get_eval_metric(self):
+        """
+        :return: The metric used for the selection of the best performing combiner.
+        """
+        return self.eval_metric

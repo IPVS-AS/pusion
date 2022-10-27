@@ -109,7 +109,7 @@ class DecisionProcessor:
             return self.combiner.get_multi_combiner_decision_tensor()
         raise TypeError("No multi combiner output. Use combine(...) to retrieve the output of a single combiner.")
 
-    def get_optimal_combiner(self):
+    def get_optimal_combiner(self, eval_metric=None):
         """
         Retrieve the combiner with the best classification performance obtained by the framework, i.e. the
         `AutoCombiner` or the `GenericCombiner`.
@@ -120,7 +120,7 @@ class DecisionProcessor:
         if type(self.combiner) is GenericCombiner and self.evaluation is None:
             raise TypeError("No evaluation set for determining the optimal method using GenericCombiner.")
         if type(self.combiner) is GenericCombiner:
-            return self.evaluation.get_top_n_instances(1)[0][0]
+            return self.evaluation.get_top_n_instances(n=1, metric=eval_metric)[0][0]
         elif type(self.combiner) is AutoCombiner:
             return self.combiner.get_selected_combiner()
         else:
@@ -169,14 +169,15 @@ class DecisionProcessor:
 
 
 
-    def report(self):
+    def report(self, eval_metric=None):
         """
         :return: The textual evaluation report.
         """
         if isinstance(self.combiner, GenericCombiner) or isinstance(self.combiner, AutoCombiner):
             problem, assignment_type, coverage_type = self.combiner.get_pac()
             combiner_type_selection = self.combiner.get_combiner_type_selection()
-            optimal_comb = self.get_optimal_combiner()
+            optimal_comb = self.get_optimal_combiner(eval_metric=eval_metric)
+            selection_metric = self.combiner.get_eval_metric().__name__ if isinstance(self.combiner, AutoCombiner) else (eval_metric.__name__ if eval_metric is not None else self.evaluation.metrics[0].__name__)
 
             report_dict = {
                 'Problem': problem,
@@ -184,6 +185,7 @@ class DecisionProcessor:
                 'Coverage type': coverage_type,
                 'Combiner type selection': ', '.join([ct.__name__ for ct in combiner_type_selection]),
                 'Compatible combiners': ', '.join([type(comb).__name__ for comb in self.get_combiners()]),
+                'Selection metric': selection_metric,
                 'Optimal combiner': type(optimal_comb).__name__,
                 'Classification performance': '\n' + str(self.evaluation.get_report())
             }
