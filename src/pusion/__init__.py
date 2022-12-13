@@ -21,7 +21,7 @@ from pusion.model.configuration import Configuration
 from pusion.util import *
 from pusion.util.constants import *
 from pusion.util.exceptions import *
-
+from pusion.util.generator import *
 
 # Maintain this static attributes according to implemented methods for ease of framework usage,
 # e.g., `pusion.Method.AutoCombiner`.

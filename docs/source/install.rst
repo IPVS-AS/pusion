@@ -41,7 +41,7 @@ For `MacOS` or `Unix` user:
 
     python3 -m build
 
-Once successfully executed, two files are generated in the `dist` subfolder within the project's root folder.
+Once successfully executed, two files are generated in the `dist` subfolder within the project's root folder. The `tar.gz` file is the source distribution and the `whl` file is the built distribution.
 
 Installation
 ------------
