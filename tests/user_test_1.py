@@ -93,5 +93,8 @@ def main():
     print("------------- Runtimes ---------------")
     print("Total train time:", t_elapsed_train)
     print("Total combine time:", t_elapsed_combine)
-    print()
+
+
+if __name__ == '__main__':
+    main()
 
