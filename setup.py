@@ -29,8 +29,7 @@ setup(
         'scikit-learn~=0.24.1',
         'setuptools~=54.2.0',
         'pandas~=1.2.3',
-        'matplotlib~=3.4.1',
-        'pickle5~=0.0.11'
+        'matplotlib~=3.4.1'
     ],
     setup_requires=['pytest-runner'],
     packages=find_packages(exclude=['tests'], where="pusion"),

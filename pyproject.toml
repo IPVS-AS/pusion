@@ -1,6 +1,44 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
-]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pusion"
+version = "0.2.0"
+authors = [
+    { name="Yannick Wilhelm", email="yannick.wilhelm@gsame.uni-stuttgart.de" },
+    { name="Admir Obralija"}
+]
+description = "Pusion (Python Universal Fusion) is a generic and automated framework for decision fusion written in Python."
+readme = "README.md"
+license={file = "LICENSE.txt"}
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "numpy~=1.20.2",
+    "scipy~=1.6.2",
+    "scikit-learn~=0.24.1",
+    "setuptools~=54.2.0",
+    "pandas~=1.2.3",
+    "matplotlib~=3.4.1"
+]
+keywords = ["decision fusion", "combining classifiers", "fusion", "pusion"]
+
+[project.optional-dependencies]
+test = [
+  "pytest > 5.0.0",
+  #"pytest-cov[all]"
+]
+doc = [
+  "sphinx"#,
+  #"furo"
+]
+
+[project.urls]
+homepage = "https://github.com/IPVS-AS/pusion"
+documentation = "https://ipvs-as.github.io/pusion/build/html/index.html"
+"Bug Tracker" = "https://github.com/IPVS-AS/pusion/issues"

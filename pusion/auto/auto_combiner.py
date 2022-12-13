@@ -72,8 +72,9 @@ class AutoCombiner(GenericCombiner):
         performance_per_combiner = np.zeros(len(self.combiners))
         for i in range(len(self.combiners)):
             comb_res = self.multi_combiner_decision_tensor[i]
-            # TODO add support for further evaluation metrics to select the best performing decision fusion algorithm
-            #  within AutoFusion, e. g. fbeta socre, significance tests, cutomized cost functions with weightings ...
+            # TODO add support for a combined evaluation metric a la Alejandro Villanuevas Paper in the 3d space
+            #  --> add a weighted distance-based selection approach to select the best performing decision fusion algorithm, e. g. acc, fdr and prbabilistic prediction quality
+            #  also further approaches, e. g. significance tests, cutomized cost functions with weightings ...
             #performance_per_combiner[i] = accuracy(ta_valid, comb_res)
             performance_per_combiner[i] = self.eval_metric(ta_valid, comb_res)
         self.selected_combiner = self.combiners[performance_per_combiner.argmax()]
