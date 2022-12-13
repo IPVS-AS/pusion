@@ -10,7 +10,7 @@ The latter one is followed by the presented framework and illustrated in :numref
 
 .. _fig-context:
 
-.. figure:: images/framework_context.pdf
+.. figure:: images/framework_context.svg
 
    Architectural embedding of the decision fusion framework
 

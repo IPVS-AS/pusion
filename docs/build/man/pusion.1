@@ -1,0 +1,4669 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "PUSION" "1" "Dec 13, 2022" "0.2.0" "pusion - Decision Fusion Framework"
+.SH NAME
+pusion \- pusion Documentation
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.sp
+Pusion (Python Universal Fusion) is a flexible framework for combining multi\-classifier decisions in Python.
+.sp
+The framework accommodates a variety of fusion methods adapted from ensemble techniques and pattern recognition.
+The general purpose is to improve the classification performance over the input classifiers and to determine the
+compatibility of individual fusion methods to the given problem.
+Pusion handles an unlimited number of classifiers and also tolerates different forms of classification outputs.
+This includes the multiclass and multilabel classification, as well as crisp and continuous class assignments.
+.sp
+The framework is originally designed for combining fault detection and diagnosis methods.
+However, its application is not limited to this area.
+.sp
+This documentation includes the following sections:
+.SH OVERVIEW
+.SS Introduction
+.sp
+In general, there exist two main approaches to combine multiple classifiers in order to obtain reasonable classification
+outputs for unseen samples: the classifier selection and the classifier fusion.
+The latter one is followed by the presented framework and illustrated in Fig. %s\&.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Architectural embedding of the decision fusion framework.UNINDENT
+.UNINDENT
+.sp
+However, there are significant properties arising from such classifier ensembles as parameters which need to be
+considered in the whole decision fusion process.
+These parameters are forming a configuration which consists of:
+.INDENT 0.0
+.IP \(bu 2
+Decision fusion method (\fIcombiner\fP)
+.IP \(bu 2
+Classification problem
+.IP \(bu 2
+Class assignment type
+.IP \(bu 2
+Classification coverage
+.UNINDENT
+.sp
+The \fIcombiner\fP states an explicit method provided by the framework which should be applied on the input data set.
+Available core methods are listed in the following section.
+.sp
+The \fIclassification problem\fP refers either to a multiclass or to a multilabel classification problem.
+In the multiclass case, a sample is always classified into one class, while in the multilabel case, more than one class
+may be assigned to a sample.
+.sp
+Pusion operates on classification data which is given by class assignments.
+The class assignment describes memberships to each individual class for a sample.
+A \fIclass assignment type\fP is either crisp or continuous. Crisp assignments are equivalent to labels
+and continuous assignments represent probabilities for each class being true.
+.sp
+The \fIclassification coverage\fP states for each input classifier, which classes it is able to decide.
+A classifier ensemble may yield a redundant, complementary or complementary\-redundant coverage.
+.SS Core methods
+.sp
+The following core decision fusion methods are supported by \fIpusion\fP and classified according to the evidence resolution
+they accept. With lower evidence resolution, a weaker a\-priori information about individual classifiers can be taken
+into account during the fusion process.
+Utility\-based methods do not take any further information about classifiers into account.
+In cases where no evidence is available for a certain classification data set, a utility\-based method is a reasonable
+choice.
+Evidence\-based methods are recommended in cases where evidence (e.g. confusion matrices) but no training data is
+available for each classifier.
+Trainable methods provide the highest evidence resolution, since decision outputs are required from the ensemble for
+each sample during the training phase.
+Therefore, each \fItrainable combiner\fP is able to calculate any kind of evidence based on the training data and is even
+able to analyse the behaviour of each classification method from the ensemble.
+.sp
+Utility\-based methods (low evidence resolution):
+.INDENT 0.0
+.IP \(bu 2
+Borda Count (BC)
+.IP \(bu 2
+Cosine Similarity (COS)
+.IP \(bu 2
+Macro Majority Vote (MAMV)
+.IP \(bu 2
+Micro Majority Vote (MIMV)
+.IP \(bu 2
+Simple Average (AVG)
+.UNINDENT
+.sp
+Evidence\-based methods (medium evidence resolution):
+.INDENT 0.0
+.IP \(bu 2
+Naive Bayes (NB)
+.IP \(bu 2
+Weighted Voting (WV)
+.UNINDENT
+.sp
+Trainable methods (highest evidence resolution):
+.INDENT 0.0
+.IP \(bu 2
+Behaviour Knowledge Space (BKS)
+.IP \(bu 2
+Decision Templates (DT)
+.IP \(bu 2
+k Nearest Neighbors (KNN)
+.IP \(bu 2
+Dempster Shafer (DS)
+.IP \(bu 2
+Maximum Likelihood (MLE)
+.IP \(bu 2
+Neural Network (NN)
+.UNINDENT
+.SS Data input and output
+.sp
+The input type used for classification data is generic and applies to all provided decision fusion methods.
+It is given by a 3D \fI\%numpy.ndarray\fP tensor,
+which is illustrated in Fig. %s\&.
+.INDENT 0.0
+.INDENT 2.5
+[image]
+Illustration of the input tensor for a multilabel problem with crisp assignments
+(3 samples, 4 classes, 2 classifiers)..UNINDENT
+.UNINDENT
+.sp
+The same applies also to the pusion’s return, except that the output matrix is a 2D \fInumpy.ndarray\fP\&.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+In case of complementary\-redundant decisions, the coverage needs to be specified besides ordinary python lists,
+which are used as an alternative to the \fInumpy.ndarray\fP\&.
+.UNINDENT
+.UNINDENT
+.SS AutoFusion
+.sp
+The framework provides an additional fusion method AutoCombiner which is able to the detect the configuration
+based on the input classification data and to automatically select the fusion method with the best classification
+performance for the given problem.
+The \fIAutoCombiner\fP bundles all methods provided by the framework and probes each of them for the application on the
+given classification data.
+The \fIAutoCombiner\fP is transparent to the user as each of the core fusion methods.
+.SS Generic fusion
+.sp
+In contrast to the \fIAutoCombiner\fP, the GenericCombiner retrieves fusion results obtained by all
+compatible core methods by means of a \fInumpy.ndarray\fP tensor. In this case, the evaluation as well as the method
+selection is handed over to the user.
+.SS Further functionalities
+.INDENT 0.0
+.IP \(bu 2
+Classification data and coverage generation (see module generator)
+.IP \(bu 2
+Useful transformations for decision outputs, e.g. multilabel to multiclass conversion
+(see module transformer)
+.IP \(bu 2
+Evaluation methods for different classification and coverage types (see class Evaluation)
+.UNINDENT
+.SH INSTALL PUSION
+.SS General requirements
+.INDENT 0.0
+.IP \(bu 2
+Python >= 3.6
+.UNINDENT
+.SS Package requirements
+.INDENT 0.0
+.IP \(bu 2
+numpy >= 1.20.2
+.IP \(bu 2
+scipy >= 1.6.2
+.IP \(bu 2
+scikit\-learn >= 0.24.1
+.IP \(bu 2
+setuptools >= 54.2.0
+.IP \(bu 2
+pandas >= 1.2.3
+.IP \(bu 2
+matplotlib >= 3.4.1
+.UNINDENT
+.SS Preparation
+.sp
+To generate the python distribution archives of \fIpusion\fP, update the PyPA’s build to the latest version. Under \fIWindows\fP run in your python environment the following command:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+py \-m pip install \-\-upgrade build
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+If you are using \fIMacOS\fP or \fIUnix\fP, run in your python environment:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+python3 \-m pip install \-\-upgrade build
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+After cloning \fIpusion\fP from GitHub to your local computer, enter the \fIpusion\fP directory where the file \fIpyproject.toml\fP is located. Under this directory run the following \fIbuild\fP command. For \fIWindows\fP users:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+py \-m build
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+For \fIMacOS\fP or \fIUnix\fP user:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+python3 \-m build
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Once successfully executed, two files are generated in the \fIdist\fP subfolder within the project’s root folder. The \fItar.gz\fP file is the source distribution and the \fIwhl\fP file is the built distribution.
+.SS Installation
+.sp
+The generated wheel can be installed using the \fBpip3\fP command, which also installs all required packages for \fIpusion\fP\&.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+pip3 install dist/pusion\-<version>\-py3\-none\-any.whl
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH API REFERENCE
+.SS pusion.auto package
+.SS pusion.auto.auto_combiner
+.INDENT 0.0
+.TP
+.B class pusion.auto.auto_combiner.AutoCombiner
+Bases: \fBpusion.auto.generic_combiner.GenericCombiner\fP
+.sp
+The \fIAutoCombiner\fP allows for automatic decision fusion using all methods provided by the framework, which are
+applicable to the given problem. The key feature of this combiner is the transparency in terms of it’s outer
+behaviour. Based on the usage (i.e. method calls) and the automatically detected configuration,
+the \fIAutoCombiner\fP preselects all compatible methods from \fIpusion.core\fP\&. The main purpose is to retrieve fusion
+results obtained by the methods with the best performance without further user interaction.
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments, **kwargs)
+Train the AutoCombiner (AC) model. This method detects the configuration based on the \fBdecision_tensor\fP and
+trains all trainable combiners that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs using the AutoCombiner (AC) model. Both continuous and crisp classification outputs are
+supported. This procedure involves selecting the best method regarding its classification performance in case
+of a trained AC.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp or continuous class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_validation_size(validation_size)
+Set the validation size, based on which the training data is split and the best combiner is selected.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBvalidation_size\fP – A \fIfloat\fP between \fI0\fP and \fI1.0\fP\&. Ratio of the validation data set.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine_par(decision_tensor)
+Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+This procedure involves combining decision outputs by each individual method which is applicable
+to the detected configuration. Each combine procedure is spawned in a separate thread and thus performed
+in parallel.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine_seq(decision_tensor)
+Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+This procedure involves combining decision outputs by each individual method which is applicable
+to the detected configuration. Each combine procedure is initiated in sequence.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiner_type_selection()
+.INDENT 7.0
+.TP
+.B Returns
+list of combiner types established by usage.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiners()
+.INDENT 7.0
+.TP
+.B Returns
+list of core methods preselected by the \fIAutoCombiner\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_decision_tensor()
+.INDENT 7.0
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_runtimes()
+.INDENT 7.0
+.TP
+.B Returns
+A \fItuple\fP of two lists of tuples describing the train and combine runtimes respectively.
+Each inner tuple key value indexes the list of preselected fusion methods
+(retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_pac()
+.INDENT 7.0
+.TP
+.B Returns
+\fItuple\fP of detected problem, assignment type and coverage type.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_selected_combiner()
+.INDENT 7.0
+.TP
+.B Returns
+The method selected by the \fIAutoCombiner\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B classmethod obtain(config)
+Obtain a combiner registered by the framework.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBconfig\fP – \fBpusion.model.configuration.Configuration\fP\&. User\-defined configuration.
+.TP
+.B Returns
+A \fIcombiner\fP object.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_coverage(coverage)
+Set the coverage in case of complementary\-redundant classification data.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcoverage\fP – The coverage is described by using a nested list. Each list describes the classifier based on
+its position. Elements of those lists (integers) describe the actual class coverage of the respective
+classifier. E.g., with \fB[[0,1], [0,2,3]]\fP the classes 0,1 are covered by the first classifier and
+0,2,3 are covered by the second one.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_evidence(evidence)
+Set the evidence for evidence based combiners. This method preselects all combiners of type
+\fIEvidenceBasedCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_classes, n_classes)\fP\&.
+Confusion matrices for each of \fIn\fP classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_parallel(parallel=True)
+Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
+:param parallel: If \fITrue\fP, training and combining is performed in parallel respectively. Otherwise in sequence.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train_par(decision_tensor, true_assignments)
+Train the Generic Combiner by training individual combiners in parallel.
+This method detects the configuration based on the \fBdecision_tensor\fP and trains all trainable combiners
+that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train_seq(decision_tensor, true_assignments)
+Train the Generic Combiner by training individual combiners in sequence.
+This method detects the configuration based on the \fBdecision_tensor\fP and trains all trainable combiners
+that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_eval_metric()
+.INDENT 7.0
+.TP
+.B Returns
+The metric used for the selection of the best performing combiner.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.auto.generic_combiner
+.INDENT 0.0
+.TP
+.B class pusion.auto.generic_combiner.GenericCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP, \fBpusion.core.combiner.EvidenceBasedCombiner\fP, \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fIGenericCombiner\fP (GC) allows for automatic decision fusion using all methods provided by the framework, which
+are applicable to the given problem. The key feature of this combiner is the transparency in terms of it’s outer
+behaviour. Based on the usage (i.e. method calls) and the automatically detected configuration,
+the \fIGenericCombiner\fP preselects all compatible methods from \fIpusion.core\fP\&. The main purpose is to retrieve fusion
+results obtained by the all applicable methods. The main difference to the \fIAutoCombiner\fP is that decision fusion
+results are handed over to the user for further comparison and selection. Thus, GC is not suitable for
+the online fusion.
+.INDENT 7.0
+.TP
+.B set_coverage(coverage)
+Set the coverage in case of complementary\-redundant classification data.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcoverage\fP – The coverage is described by using a nested list. Each list describes the classifier based on
+its position. Elements of those lists (integers) describe the actual class coverage of the respective
+classifier. E.g., with \fB[[0,1], [0,2,3]]\fP the classes 0,1 are covered by the first classifier and
+0,2,3 are covered by the second one.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_evidence(evidence)
+Set the evidence for evidence based combiners. This method preselects all combiners of type
+\fIEvidenceBasedCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_classes, n_classes)\fP\&.
+Confusion matrices for each of \fIn\fP classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Generic Combiner. This method detects the configuration based on the \fBdecision_tensor\fP and
+trains all trainable combiners that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train_par(decision_tensor, true_assignments)
+Train the Generic Combiner by training individual combiners in parallel.
+This method detects the configuration based on the \fBdecision_tensor\fP and trains all trainable combiners
+that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train_seq(decision_tensor, true_assignments)
+Train the Generic Combiner by training individual combiners in sequence.
+This method detects the configuration based on the \fBdecision_tensor\fP and trains all trainable combiners
+that are applicable to this configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs using the AutoCombiner (AC) model. Both continuous and crisp classification outputs are
+supported. This procedure involves combining decision outputs by each individual method which is applicable
+to the detected configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine_par(decision_tensor)
+Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+This procedure involves combining decision outputs by each individual method which is applicable
+to the detected configuration. Each combine procedure is spawned in a separate thread and thus performed
+in parallel.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine_seq(decision_tensor)
+Combine decision outputs by GC. Both continuous and crisp classification outputs are supported.
+This procedure involves combining decision outputs by each individual method which is applicable
+to the detected configuration. Each combine procedure is initiated in sequence.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_pac()
+.INDENT 7.0
+.TP
+.B Returns
+\fItuple\fP of detected problem, assignment type and coverage type.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiners()
+.INDENT 7.0
+.TP
+.B Returns
+list of core methods preselected by the \fIAutoCombiner\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiner_type_selection()
+.INDENT 7.0
+.TP
+.B Returns
+list of combiner types established by usage.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_decision_tensor()
+.INDENT 7.0
+.TP
+.B Returns
+list of \fInumpy.array\fP of shape \fI(n_samples, n_classifiers)\fP\&.
+Fusion results obtained by selected fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_runtimes()
+.INDENT 7.0
+.TP
+.B Returns
+A \fItuple\fP of two lists of tuples describing the train and combine runtimes respectively.
+Each inner tuple key value indexes the list of preselected fusion methods
+(retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_parallel(parallel=True)
+Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
+:param parallel: If \fITrue\fP, training and combining is performed in parallel respectively. Otherwise in sequence.
+.UNINDENT
+.UNINDENT
+.SS pusion.auto.detector module
+.INDENT 0.0
+.TP
+.B pusion.auto.detector.determine_problem(decision_outputs)
+Determine the classification problem based on the decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.TP
+.B Returns
+\fIstring\fP constant \fI‘MULTI_CLASS’\fP or \fI‘MULTI_LABEL’\fP\&. See \fIpusion.util.constants.Problem\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.auto.detector.determine_assignment_type(decision_outputs)
+Determine the assignment type based on the decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.TP
+.B Returns
+\fIstring\fP constant \fI‘CRISP’\fP or \fI‘CONTINUOUS’\fP\&. See \fIpusion.util.constants.AssignmentType\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.auto.detector.determine_coverage_type(coverage)
+Determine the coverage type.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+.TP
+.B Returns
+\fIstring\fP constant \fI‘REDUNDANT’\fP, \fI‘COMPLEMENTARY’\fP  or \fI‘COMPLEMENTARY_REDUNDANT’\fP\&.
+See \fIpusion.util.constants.CoverageType\fP\&.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.auto.detector.determine_pac(decision_outputs, coverage=None)
+Determine the PAC\-tuple (problem, assignment type and coverage type) based on the given decision outputs and
+coverage.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of string constants representing the PAC. See \fIpusion.util.constants.Problem\fP,
+\fIpusion.util.constants.AssignmentType\fP and \fIpusion.util.constants.CoverageType\fP\&.
+.UNINDENT
+.UNINDENT
+.SS pusion.control package
+.SS pusion.control.decision_processor module
+.INDENT 0.0
+.TP
+.B class pusion.control.decision_processor.DecisionProcessor(config: pusion.model.configuration.Configuration)
+Bases: \fBobject\fP
+.sp
+\fI\%DecisionProcessor\fP is the main user interface of the decision fusion framework. It provides all methods
+for selecting combiners including the AutoCombiner and the GenericCombiner\&.
+It also ensures uniformity and correct use of all \fIpusion.core\fP combiners.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBconfig\fP – \fBpusion.model.configuration.Configuration\fP\&. User\-defined configuration.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_coverage(coverage)
+Set the coverage in case of complementary\-redundant classification data.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list. E.g., with
+\fB[[0,1], [0,2,3]]\fP the classes 0,1 are covered by the first classifier and 0,2,3 are covered by the
+second one.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_evidence(evidence)
+Set the evidence for evidence\-based combiners. The evidence is given by confusion matrices calculated
+according to Kuncheva [1]\&.
+.sp
+.IP [1] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fIlist\fP of \fInumpy.array\fP elements of shape \fI(n_classes, n_classes)\fP\&. Confusion matrices
+for each ensemble classifier.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_data_split_ratio(validation_size)
+Set the size of the validation data used by the AutoCombiner to evaluate all applicable fusion methods in order
+to select the combiner with the best classification performance.
+Accordingly, the other data of size \fI1\-validation_size\fP is used to train all individual combiners.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBvalidation_size\fP – A \fIfloat\fP between \fI0\fP and \fI1.0\fP\&. Ratio of the validation data set.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train(y_ensemble_valid, y_valid, **kwargs)
+Train the combiner model determined by the configuration.
+.sp
+\fBWARNING:\fP
+.INDENT 7.0
+.INDENT 3.5
+A trainable combiner is always trained with the validation dataset provided by ensemble classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_ensemble_valid\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.IP \(bu 2
+\fBy_valid\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.IP \(bu 2
+\fB**kwargs\fP – The \fI**kwargs\fP parameter may be used to use additional test data for the AutoFusion selection
+procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(y_ensemble_test)
+Combine decision outputs using the combiner model determined by the configuration.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBy_ensemble_test\fP – 
+.sp
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.sp
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. A matrix of crisp or continuous class assignments
+which represents fused decisions. Axis 0 represents samples and axis 1 the class labels which are
+aligned with axis 2 in \fBy_ensemble_test\fP input tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_decision_output()
+Retrieve the decision fusion outputs obtained by multiple combiners. This function is only callable for
+configurations including \fIAutoCombiner\fP or \fIGenericCombiner\fP as a method.
+.INDENT 7.0
+.TP
+.B Returns
+\fIlist\fP of \fInumpy.array\fP elements of shape \fI(n_samples, n_classes)\fP\&.
+Fusion results obtained by multiple fusion methods.
+The list is aligned with the list of preselected fusion methods (retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_optimal_combiner(eval_metric=None)
+Retrieve the combiner with the best classification performance obtained by the framework, i.e. the
+\fIAutoCombiner\fP or the \fIGenericCombiner\fP\&.
+In case of combining with the \fIGenericCombiner\fP, an \fIEvaluation\fP needs to be set by \fBset_evaluation\fP\&.
+.INDENT 7.0
+.TP
+.B Returns
+The combiner object.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiners()
+Retrieve combiners (core methods) which are preselected by the framework according to the auto\-detected
+configuration.
+:return: \fIlist\fP of combiner objects obtained by the \fIGenericCombiner\fP or \fIAutoCombiner\fP\&.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_combiner()
+.INDENT 7.0
+.TP
+.B Returns
+Selected combiner object.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B report(eval_metric=None)
+.INDENT 7.0
+.TP
+.B Returns
+The textual evaluation report.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B info()
+Retrieve the information, the automatic combiner selection is based on.
+.INDENT 7.0
+.TP
+.B Returns
+\fItuple\fP of the form \fI((A, B, C), D)\fP, whereby \fIA\fP represents the classification problem
+\fI(‘MULTI_CLASS’ or ‘MULTI_LABEL’)\fP, \fIB\fP the assignment type \fI(‘CRISP’ or ‘CONTINUOUS’)\fP and \fIC\fP
+the coverage type \fI(‘REDUNDANT’, ‘COMPLEMENTARY’ or ‘COMPLEMENTARY_REDUNDANT’)\fP\&.
+.sp
+\fID\fP contains the combiner type selection as a \fIlist\fP\&.
+Possible combiner types are \fIUtilityBasedCombiner\fP, \fITrainableCombiner\fP and \fIEvidenceBasedCombiner\fP\&.
+
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_multi_combiner_runtimes()
+Retrieve the train and combine runtime for each combiner used during a generic fusion.
+.INDENT 7.0
+.TP
+.B Returns
+A \fItuple\fP of two lists of tuples describing the train and combine runtimes respectively.
+Each inner tuple key value indexes the list of preselected fusion methods
+(retrievable by \fBget_combiners()\fP).
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_evaluation(evaluation)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevaluation\fP – \fBpusion.control.evaluation.Evaluation\fP object, a combiner evaluation was
+performed with.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_parallel(parallel=True)
+Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
+:param parallel: If \fITrue\fP, training and combining is performed in parallel respectively. Otherwise in sequence.
+.UNINDENT
+.UNINDENT
+.SS pusion.core package
+.SS pusion.core.behaviour_knowledge_space_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.behaviour_knowledge_space_combiner.BehaviourKnowledgeSpaceCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%BehaviourKnowledgeSpaceCombiner\fP (BKS) is adopted from the decision fusion method originally proposed by
+Huang, Suen et al. [1]\&. BKS analyses the behaviour of multiple classifiers based on their
+classification outputs with respect to each available class.
+This behaviour is recorded by means of a lookup table, which is used for final combination of multiple
+classification outputs for a sample.
+.sp
+.IP [1] 5
+Yea\ S Huang and Ching\ Y Suen. The behavior\-knowledge space method for combination of multiple classifiers. In \fIIEEE computer society conference on computer vision and pattern recognition\fP, 347–347. Institute of Electrical Engineers Inc (IEEE), 1993.
+
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Behaviour Knowledge Space model (BKS) by extracting the classification configuration from all
+classifiers and summarizing samples of each true class that leads to that configuration. This relationship is
+recorded in a lookup table. Only crisp classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the Behaviour Knowledge Space (BKS) method. This procedure involves looking up the
+most representative class for a given classification output regarding the behaviour of all classifiers in the
+ensemble. Only crisp classification outputs are supported. If a trained lookup entry is not present for a
+certain classification configuration, no decision fusion can be made for the sample, which led to that
+configuration. In this case, the decision fusion is a zero vector.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which are obtained by the best representative class
+for a certain classifier’s behaviour per sample. Axis 0 represents samples and axis 1 the class labels
+which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.behaviour_knowledge_space_combiner.CRBehaviourKnowledgeSpaceCombiner
+Bases: \fI\%pusion.core.behaviour_knowledge_space_combiner.BehaviourKnowledgeSpaceCombiner\fP
+.sp
+The \fI\%CRBehaviourKnowledgeSpaceCombiner\fP is a modification of \fI\%BehaviourKnowledgeSpaceCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Behaviour Knowledge Space model (BKS) by extracting the classification configuration from all
+classifiers and summarizing samples of each true class that leads to that configuration. This relationship is
+recorded in a lookup table. Only crisp classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains crisp decision outputs
+per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which is considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by the Behaviour Knowledge Space (BKS) method. This procedure involves looking up the
+most representative class for a given classification output regarding the behaviour of all classifiers in the
+ensemble. Only crisp classification outputs are supported. If a trained lookup entry is not present for a
+certain classification configuration, no decision fusion can be made for the sample, which led to that
+configuration. In this case, the decision fusion is a zero vector.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains crisp decision outputs
+per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which are obtained by the best representative class
+for a certain classifier’s behaviour per sample. Axis 0 represents samples and axis 1 all the class
+labels which are provided by the coverage.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.borda_count_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.borda_count_combiner.BordaCountCombiner
+Bases: \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fI\%BordaCountCombiner\fP (BC) is a decision fusion method that establishes a ranking between label
+assignments for a sample. This ranking is implicitly given by continuous support outputs and is mapped to different
+amounts of votes (0 of L votes for the lowest support, and L\-1 votes for the highest one).
+A class with the highest sum of these votes (borda counts) across all classifiers is considered as a winner for the
+final decision.
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the Borda Count (BC) method. Firstly, the continuous classification is mapped to a
+ranking with respect to available classes for each sample. Those rankings are then summed up across all
+classifiers to establish total votes (borda counts) for each class in a sample. The class with the highest
+number of borda counts is considered as decision fusion. Only continuous classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.borda_count_combiner.CRBordaCountCombiner
+Bases: \fI\%pusion.core.borda_count_combiner.BordaCountCombiner\fP
+.sp
+The \fI\%CRBordaCountCombiner\fP is a modification of \fI\%BordaCountCombiner\fP that also supports
+complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing classification
+assignments are considered as \fI0\fP, respectively. To call \fI\%combine()\fP a coverage needs to be set first
+by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine complementary\-redundant decision outputs by the Borda Count (BC) method. Firstly, the continuous
+classification is mapped to a ranking with respect to available classes for each sample. Those rankings are then
+summed up across all classifiers to establish total votes (borda counts) for each class in a sample. The class
+with the highest number of borda counts is considered as decision fusion. Only continuous classification outputs
+are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains continuous decision outputs
+per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.combiner.Combiner
+Bases: \fBobject\fP
+.sp
+Combiner’s root class. This class as well as the subclasses in this module set the structure for each combiner
+provided by the framework. It also accommodates methods and attributes which are essential for combiner’s
+registration and obtainment.
+.sp
+Each combiner to be registered in the framework, needs to base at least one of the following classes:
+.INDENT 7.0
+.IP \(bu 2
+\fI\%UtilityBasedCombiner\fP
+.IP \(bu 2
+\fI\%TrainableCombiner\fP
+.IP \(bu 2
+\fI\%EvidenceBasedCombiner\fP\&.
+.UNINDENT
+.sp
+Furthermore, it needs a \fIlist\fP \fB_SUPPORTED_PAC\fP of supported PAC tuples set as a class attribute.
+A PAC tuple is a \fItuple\fP of string constants (classification problem, assignment type and coverage type). See:
+.INDENT 7.0
+.IP \(bu 2
+\fIpusion.util.constants.Problem\fP
+.IP \(bu 2
+\fIpusion.util.constants.AssignmentType\fP
+.IP \(bu 2
+\fIpusion.util.constants.CoverageType\fP
+.UNINDENT
+.sp
+respectively. Example of a new combiner:
+.INDENT 7.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+class NewCombiner(TrainableCombiner):
+
+_SUPPORTED_PAC = [
+    (Problem.MULTI_CLASS, AssignmentType.CRISP, CoverageType.REDUNDANT),
+    (Problem.MULTI_CLASS, AssignmentType.CONTINUOUS, CoverageType.REDUNDANT)
+]
+
+def train(self, decision_outputs, true_assignments):
+    pass
+
+def combine(self, decision_outputs):
+    pass
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBWARNING:\fP
+.INDENT 7.0
+.INDENT 3.5
+Note that a new combiner also needs to be inserted into the \fBpusion.Method\fP class within
+\fIpusion.__init__.py\fP file.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B classmethod obtain(config)
+Obtain a combiner registered by the framework.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBconfig\fP – \fBpusion.model.configuration.Configuration\fP\&. User\-defined configuration.
+.TP
+.B Returns
+A \fIcombiner\fP object.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B abstract combine(decision_tensor)
+Abstract method. Combine decision outputs by combiner’s implementation.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. A matrix of class assignments which represents fused
+decisions obtained by combiner’s implementation. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_coverage(coverage)
+Set the coverage for complementary\-redundant decisions.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.combiner.UtilityBasedCombiner
+Bases: \fI\%pusion.core.combiner.Combiner\fP
+.sp
+A combiner of type \fI\%UtilityBasedCombiner\fP fuses decisions solely based on the outputs of the ensemble
+classifiers. It does not take any further information or evidence about respective ensemble classifiers into
+account.
+.INDENT 7.0
+.TP
+.B abstract combine(decision_tensor)
+Abstract method. Combine decision outputs by combiner’s implementation.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. A matrix of class assignments which represents fused
+decisions obtained by combiner’s implementation. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.combiner.TrainableCombiner
+Bases: \fI\%pusion.core.combiner.Combiner\fP
+.sp
+A combiner of type \fI\%TrainableCombiner\fP needs to be trained using decision outputs of the ensemble classifiers
+with true class assignments in order to combine decisions of unknown samples.
+.INDENT 7.0
+.TP
+.B abstract combine(decision_tensor)
+Abstract method. Combine decision outputs by combiner’s implementation.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. A matrix of class assignments which represents fused
+decisions obtained by combiner’s implementation. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B abstract train(decision_tensor, true_assignments, **kwargs)
+Abstract method. Train combiner’s implementation using decision outputs an appropriate true assignments.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of class assignments which are considered true for each sample during the training procedure.
+.IP \(bu 2
+\fB**kwargs\fP – The \fI**kwargs\fP parameter may be used to use additional test data for the AutoFusion selection
+procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.combiner.EvidenceBasedCombiner
+Bases: \fI\%pusion.core.combiner.Combiner\fP
+.sp
+A combiner of type \fI\%EvidenceBasedCombiner\fP takes an additional evidence into account while combining outputs
+of ensemble classifiers. Thus, it is able to empower better classifiers in order to obtain a fusion result with
+higher overall classification performance.
+.INDENT 7.0
+.TP
+.B abstract combine(decision_tensor)
+Abstract method. Combine decision outputs by combiner’s implementation.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. A matrix of class assignments which represents fused
+decisions obtained by combiner’s implementation. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B abstract set_evidence(evidence)
+Abstract method. Set the evidence for evidence\-based combiner implementations.
+The evidence is given by confusion matrices calculated according to Kuncheva [1]\&.
+.sp
+.IP [1] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fIlist\fP of \fInumpy.array\fP elements of shape \fI(n_classes, n_classes)\fP\&. Confusion matrices
+for each ensemble classifier.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.cosine_similarity_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.cosine_similarity_combiner.CosineSimilarityCombiner
+Bases: \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fI\%CosineSimilarityCombiner\fP considers the classification assignments to \eell classes as vectors
+from an \eell\-dimensional vector space. The normalized cosine\-similarity measure between two vectors
+x and y is calculated as
+.sp
+.ce
+cos(x,y) = \edfrac{x\ecdot y}{|x||y|}\e .
+
+
+.ce 0
+.sp
+The cosine\-similarity is calculated pairwise and accumulated for each classifier for one specific sample.
+The fusion is represented by a classifier which shows the most similar classification output to the output of all
+competing classifiers.
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs with as an output that accommodates the highest cosine\-similarity to the output of
+all competing classifiers. In other words, the best representative classification output among the others is
+selected according to the highest cumulative cosine\-similarity. This method supports both, continuous and
+crisp classification outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by the highest cumulative cosine\-similarity. Axis 0 represents samples and axis 1 the
+class labels which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.cosine_similarity_combiner.CRCosineSimilarity
+Bases: \fI\%pusion.core.cosine_similarity_combiner.CosineSimilarityCombiner\fP
+.sp
+The \fI\%CRCosineSimilarity\fP is a modification of \fI\%CosineSimilarityCombiner\fP that also supports
+complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing classification
+assignments are considered as \fI0\fP, respectively. To call \fI\%combine()\fP a coverage needs to be set first
+by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine complementary\-redundant decision outputs with as an output that accommodates the highest
+cosine\-similarity to the output of all competing classifiers. In other words, the best representative
+classification output among the others is selected according to the highest cumulative cosine\-similarity.
+This method supports both, continuous and crisp classification outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp or continuous class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.decision_templates_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.decision_templates_combiner.DecisionTemplatesCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%DecisionTemplatesCombiner\fP (DT) is adopted from the decision fusion method originally proposed by
+Kuncheva [1]\&. A decision template is the average matrix of all decision profiles,
+which correspond to samples of one specific class. A decision profile contains classification outputs from all
+classifiers for a sample in a row\-wise fashion. The decision fusion is performed based on distance calculations
+between decision templates and the decision profile generated from the ensemble outputs.
+.sp
+.IP [1] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Decision Templates Combiner model by precalculating decision templates from given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+calculating means of decision profiles (decision templates) for each true class.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by using the Decision Templates method.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fI\%DecisionTemplatesCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by the minimum distance between decision profiles of \fBdecision_tensor\fP and
+precalculated decision templates. Axis 0 represents samples and axis 1 the class assignments which
+are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.decision_templates_combiner.CRDecisionTemplatesCombiner
+Bases: \fI\%pusion.core.decision_templates_combiner.DecisionTemplatesCombiner\fP
+.sp
+The \fI\%CRDecisionTemplatesCombiner\fP is a modification of \fI\%DecisionTemplatesCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Decision Templates Combiner model by precalculating decision templates from given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+calculating means of decision profiles (decision templates) for each true class.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by using the Decision Templates method.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fI\%CRDecisionTemplatesCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp or continuous class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.k_nearest_neighbors_combiner.py
+.INDENT 0.0
+.TP
+.B class pusion.core.k_nearest_neighbors_combiner.KNNCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%KNNCombiner\fP (kNN) is a learning and classifier\-based combiner that converts multiple decision
+outputs into new features, which in turn are used to train this combiner.
+The kNN combiner (k=5) uses uniform weights for all neighbors and the standard Euclidean metric for the distance.
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the kNN combiner by fitting the \fIk\fP nearest neighbors (k=5) model with given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the \fIk\fP nearest neighbors (k=5) model.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fBDecisionTreeCombiner\fP\&.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by kNN. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.k_nearest_neighbors_combiner.CRKNNCombiner
+Bases: \fI\%pusion.core.k_nearest_neighbors_combiner.KNNCombiner\fP
+.sp
+The \fI\%CRKNNCombiner\fP is a modification of \fI\%KNNCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the kNN combiner model by fitting the \fIk\fP nearest neighbors (k=5) model with given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by the \fIk\fP nearest neighbors (k=5) model.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fBDecisionTreeCombiner\fP\&.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp or continuous class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.dempster_shafer_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.dempster_shafer_combiner.DempsterShaferCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%DempsterShaferCombiner\fP (DS) fuses decision outputs by means of the Dempster Shafer evidence theory
+referenced by Polikar [1] and Ghosh et al. [2]\&.
+DS involves computing the \fIproximity\fP and \fIbelief\fP values per classifier and class, depending on a sample.
+Then, the total class support is calculated using the Dempster’s rule as the product of belief values across all
+classifiers to each class, respectively. The class with the highest product is considered as a fused decision.
+DS shares the same training procedure with the \fBDecisionTemplatesCombiner\fP\&.
+.sp
+.IP [1] 5
+Robi Polikar. Ensemble based systems in decision making. \fIIEEE Circuits and systems magazine\fP, 6(3):21–45, 2006.
+.IP [2] 5
+Kaushik Ghosh, Yew\ Seng Ng, and Rajagopalan Srinivasan. Evaluation of decision fusion strategies for effective collaboration among heterogeneous fault diagnostic methods. \fIComputers & chemical engineering\fP, 35(2):342–355, 2011.
+
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+calculations mean decision profiles (decision templates) for each true class assignment.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by using the Dempster Shafer method.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fI\%DempsterShaferCombiner\fP\&.
+This procedure involves computing the proximity, the belief values, and the total class support using the
+Dempster’s rule.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by the maximum class support. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.dempster_shafer_combiner.CRDempsterShaferCombiner
+Bases: \fI\%pusion.core.dempster_shafer_combiner.DempsterShaferCombiner\fP
+.sp
+The \fI\%CRDempsterShaferCombiner\fP is a modification of \fI\%DempsterShaferCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Dempster Shafer Combiner model by precalculating decision templates from given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported. This procedure involves
+calculations mean decision profiles (decision templates) for each true class assignment.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by using the Dempster Shafer method.
+Both continuous and crisp classification outputs are supported. Combining requires a trained
+\fI\%DempsterShaferCombiner\fP\&.
+This procedure involves computing the proximity, the belief values, and the total class support using the
+Dempster’s rule.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp or continuous class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.macro_majority_vote_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.macro_majority_vote_combiner.MacroMajorityVoteCombiner
+Bases: \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fI\%MacroMajorityVoteCombiner\fP (MAMV) is based on a variation of the general majority vote method.
+The fusion consists of a decision vector which is given by the majority of the classifiers in the ensemble for a
+sample. MAMV does not consider outputs for each individual class (macro).
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by majority voting across all classifiers considering the most common classification
+assignment (macro). Only crisp classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments obtained by MAMV. Axis 0 represents samples and
+axis 1 the class labels which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.maximum_likelihood_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.maximum_likelihood_combiner.MaximumLikelihoodCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%MaximumLikelihoodCombiner\fP (MLE) is a combiner that estimates the parameters \emu (sample means)
+and \esigma (sample variances) of the Gaussian probability density function for each class \eomega\&.
+Multiple decision outputs for a sample are converted into a new feature space.
+.sp
+The fusion is performed by evaluating the class conditional density
+.sp
+.ce
+p(x|\eomega) = \efrac{1}{\esigma \esqrt{2 \epi}}
+    exp\eleft({\-\efrac{1}{2}\eleft(\efrac{x\-\emu}{\esigma}\eright)^2}\eright).
+
+
+.ce 0
+.sp
+of a transformed sample x for each available class \eomega, respectively. The class with the highest
+likelihood is considered as winner and thus forms the decision fusion.
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Maximum Likelihood combiner model by calculating the parameters of gaussian normal distribution
+(i.e. means and variances) from the given decision outputs and true class assignments.
+Both continuous and crisp classification outputs are supported. This procedure transforms decision outputs
+into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the Maximum Likelihood method. This procedure involves evaluating the class
+conditional density as described above. Both continuous and crisp classification outputs are supported.
+Combining requires a trained \fI\%MaximumLikelihoodCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by MLE. Axis 0 represents samples and axis 1 the class assignments which are aligned
+with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.maximum_likelihood_combiner.CRMaximumLikelihoodCombiner
+Bases: \fI\%pusion.core.maximum_likelihood_combiner.MaximumLikelihoodCombiner\fP
+.sp
+The \fI\%CRMaximumLikelihoodCombiner\fP is a modification of \fI\%MaximumLikelihoodCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Maximum Likelihood combiner model by calculating the parameters of gaussian normal distribution
+(i.e. means and variances) from the given decision outputs and true class assignments.
+Both continuous and crisp classification outputs are supported. This procedure transforms decision outputs
+into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by the Maximum Likelihood method. This procedure involves evaluating the class
+conditional density as described above. Both continuous and crisp classification outputs are supported.
+Combining requires a trained \fI\%MaximumLikelihoodCombiner\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by MLE. Axis 0 represents samples and axis 1 the class assignments which are aligned
+with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.micro_majority_vote_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.micro_majority_vote_combiner.MicroMajorityVoteCombiner
+Bases: \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fI\%MicroMajorityVoteCombiner\fP (MIMV) is based on a variation of the general majority vote method.
+The fusion consists of a decision vector which results from the majority of assignments for each individual class.
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by MIMV across all classifiers per class (micro).
+Only crisp classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments obtained by MIMV. Axis 0 represents samples and
+axis 1 the class labels which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.micro_majority_vote_combiner.CRMicroMajorityVoteCombiner
+Bases: \fI\%pusion.core.micro_majority_vote_combiner.MicroMajorityVoteCombiner\fP
+.sp
+The \fI\%CRMicroMajorityVoteCombiner\fP is a modification of \fI\%MicroMajorityVoteCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To call \fI\%combine()\fP a coverage needs to
+be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by MIMV across all classifiers per class (micro).
+Only crisp classification outputs are supported.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains crisp decision outputs
+per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which are obtained by MIMV. Axis 0 represents
+samples and axis 1 all the class labels which are provided by the coverage.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.naive_bayes_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.naive_bayes_combiner.NaiveBayesCombiner
+Bases: \fBpusion.core.combiner.EvidenceBasedCombiner\fP, \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%NaiveBayesCombiner\fP (NB) is a fusion method based on the Bayes theorem which is applied according to
+Kuncheva [1] and Titterington et al. [2]\&.
+NB uses the confusion matrix as an evidence to calculate the a\-priori probability and the bayesian belief value,
+which in turn the decision fusion bases on. NB requires outputs from uncorrelated classifiers in the ensemble.
+.sp
+.IP [1] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+.IP [2] 5
+DM\ Titterington, GD\ Murray, LS\ Murray, DJ\ Spiegelhalter, AM\ Skene, JDF Habbema, and GJ\ Gelpke. Comparison of discrimination techniques applied to a complex data set of head injured patients. \fIJournal of the Royal Statistical Society: Series A (General)\fP, 144(2):145–161, 1981.
+
+.INDENT 7.0
+.TP
+.B set_evidence(evidence)
+Set the evidence given by confusion matrices calculated according to Kuncheva [1]
+for each ensemble classifier.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_classes, n_classes)\fP\&.
+Confusion matrices for each of \fIn\fP classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Naive Bayes combiner model by precalculating confusion matrices from given decision outputs and
+true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+the MAX rule.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by using the Naive Bayes method.
+Continuous decision outputs are converted to crisp multiclass predictions using the MAX rule.
+Combining requires a trained \fI\%NaiveBayesCombiner\fP or evidence set with \fBset_evidence\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which represents fused
+decisions obtained by the maximum class support. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.naive_bayes_combiner.CRNaiveBayesCombiner
+Bases: \fI\%pusion.core.naive_bayes_combiner.NaiveBayesCombiner\fP
+.sp
+The \fI\%CRNaiveBayesCombiner\fP is a modification of \fI\%NaiveBayesCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as \fI0\fP, respectively. To call \fI\%combine()\fP a coverage needs to be set
+first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Naive Bayes combiner model by precalculating confusion matrices from given decision outputs and
+true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+the MAX rule.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by using the Naive Bayes method.
+Continuous decision outputs are converted to crisp multiclass predictions using the MAX rule.
+Combining requires a trained \fI\%NaiveBayesCombiner\fP or evidence set with \fBset_evidence\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which represents fused decisions.
+Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
+\fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.neural_network_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.neural_network_combiner.NeuralNetworkCombiner
+Bases: \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%NeuralNetworkCombiner\fP (NN) is a learning and classifier\-based combiner that converts multiple decision
+outputs into new features, which in turn are used to train this combiner. The NN includes three hidden layers and a
+dynamic number of neurons per layer, which is given by (\fIn_classifiers * n_classes\fP).
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the NN combiner by fitting the Neural Network model with given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the trained Neural Network model. Both continuous and crisp classification outputs
+are supported. Combining requires a trained \fI\%NeuralNetworkCombiner\fP\&. This procedure transforms decision
+outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by NN. Axis 0 represents samples and axis 1 the class assignments which are aligned
+with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.neural_network_combiner.CRNeuralNetworkCombiner
+Bases: \fI\%pusion.core.neural_network_combiner.NeuralNetworkCombiner\fP
+.sp
+The \fI\%CRNeuralNetworkCombiner\fP is a modification of \fI\%NeuralNetworkCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed, such that all missing
+classification assignments are considered as a constant, respectively. To use methods \fI\%train()\fP and
+\fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the NN combiner by fitting the Neural Network model with given decision outputs and
+true class assignments. Both continuous and crisp classification outputs are supported.
+This procedure transforms decision outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by the trained Neural Network model. Both continuous and crisp classification outputs
+are supported. Combining requires a trained \fI\%NeuralNetworkCombiner\fP\&. This procedure transforms decision
+outputs into a new feature space.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage. Each matrix corresponds to
+one of \fIn_classifiers\fP classifiers and contains crisp or continuous decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of either crisp or continuous class assignments which represents fused
+decisions obtained by NN. Axis 0 represents samples and axis 1 the class assignments which are aligned
+with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.simple_average_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.simple_average_combiner.SimpleAverageCombiner
+Bases: \fBpusion.core.combiner.UtilityBasedCombiner\fP
+.sp
+The \fI\%SimpleAverageCombiner\fP (AVG) fuses decisions using the arithmetic mean rule.
+The mean is calculated between decision vectors obtained by multiple ensemble classifiers for a sample.
+The AVG combiner is unaware of the input problem (multiclass/multilabel) or the assignment type (crisp/continuous).
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by averaging the class support of each classifier in the given ensemble.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp assignments which represents fused
+decisions obtained by the AVG method. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.simple_average_combiner.CRSimpleAverageCombiner
+Bases: \fI\%pusion.core.simple_average_combiner.SimpleAverageCombiner\fP
+.sp
+The \fI\%CRSimpleAverageCombiner\fP is a modification of \fI\%SimpleAverageCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed to a unified
+tensor representation supporting undefined class assignments. The mean is calculated only for assignments which
+are defined. To call \fI\%combine()\fP a coverage needs to be set first by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by averaging the defined class support of each classifier in the given ensemble.
+Undefined class supports are excluded from averaging.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains either crisp or continuous
+decision outputs per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp assignments which represents fused
+decisions obtained by the AVG method. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.core.weighted_voting_combiner
+.INDENT 0.0
+.TP
+.B class pusion.core.weighted_voting_combiner.WeightedVotingCombiner
+Bases: \fBpusion.core.combiner.EvidenceBasedCombiner\fP, \fBpusion.core.combiner.TrainableCombiner\fP
+.sp
+The \fI\%WeightedVotingCombiner\fP (WV) is a weighted voting schema adopted from Kuncheva (eq. 4.43)
+[1]\&. Classifiers with better performance (i.e. accuracy) are given more
+weight contributing to final decisions. Nevertheless, if classifiers of high performance disagree on a sample,
+low performance classifiers may contribute to the final decision.
+.sp
+.IP [1] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+
+.INDENT 7.0
+.TP
+.B set_evidence(evidence)
+Set the evidence given by confusion matrices calculated according to Kuncheva [1]
+for each ensemble classifier.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBevidence\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_classes, n_classes)\fP\&.
+Confusion matrices for each of \fIn\fP classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B train(decision_tensor, true_assignments)
+Train the Weighted Voting combiner model by precalculating confusion matrices from given decision outputs and
+true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+the MAX rule.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of either crisp or continuous class assignments which are considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_tensor)
+Combine decision outputs by the weighted voting schema.
+Classifiers with better performance (i.e. accuracy) are given more authority over final decisions.
+Combining requires a trained \fI\%WeightedVotingCombiner\fP or evidence set with \fBset_evidence\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which represents fused
+decisions obtained by the maximum weighted class support. Axis 0 represents samples and axis 1 the class
+assignments which are aligned with axis 2 in \fBdecision_tensor\fP input tensor.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B class pusion.core.weighted_voting_combiner.CRWeightedVotingCombiner
+Bases: \fI\%pusion.core.weighted_voting_combiner.WeightedVotingCombiner\fP
+.sp
+The \fI\%CRWeightedVotingCombiner\fP is a modification of \fI\%WeightedVotingCombiner\fP that
+also supports complementary\-redundant decision outputs. Therefore the input is transformed to a unified
+tensor representation supporting undefined class assignments. The mean is calculated only for assignments which
+are defined. To call methods \fI\%train()\fP and \fI\%combine()\fP, a coverage needs to be set first
+by the inherited \fBset_coverage()\fP method.
+.INDENT 7.0
+.TP
+.B train(decision_outputs, true_assignments)
+Train the Weighted Voting combiner model by precalculating confusion matrices from given decision outputs and
+true class assignments. Continuous decision outputs are converted into crisp multiclass assignments using
+the MAX rule.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains crisp decision outputs
+per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which is considered true for each sample during
+the training procedure.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B combine(decision_outputs)
+Combine decision outputs by the weighted voting schema.
+Classifiers with better performance (i.e. accuracy) are given more authority over final decisions.
+Combining requires a trained \fI\%WeightedVotingCombiner\fP or evidence set with \fBset_evidence\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fIlist\fP of \fInumpy.array\fP matrices, each of shape \fI(n_samples, n_classes’)\fP,
+where \fIn_classes’\fP is classifier\-specific and described by the coverage.
+Each matrix corresponds to one of \fIn_classifiers\fP classifiers and contains crisp decision outputs
+per sample.
+.TP
+.B Returns
+A matrix (\fInumpy.array\fP) of crisp class assignments which are obtained by the best representative class
+for a certain classifier’s behaviour per sample. Axis 0 represents samples and axis 1 all the class
+labels which are provided by the coverage.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.evaluation package
+.SS pusion.evaluation.evaluation module
+.INDENT 0.0
+.TP
+.B class pusion.evaluation.evaluation.Evaluation(*argv)
+Bases: \fBobject\fP
+.sp
+\fI\%Evaluation\fP provides methods for evaluating decision outputs (i.e. combiners and classifiers) with different
+problems and coverage types.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBargv\fP – Performance metric functions.
+.UNINDENT
+.INDENT 7.0
+.TP
+.B evaluate(true_assignments, decision_tensor)
+Evaluate the decision outputs with already set classification performance metrics.
+.sp
+\fBWARNING:\fP
+.INDENT 7.0
+.INDENT 3.5
+This evaluation is only applicable on redundant multiclass or multilabel decision outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for the evaluation.
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_instances, n_metrics)\fP\&. Performance matrix containing performance values
+for each set instance row\-wise and each set performance metric column\-wise.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B evaluate_cr_decision_outputs(true_assignments, decision_outputs, coverage=None)
+Evaluate complementary\-redundant decision outputs with already set classification performance metrics.
+The outputs of each classifier for each class is considered as a binary output and thus, the performance is
+calculated class\-wise and averaged across all classes, which are covered by individual classifiers.
+.sp
+\fBNOTE:\fP
+.INDENT 7.0
+.INDENT 3.5
+This evaluation is applicable on complementary\-redundant ensemble classifier outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for the evaluation.
+.IP \(bu 2
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_instances, n_metrics)\fP\&. Performance matrix containing performance values
+for each set instance row\-wise and each set performance metric column\-wise.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B evaluate_cr_multi_combiner_decision_outputs(true_assignments, decision_tensor)
+Evaluate decision outputs of multiple CR combiners with already set classification performance metrics.
+The evaluation is performed by \fI\%evaluate_cr_decision_outputs()\fP for each combiner.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for the evaluation.
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_combiners, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different combiners per sample.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_instances, n_metrics)\fP\&. Performance matrix containing performance values
+for each set instance row\-wise and each set performance metric column\-wise.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B class_wise_mean_score(true_assignments, decision_outputs, coverage, metric)
+Calculate the class\-wise mean score with the given metric for the given classification outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for the evaluation.
+.IP \(bu 2
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a
+classifier, which is identified by the positional index of the respective list.
+If none set, the coverage for fully redundant classification is chosen by default.
+.IP \(bu 2
+\fBmetric\fP – The score metric.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classes,)\fP\&. The mean score per class across all classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_report()
+.INDENT 7.0
+.TP
+.B Returns
+A summary \fIReport\fP of performed evaluations including all involved instances and performance metrics.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_runtime_report()
+.INDENT 7.0
+.TP
+.B Returns
+A summary \fIReport\fP of train and combine runtimes for all involved instances.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_instances()
+.INDENT 7.0
+.TP
+.B Returns
+A \fIlist\fP of instances (i.e. combiner or classifiers) been evaluated.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_metrics()
+.INDENT 7.0
+.TP
+.B Returns
+A \fIlist\fP of performance metrics been used for evaluation.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_performance_matrix()
+.INDENT 7.0
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_instances, n_metrics)\fP\&. Performance matrix containing performance values
+for each set instance row\-wise and each set performance metric column\-wise.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_runtime_matrix()
+.INDENT 7.0
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_instances, 2)\fP\&. Runtime matrix containing runtimes
+for each set instance row\-wise. The column at index \fI0\fP describes train times and the column at index
+\fI1\fP describes combine times.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_top_n_instances(n=None, metric=None)
+Retrieve top \fIn\fP best instances according to the given \fImetric\fP in a sorted order.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn\fP – \fIinteger\fP\&. Number of instances to be retrieved. If unset, all instances are retrieved.
+.IP \(bu 2
+\fBmetric\fP – The metric all instances are sorted by. If unset, the first metric is used.
+.UNINDENT
+.TP
+.B Returns
+Evaluated top \fIn\fP instances.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_top_instances(metric=None)
+Retrieve best performing instances according to the given \fImetric\fP\&.
+Multiple instances may be returned having the identical best performance score.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBmetric\fP – The metric all instances were evaluated with. If unset, the first metric is used.
+.TP
+.B Returns
+Evaluated top instances according to their performance.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_instance_performance_tuples(metric=None)
+Retrieve (instance, performance) tuples created for to the given \fImetric\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBmetric\fP – The metric all instances are evaluated by. If unset, the first set metric is used.
+.TP
+.B Returns
+\fIlist\fP of (instance, performance) tuples.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_metrics(*argv)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBargv\fP – Performance metric functions.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_instances(instances)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBinstances\fP – An instance or a \fIlist\fP of instances to be evaluated, e.g. classifiers or combiners.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B set_runtimes(runtimes)
+.INDENT 7.0
+.TP
+.B Parameters
+\fBruntimes\fP – A \fItuple\fP of two lists of tuples describing the train and combine runtimes respectively.
+Each runtime list is aligned with the list of set instances.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.evaluation.evaluation_metrics module
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_brier_score_micro(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Calculate the brier score for multi\-label problems according to Brier 1950
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The micro brier score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_brier_score(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Calculate the brier score for multiclass problems according to Brier 1950
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The brier score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_brier_score(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Calculate the brier score for multi\-label problems according to Brier 1950
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The brier score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.far(y_true: numpy.ndarray, y_pred: numpy.ndarray, pos_normal_class: int = 0) -> float
+Calculate the false alarm rate for multiclass and multi\-label problems.
+FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:param pos_normal_class: the position of the ‘normal class’ in :param y_true and :param y_pred. Default is \fI0\fP
+:return: The false alarm rate.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_fdr(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The fault detection rate.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multilabel_subset_fdr(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The fault detection rate.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multilabel_minor_fdr(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The fault detection rate.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_weighted_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Calculate the precision for a multiclass problem with a \fIweighted\fP average.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_weighted_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Calculate the precision for a multi\-label problem with a \fIweighted\fP average.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_class_wise_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray
+Calculate the precision for a multiclass problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_class_wise_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray
+Calculate the precision for a multi\-label problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_recall(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Calculate the recall for a multiclass problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. Predicted labels or class assignments.
+:return: The recall score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_recall(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Calculate the recall for a multi\-label problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The recall score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_class_wise_recall(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray
+Calculate the recall for a multiclass problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_class_wise_recall(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> numpy.ndarray
+Calculate the recall for a multi\-label problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_weighted_scikit_auc_roc_score(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the scikit auc roc score for a multi\-label problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The auc roc score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_weighted_pytorch_auc_roc_score(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the pytorch auc roc score for a multi\-label problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The auc roc score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_pytorch_auc_roc_score(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Compute the pytorch auc roc score for a multi\-label problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The auc roc score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_class_wise_avg_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Compute the class wise precision for a multiclass problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_weighted_avg_precision(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the precision for a multiclass problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_auc_precision_recall_curve(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Compute the class wise auc precision recall curve for a multiclass problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The aggregated auc precision recall curve class wise.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_weighted_pytorch_auc_roc(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the pytorch auc roc for a multiclass problem with average \fIweighted\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The auc roc score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_pytorch_auc_roc(y_true: numpy.ndarray, y_pred: numpy.ndarray)
+Compute the pytorch auc roc for a multiclass problem with average \fINone\fP\&.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The auc roc score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_ranking_avg_precision_score(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the label ranking based average precision score for a multi\-label problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_ranking_loss(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the label ranking loss for a multi\-label problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The precision score.
+:return: The loss.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_normalized_discounted_cumulative_gain(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the normalized discounted cumulative gain for a multi\-label problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The gain.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_top_1_accuracy(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the top\-1 accuracy for a multiclass problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The accuracy score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_top_3_accuracy(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the top\-3 accuracy for a multiclass problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The accuracy score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_top_5_accuracy(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+Compute the top\-5 accuracy for a multiclass problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape (n_samples, n_classes)\(ga. Predicted labels or class assignments.
+:return: The accuracy score.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multiclass_log_loss(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+The logarithmic loss for a multiclass problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The loss.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.multi_label_log_loss(y_true: numpy.ndarray, y_pred: numpy.ndarray) -> float
+The logarithmic loss for a multi\-label problem.
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: The loss.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.micro_precision(y_true, y_pred)
+Calculate the micro precision, i.e. TP / (TP + FP).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The micro precision.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.micro_recall(y_true, y_pred)
+Calculate the micro recall, i.e.  TP / (TP + FN).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The micro recall.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.micro_f1(y_true, y_pred)
+Calculate the micro F1\-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The micro F1\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.micro_f2(y_true, y_pred)
+Calculate the micro F2\-score (beta=2).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The micro F2\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.micro_jaccard(y_true, y_pred)
+Calculate the micro Jaccard\-score, i.e. TP / (TP + FP + FN).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The micro Jaccard\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.macro_precision(y_true, y_pred)
+Calculate the macro precision, i.e. TP / (TP + FP).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro precision.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.macro_recall(y_true, y_pred)
+Calculate the macro recall, i.e.  TP / (TP + FN).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro recall.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.macro_f1(y_true, y_pred)
+Calculate the macro F1\-score, i.e. 2 * (Precision * Recall) / (Precision + Recall).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro F1\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.weighted_f1(y_true, y_pred)
+Calculate the macro F1\-score, i.e. 2 * (Precision * Recall) / (Precision + Recall), weighted by the class support.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The weighted macro F1\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.macro_f2(y_true, y_pred)
+Calculate the macro F2\-score (beta=2).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro F2\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.macro_jaccard(y_true, y_pred)
+Calculate the macro Jaccard\-score, i.e. TP / (TP + FP + FN).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro Jaccard\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.weighted_jaccard(y_true, y_pred)
+Calculate the Jaccard\-score for each label, and find their average, weighted by support, i. e., the number of true instances of each label instance.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+.UNINDENT
+.TP
+.B Returns
+The macro Jaccard\-score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.accuracy(y_true, y_pred)
+Calculate the accuracy, i.e. (TP + TN) / (TP + FP + FN + TN).
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+Accuracy.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.error_rate(y_true, y_pred)
+Calculate the error rate, i. e. error_rate = 1\-accuracy
+:param y_true: \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+:param y_pred: \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or class assignments.
+:return: Error Rate of typ \fIfloat\fP
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.balanced_multiclass_accuracy(y_true, y_pred)
+Calculate the balanced accuracy, i.e. (Precision + Recall) / 2.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+Accuracy.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.mean_multilabel_confusion_matrix(y_true, y_pred)
+Calculate the normalized mean confusion matrix across all classes.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classes, n_classes)\fP\&. Normalized mean confusion matrix.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.mean_confidence(y_true, y_pred)
+Calculate the mean confidence for continuous multiclass and multilabel classification outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Predicted class assignments.
+.UNINDENT
+.TP
+.B Returns
+Mean confidence.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.hamming(y_true, y_pred)
+Calculate the average Hamming Loss.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+Average Hamming Loss.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.log(y_true, y_pred)
+Calculate the Logistic Loss.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. True labels or class assignments.
+.IP \(bu 2
+\fBy_pred\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Predicted labels or
+class assignments.
+.UNINDENT
+.TP
+.B Returns
+Logistic Loss.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.cohens_kappa(y1, y2, labels)
+Calculate the Cohen’s Kappa annotator agreement score according to [1]\&.
+.sp
+.IP [1] 5
+Jacob Cohen. A coefficient of agreement for nominal scales. \fIEducational and psychological measurement\fP, 20(1):37–46, 1960.
+
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Labels or class assignments.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP or \fI(n_samples, n_classes)\fP\&. Labels or class assignments.
+.IP \(bu 2
+\fBlabels\fP – \fIlist\fP of all possible labels.
+.UNINDENT
+.TP
+.B Returns
+Cohen’s Kappa score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_cohens_kappa(decision_tensor)
+Calculate the average of pairwise Cohen’s Kappa scores over all multiclass decision outputs.
+E.g., for 3 classifiers \fI(0,1,2)\fP, the agreement score is calculated for classifier tuples \fI(0,1)\fP, \fI(0,2)\fP and
+\fI(1,2)\fP\&. These scores are then averaged over all 3 classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.TP
+.B Returns
+Pairwise (averages) Cohen’s Kappa score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.correlation(y1, y2, y_true)
+Calculate the correlation score for decision outputs of two classifiers according to Kuncheva
+[2]\&.
+.sp
+.IP [2] 5
+Ludmila\ I Kuncheva. \fICombining pattern classifiers: methods and algorithms\fP\&. John Wiley & Sons, 2014.
+
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.q_statistic(y1, y2, y_true)
+Calculate the Q statistic score for decision outputs of two classifiers according to Yule
+[3]\&.
+.sp
+.IP [3] 5
+G\ Udny\ Yule. On the association of attributes in statistics: with illustrations from the material of the childhood society, &c. \fIPhilosophical Transactions of the Royal Society of London Series A\fP, 194:257–319, 1900.
+
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.kappa_statistic(y1, y2, y_true)
+Calculate the kappa score for decision outputs of two classifiers according to Kuncheva
+[2]\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Kappa score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.disagreement(y1, y2, y_true)
+Calculate the disagreement for decision outputs of two classifiers, i.e. the percentage of samples which are
+correctly classified by exactly one of the classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Disagreement score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.double_fault(y1, y2, y_true)
+Calculate the double fault for decision outputs of two classifiers, i.e. the percentage of samples which are
+misclassified by both classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Double fault score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.abs_correlation(y1, y2, y_true)
+Calculate the absolute correlation score for decision outputs of two classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.abs_q_statistic(y1, y2, y_true)
+Calculate the absolute Q statistic score for decision outputs of two classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy1\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the first classifier.
+.IP \(bu 2
+\fBy2\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Crisp multiclass decision outputs by the second classifier.
+.IP \(bu 2
+\fBy_true\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_correlation(decision_tensor, true_assignments, **kwargs)
+Calculate the average of the pairwise absolute correlation scores over all decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Pairwise correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_q_statistic(decision_tensor, true_assignments)
+Calculate the average of the pairwise absolute Q\-statistic scores over all decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Pairwise correlation score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic(decision_tensor, true_assignments, **kwargs)
+Calculate the average of pairwise Kappa scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Pairwise kappa score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_disagreement(decision_tensor, true_assignments)
+Calculate the average of pairwise disagreement scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Pairwise disagreement score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_double_fault(decision_tensor, true_assignments, **kwargs)
+Calculate the average of pairwise double fault scores over all decision outputs.
+Multilabel class assignments are transformed to equivalent multiclass class assignments.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered as true.
+.UNINDENT
+.TP
+.B Returns
+Pairwise double fault score.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.evaluation.evaluation_metrics.pairwise_euclidean_distance(decision_tensor)
+Calculate the average of pairwise euclidean distance between decision matrices for the given classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.TP
+.B Returns
+Pairwise euclidean distance.
+.UNINDENT
+.UNINDENT
+.SS pusion.model package
+.SS pusion.model.configuration module
+.INDENT 0.0
+.TP
+.B class pusion.model.configuration.Configuration(method, problem=\(aqGENERIC\(aq, assignment_type=\(aqGENERIC\(aq, coverage_type=\(aqGENERIC\(aq)
+Bases: \fBobject\fP
+.sp
+The \fI\%Configuration\fP forms the main parameter of the decision fusion framework. Based on this, the framework
+is able to check the compatibility of a respective decision fusion method to the given decision outputs.
+A configuration may be defined by the user or auto\-detected by the framework.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBmethod\fP – An explicit method provided by the framework which should be applied on the input data set.
+See \fIpusion.Method\fP for possible options.
+.IP \(bu 2
+\fBproblem\fP – Input problem type. See \fIpusion.util.constants.Problem\fP for possible options.
+.IP \(bu 2
+\fBassignment_type\fP – The class assignment describes memberships to each individual class for a sample.
+A class assignment type is either crisp or continuous. Crisp assignments are equivalent to labels and
+continuous assignments represent probabilities for each class being true.
+See \fIpusion.util.constants.AssignmentType\fP for possible options.
+.IP \(bu 2
+\fBcoverage_type\fP – The classification coverage states for each input classifier, which classes it is able to
+decide. A classifier ensemble may yield a redundant, complementary or complementary\-redundant coverage.
+See \fIpusion.util.constants.CoverageType\fP for possible options.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_tuple()
+.INDENT 7.0
+.TP
+.B Returns
+A \fItuple\fP of method, problem, assignment type and coverage type.
+.UNINDENT
+.UNINDENT
+.INDENT 7.0
+.TP
+.B get_pac()
+.INDENT 7.0
+.TP
+.B Returns
+A \fItuple\fP of problem, assignment type and coverage type. This tuple is also referred to as PAC.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.model.report module
+.INDENT 0.0
+.TP
+.B class pusion.model.report.Report(performance_matrix, instances, metrics)
+Bases: \fBobject\fP
+.sp
+\fI\%Report\fP is a string representation of the performance matrix retrieved by \fBEvaluation\fP methods.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBperformance_matrix\fP – \fInumpy.array\fP of shape \fI(n_instances, n_metrics)\fP\&. Performance matrix containing
+performance values for each set instance row\-wise and each set performance metric column\-wise.
+.IP \(bu 2
+\fBinstances\fP – \fIlist\fP of instances been evaluated which is aligned with the performance_matrix on axis \fI0\fP\&.
+.IP \(bu 2
+\fBmetrics\fP – \fIlist\fP of metric functions which is aligned with the performance_matrix on axis \fI1\fP\&.
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SS pusion.util package
+.SS pusion.util.generator module
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multiclass_ensemble_classification_outputs(classifiers, n_classes, n_samples, continuous_out=False, parallelize=True)
+Generate random multiclass, crisp and redundant classification outputs (assignments) for the given ensemble of
+classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBclassifiers\fP – Classifiers used to generate classification outputs.
+These need to implement \fIfit\fP and \fIpredict\fP methods according to classifiers provided by \fIsklearn\fP\&.
+.IP \(bu 2
+\fBn_classes\fP – \fIinteger\fP\&. Number of classes, predictions are made for.
+.IP \(bu 2
+\fBn_samples\fP – \fIinteger\fP\&. Number of samples.
+.IP \(bu 2
+\fBparallelize\fP – If \fITrue\fP, all classifiers are trained in parallel. Otherwise they are trained in sequence.
+.IP \(bu 2
+\fBcontinuous_out\fP – If \fITrue\fP, class assignments in \fIy_ensemble_valid\fP and \fIy_ensemble_test\fP are given as
+probabilities. Default value is \fIFalse\fP\&.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of:
+\- \fIy_ensemble_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a validation dataset.
+\- \fIy_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the validation.
+\- \fIy_ensemble_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a test dataset.
+\- \fIy_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the test.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multiclass_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None, continuous_out=False, parallelize=True)
+Generate random multiclass, crisp and complementary\-redundant classification outputs (assignments) for the given
+ensemble of classifiers.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBclassifiers\fP – Classifiers used to generate classification outputs.
+These need to implement \fIfit\fP and \fIpredict\fP methods according to classifiers provided by \fIsklearn\fP\&.
+.IP \(bu 2
+\fBn_classes\fP – \fIinteger\fP\&. Number of classes, predictions are made for.
+.IP \(bu 2
+\fBn_samples\fP – \fIinteger\fP\&. Number of samples.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+If unset, redundant classification outputs are retrieved.
+.IP \(bu 2
+\fBcontinuous_out\fP – If \fITrue\fP, class assignments in \fIy_ensemble_valid\fP and \fIy_ensemble_test\fP are given as
+probabilities. Default value is \fIFalse\fP\&.
+.IP \(bu 2
+\fBparallelize\fP – If \fITrue\fP, all classifiers are trained in parallel. Otherwise they are trained in sequence.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of:
+\- \fIy_ensemble_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a validation dataset.
+\- \fIy_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the validation.
+\- \fIy_ensemble_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a test dataset.
+\- \fIy_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the test.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multilabel_ensemble_classification_outputs(classifiers, n_classes, n_samples, continuous_out=False, parallelize=True)
+Generate random multilabel crisp classification outputs (assignments) for the given ensemble of classifiers with
+the normal class included at index \fI0\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBclassifiers\fP – Classifiers used to generate classification outputs.
+These need to implement \fIfit\fP and \fIpredict\fP methods according to classifiers provided by \fIsklearn\fP\&.
+.IP \(bu 2
+\fBn_classes\fP – \fIinteger\fP\&. Number of classes, predictions are made for with the normal class included.
+.IP \(bu 2
+\fBn_samples\fP – \fIinteger\fP\&. Number of samples.
+.IP \(bu 2
+\fBcontinuous_out\fP – If \fITrue\fP, class assignments in \fIy_ensemble_valid\fP and \fIy_ensemble_test\fP are given as
+probabilities. Default value is \fIFalse\fP\&.
+.IP \(bu 2
+\fBparallelize\fP – If \fITrue\fP, all classifiers are trained in parallel. Otherwise they are trained in sequence.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of:
+\- \fIy_ensemble_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a validation dataset.
+\- \fIy_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the validation.
+\- \fIy_ensemble_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a test dataset.
+\- \fIy_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the test.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multilabel_cr_ensemble_classification_outputs(classifiers, n_classes, n_samples, coverage=None, continuous_out=False, parallelize=True)
+Generate random multilabel, crisp and complementary\-redundant classification outputs (assignments) for the given
+ensemble of classifiers with the normal class included at index \fI0\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBclassifiers\fP – Classifiers used to generate classification outputs.
+These need to implement \fIfit\fP and \fIpredict\fP methods according to classifiers provided by \fIsklearn\fP\&.
+.IP \(bu 2
+\fBn_classes\fP – \fIinteger\fP\&. Number of classes, predictions are made for with the normal class included.
+.IP \(bu 2
+\fBn_samples\fP – \fIinteger\fP\&. Number of samples.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+If unset, redundant classification outputs are retrieved.
+.IP \(bu 2
+\fBcontinuous_out\fP – If \fITrue\fP, class assignments in \fIy_ensemble_valid\fP and \fIy_ensemble_test\fP are given as
+probabilities. Default value is \fIFalse\fP\&.
+.IP \(bu 2
+\fBparallelize\fP – If \fITrue\fP, all classifiers are trained in parallel. Otherwise they are trained in sequence.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of:
+\- \fIy_ensemble_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a validation dataset.
+\- \fIy_valid\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the validation.
+\- \fIy_ensemble_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Ensemble decision output matrix for
+as a test dataset.
+\- \fIy_test\fP: \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. True class assignments for the test.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multiclass_confusion_matrices(decision_tensor, true_assignments)
+Generate multiclass confusion matrices out of the given decision tensor and true assignments.
+Continuous outputs are converted to multiclass assignments using the MAX rule.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_samples)\fP\&. Confusion matrices per classifier.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_multilabel_cr_confusion_matrices(decision_outputs, true_assignments, coverage)
+Generate multilabel confusion matrices for complementary\-redundant multilabel classification outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of crisp class assignments which are considered true for calculating confusion matrices.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+.UNINDENT
+.TP
+.B Returns
+List of multilabel confusion matrices.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.generate_classification_coverage(n_classifiers, n_classes, overlap, normal_class=True)
+Generate random complementary redundant class indices for each classifier \fI0..(n_classifiers\-1)\fP\&.
+The coverage is drawn from normal distribution for all classifiers.
+However, it is guaranteed that each classifier covers at least one class regardless of the distribution.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBn_classifiers\fP – Number of classifiers representing the classifier \fI0..(n_classifiers\-1)\fP\&.
+.IP \(bu 2
+\fBn_classes\fP – Number of classes representing the class label \fI0..(n_classes\-1)\fP\&.
+.IP \(bu 2
+\fBoverlap\fP – Indicator between \fI0\fP and \fI1\fP for overall classifier overlapping in terms of classes.
+If \fI0\fP, only complementary class indices are obtained.
+If \fI1\fP, the overlapping is fully redundant.
+.IP \(bu 2
+\fBnormal_class\fP – If \fITrue\fP, a class for the normal state is included for all classifiers as class index \fI0\fP\&.
+.UNINDENT
+.TP
+.B Returns
+\fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.shrink_to_coverage(decision_tensor, coverage)
+Shrink the given decision tensor to decision outputs according to the given coverage.
+Assumption: the normal class is covered by each classifier at index \fI0\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBcoverage\fP – \fIlist\fP of \fIlist\fP elements. Each inner list contains classes as integers covered by a classifier,
+which is identified by the positional index of the respective list.
+.UNINDENT
+.TP
+.B Returns
+\fIlist\fP of \fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is
+classifier\-specific due to the coverage.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.generator.split_into_train_and_validation_data(decision_tensor, true_assignments, validation_size=0.5)
+Split the decision outputs (tensor) from multiple classifiers as well as the true assignments randomly into train
+and validation datasets.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBtrue_assignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&.
+Matrix of true class assignments.
+.IP \(bu 2
+\fBvalidation_size\fP – Proportion between \fI0\fP and \fI1\fP for the size of the validation data set.
+.UNINDENT
+.TP
+.B Returns
+\fItuple\fP of
+(1) \fInumpy.array\fP of shape \fI(n_classifiers, n_samples’, n_classes)\fP,
+(2) \fInumpy.array\fP of shape \fI(n_classifiers, n_samples’)\fP,
+(3) \fInumpy.array\fP of shape \fI(n_classifiers, n_samples’’, n_classes)\fP,
+(4) \fInumpy.array\fP of shape \fI(n_classifiers, n_samples’’)\fP, with \fIn_samples’\fP as the number of training
+samples and \fIn_samples’’\fP as the number of validation samples.
+.UNINDENT
+.UNINDENT
+.SS pusion.util.transformer module
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.confusion_matrices_to_accuracy_vector(confusion_matrix_tensor)
+Convert confusion matrices of respective classification to an accuracy vector.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBconfusion_matrix_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_classes, n_classes)\fP
+Confusion matrices.
+.TP
+.B Returns
+One\-dimensional \fInumpy.array\fP of shape of length \fIn_classifiers\fP containing the accuracy for each confusion
+matrix.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.confusion_matrix_to_accuracy(cm)
+Calculate the accuracy out of the given confusion matrix.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBcm\fP – \fInumpy.array\fP of shape \fI(n_classes, n_classes)\fP\&.
+Confusion matrix.
+.TP
+.B Returns
+The accuracy.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multilabel_cr_confusion_matrices_to_avg_accuracy(label_cms)
+Calculate the average accuracy for the given confusion matrices generated from complementary redundant multilabel
+output.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBlabel_cms\fP – \fIlist\fP of confusion matrices given as 2\-dimensional \fInumpy.array\fP respectively.
+.TP
+.B Returns
+The average accuracy.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.decision_tensor_to_decision_profiles(decision_tensor)
+Transform the given decision tensor to decision profiles for each respective sample.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of either crisp or continuous decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classifiers, n_classes)\fP\&.
+Decision profiles.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multilabel_predictions_to_decisions(predictions, threshold=0.5)
+Transform a continuously valued tensor of multilabel decisions to crisp decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBpredictions\fP – \fInumpy.array\fP of any shape. Continuous predictions.
+.IP \(bu 2
+\fBthreshold\fP – \fIfloat\fP\&. A threshold value, based on which the crisp output is constructed.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of the same shape as \fBpredictions\fP\&. Crisp decision outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multiclass_predictions_to_decisions(predictions)
+Transform a continuously valued matrix of multiclass decisions to crisp decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBpredictions\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Continuous predictions.
+.TP
+.B Returns
+\fInumpy.array\fP of the same shape as \fBpredictions\fP\&. Crisp decision outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multilabel_prediction_tensor_to_decision_tensor(predictions)
+Transform a continuously valued tensor of multilabel decisions to crisp decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBpredictions\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&. Continuous predictions.
+.TP
+.B Returns
+\fInumpy.array\fP of the same shape as \fBpredictions\fP\&. Crisp decision outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multiclass_prediction_tensor_to_decision_tensor(predictions)
+Transform a continuously valued tensor of multiclass decisions to crisp decision outputs.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBpredictions\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&. Continuous predictions.
+.TP
+.B Returns
+\fInumpy.array\fP of the same shape as \fBpredictions\fP\&. Crisp decision outputs.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.decision_tensor_to_configs(decision_outputs)
+Transform decision outputs to decision configs. A decision config shows concatenated classification outputs of each
+classifier per sample.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_outputs\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP or a \fIlist\fP of
+\fInumpy.array\fP elements of shape \fI(n_samples, n_classes’)\fP, where \fIn_classes’\fP is classifier\-specific
+due to the coverage.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes*)\fP, \fIn_classes*\fP is the sum of all classes covered by
+all classifiers.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multiclass_assignments_to_labels(assignments)
+Transform multiclass assignments to labels. A matrix of shape \fI(n_samples, n_classes)\fP is converted to a vector
+of shape \fI(n_samples,)\fP, with element\-wise labels represented in integers from \fI0\fP to \fIn_classes \- 1\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBassignments\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Multiclass assignments.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples,)\fP with an integer label per element.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.transform_label_tensor_to_class_assignment_tensor(label_tensor, n_classes)
+Transform a label tensor of shape \fI(n_classifiers, n_samples)\fP to the tensor of class assignments of shape
+\fI(n_classifiers, n_samples, n_classes)\fP\&. A label is an integer between \fI0\fP and \fIn_classes \- 1\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBlabel_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples)\fP\&. Label tensor.
+.IP \(bu 2
+\fBn_classes\fP – Number of classes to be considered.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&. Class assignment tensor (decision tensor).
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.transform_label_vector_to_class_assignment_matrix(label_vector, n_classes=None)
+Transform labels to multiclass assignments. A vector of shape \fI(n_samples,)\fP, with element\-wise labels is converted
+to the assignment matrix of shape \fI(n_samples, n_classes)\fP\&.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBlabel_vector\fP – \fInumpy.array\fP of shape \fI(n_samples,)\fP with an integer label per element.
+.IP \(bu 2
+\fBn_classes\fP – Number of classes to be considered.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Multiclass assignments.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.class_assignment_tensor_to_label_tensor(class_assignment_tensor)
+Transform multiclass class assignments into a label tensor. A tensor of shape
+\fI(n_classifiers, n_samples, n_classes)\fP is converted into a tensor of shape \fI(n_classifiers, n_samples)\fP holding the
+class identifier (label) in each element.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBclass_assignment_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Class assignment tensor (decision tensor).
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples)\fP\&. Label tensor.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.class_assignment_matrix_to_label_vector(class_assignment_matrix)
+Transform multiclass class assignments into a label vector. A matrix of shape
+\fI(n_samples, n_classes)\fP is converted into a vector of shape \fI(n_samples,)\fP holding the class identifier (label)
+in each element.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBclass_assignment_matrix\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Class assignment matrix
+(decision matrix).
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples,)\fP\&. Label vector.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multilabel_to_multiclass_assignments(decision_tensor)
+Transform the multilabel decision tensor to the equivalent multiclass decision tensor using the power set method.
+The multilabel class assignments are considered as a binary number which represents a new class in the
+multiclass decision space. E.g. the assignment to the classes \fI0\fP and \fI2\fP (\fI[1,0,1]\fP) is converted to the class \fI5\fP,
+which is one of the \fI2^3\fP classes in the multiclass decision space.
+This method is inverse to the \fBmulticlass_to_multilabel_assignments\fP method.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, 2^n_classes)\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.multiclass_to_multilabel_assignments(decision_tensor)
+Transform the multiclass decision tensor to the equivalent multilabel decision tensor using the inverse
+power set method. The multiclass assignment is considered as a decimal which is converted to a binary number, which
+in turn represents the multilabel class assignment. E.g. the class assignment to the class \fI3\fP \fI([0,0,0,1])\fP is
+converted to the multilabel class assignment \fI[1,1]\fP (classes \fI0\fP and \fI1\fP in the multilabel decision space).
+This method is inverse to the \fBmultilabel_to_multiclass_assignments\fP method.
+.INDENT 7.0
+.TP
+.B Parameters
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of crisp multilabel decision outputs by different classifiers per sample.
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_classifiers, n_samples, log_2(n_classes))\fP\&.
+Tensor of crisp multiclass decision outputs by different classifiers per sample.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.tensorize(decision_outputs)
+Convert \fIlist\fP decision outputs to \fInumpy.array\fP decision tensor, if possible.
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.intercept_normal_class(y, override=False)
+Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
+class assignment. E.g. the assignment \fI[0,0,0,0]\fP is transformed to \fI[1,0,0,0]\fP, under the assumption that \fI0\fP
+is a normal class.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBy\fP – \fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP\&. Matrix of decision outputs.
+.IP \(bu 2
+\fBoverride\fP – If \fItrue\fP, the class \fI0\fP is assumed as a normal class. Otherwise a new class is prepended to
+existing classes.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP for \fIoverride=False\fP\&.
+\fInumpy.array\fP of shape \fI(n_samples, n_classes + 1)\fP for \fIoverride=True\fP\&.
+Matrix of decision outputs with intercepted normal class.
+.UNINDENT
+.UNINDENT
+.INDENT 0.0
+.TP
+.B pusion.util.transformer.intercept_normal_class_in_tensor(decision_tensor, override=False)
+Intercept the normal class for the given decision matrix, i.e. a normal class is assigned to each zero vector
+class assignment. E.g. the assignment \fI[0,0,0,0]\fP is transformed to \fI[1,0,0,0]\fP, under the assumption that \fI0\fP
+is a normal class.
+.INDENT 7.0
+.TP
+.B Parameters
+.INDENT 7.0
+.IP \(bu 2
+\fBdecision_tensor\fP – \fInumpy.array\fP of shape \fI(n_classifiers, n_samples, n_classes)\fP\&.
+Tensor of decision outputs by different classifiers per sample.
+.IP \(bu 2
+\fBoverride\fP – If \fItrue\fP, the class \fI0\fP is assumed as a normal class. Otherwise a new class is prepended to
+existing classes.
+.UNINDENT
+.TP
+.B Returns
+\fInumpy.array\fP of shape \fI(n_samples, n_classes)\fP for \fIoverride=False\fP\&.
+\fInumpy.array\fP of shape \fI(n_samples, n_classes + 1)\fP for \fIoverride=True\fP\&.
+Matrix of decision outputs with intercepted normal class.
+.UNINDENT
+.UNINDENT
+.SH USAGE AND EXAMPLES
+.SS A simple example
+.sp
+The following code shows an illustrative and simple example of using pusion for decision outputs of three classifiers.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+import pusion as p
+import numpy as np
+
+# Create exemplary classification outputs (class assignments)
+classifier_a = [[0, 0, 1], [0, 0, 1], [0, 1, 0]]
+classifier_b = [[0, 0, 1], [0, 1, 0], [1, 0, 0]]
+classifier_c = [[0, 1, 0], [0, 1, 0], [0, 1, 0]]
+
+# Create a numpy tensor
+ensemble_out = np.array([classifier_a, classifier_b, classifier_c])
+
+# Initialize the general framework interface
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.MACRO_MAJORITY_VOTE,
+                                         problem=p.Problem.MULTI_CLASS,
+                                         assignment_type=p.AssignmentType.CRISP,
+                                         coverage_type=p.CoverageType.REDUNDANT))
+
+# Fuse the ensemble classification outputs
+fused_decisions = np.array(dp.combine(ensemble_out))
+
+print(fused_decisions)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+[[0 0 1]
+ [0 1 0]
+ [0 1 0]]
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS A richer example
+.sp
+In this example, an ensemble is created using \fIsklearn\fP’s neural network classifiers.
+The 200 classification outputs are split up into validation and test datasets.
+\fBy_ensemble_valid\fP and \fBy_ensemble_test\fP holds the classification outputs of the whole ensemble, while
+\fBy_valid\fP and \fBy_test\fP are representing true labels.
+The validation datasets are used to train the \fIDempsterShaferCombiner\fP combiner (DS), while the
+final fusion is performed on the test dataset (without true labels).
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+import pusion as p
+
+import sklearn
+
+# Create an ensemble of 3 neural networks with different hyperparameters
+classifiers = [
+    sklearn.neural_network.MLPClassifier(hidden_layer_sizes=(100,)),
+    sklearn.neural_network.MLPClassifier(hidden_layer_sizes=(100, 50)),
+    sklearn.neural_network.MLPClassifier(hidden_layer_sizes=(100, 50, 25)),
+]
+
+# Generate samples for the ensemble
+y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multiclass_ensemble_classification_outputs(
+    classifiers=classifiers,
+    n_classes=5,
+    n_samples=200)
+
+# User defined configuration
+conf = p.Configuration(
+    method=p.Method.DEMPSTER_SHAFER,
+    problem=p.Problem.MULTI_CLASS,
+    assignment_type=p.AssignmentType.CRISP,
+    coverage_type=p.CoverageType.REDUNDANT
+)
+
+# Initialize the general framework interface
+dp = p.DecisionProcessor(conf)
+
+# Train the selected Dempster Shafer combiner with the validation dataset
+dp.train(y_ensemble_valid, y_valid)
+
+# Fuse the ensemble classification outputs (test dataset)
+y_comb = dp.combine(y_ensemble_test)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Evaluation
+.sp
+In addition to the previous example, we are able to evaluate both, the ensemble and the combiner classification
+performance using the evaluation methods provided by the framework.
+The critical point for achieving a reasonable comparison is obviously the usage of the same test dataset
+for the combiner as well as for the ensemble.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+# Define classification performance metrics used for the evaluation
+eval_metrics = [
+    p.PerformanceMetric.ACCURACY,
+    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MICRO_PRECISION
+]
+
+print("============= Ensemble ===============")
+eval_classifiers = p.Evaluation(*eval_metrics)
+eval_classifiers.set_instances(classifiers)
+eval_classifiers.evaluate(y_test, y_ensemble_test)
+print(eval_classifiers.get_report())
+
+print("============== Combiner ==============")
+eval_combiner = p.Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate(y_test, y_comb)
+print(eval_combiner.get_report())
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+============= Ensemble ===============
+                                     accuracy     f1  precision
+MLPClassifier [0]                       0.810  0.810      0.810
+MLPClassifier [1]                       0.800  0.800      0.800
+MLPClassifier [2]                       0.792  0.792      0.792
+============== Combiner ==============
+                                     accuracy     f1  precision
+DempsterShaferCombiner                  0.816  0.816      0.816
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Auto Combiner
+.sp
+The following code shows an exemplary usage and evaluation of the AutoCombiner specified in
+the configuration.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+dp.train(y_ensemble_valid, y_valid)
+y_comb = dp.combine(y_ensemble_test)
+
+eval_combiner = p.Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+================================= AutoCombiner \- Report ==================================
+                   Problem: MULTI_CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: CosineSimilarityCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+AutoCombiner                            0.836     0.836            0.836
+==========================================================================================
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS Generic Combiner
+.sp
+For the given data sets one could also use the GenericCombiner to gain an overview over applicable
+methods and their respective performances.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.GENERIC))
+dp.train(y_ensemble_valid, y_valid)
+dp.combine(y_ensemble_test)
+
+eval_combiner = p.Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiners())
+eval_combiner.evaluate(y_test, dp.get_multi_combiner_decision_output())
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+The \fIDecisionProcessor\fP provides \fBget_multi_combiner_decision_output()\fP to retrieve fused decisions from each
+applicable combiner.
+.UNINDENT
+.UNINDENT
+.sp
+Output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+================================ GenericCombiner \- Report ================================
+                   Problem: MULTI_CLASS
+           Assignment type: CRISP
+             Coverage type: REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CosineSimilarityCombiner, MacroMajorityVoteCombiner, MicroMajorityVoteCombiner, SimpleAverageCombiner, BehaviourKnowledgeSpaceCombiner, DecisionTemplatesCombiner, KNNCombiner, DempsterShaferCombiner, MaximumLikelihoodCombiner, NaiveBayesCombiner, NeuralNetworkCombiner, WeightedVotingCombiner
+          Optimal combiner: WeightedVotingCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+CosineSimilarityCombiner                0.836     0.836            0.836
+MacroMajorityVoteCombiner               0.836     0.836            0.836
+MicroMajorityVoteCombiner               0.836     0.836            0.836
+SimpleAverageCombiner                   0.836     0.836            0.836
+BehaviourKnowledgeSpaceCombiner         0.822     0.831            0.840
+DecisionTemplatesCombiner               0.836     0.836            0.836
+KNNCombiner                             0.826     0.836            0.846
+DempsterShaferCombiner                  0.836     0.836            0.836
+MaximumLikelihoodCombiner               0.834     0.834            0.834
+NaiveBayesCombiner                      0.836     0.836            0.836
+NeuralNetworkCombiner                   0.826     0.832            0.838
+WeightedVotingCombiner                  0.836     0.836            0.836
+==========================================================================================
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SS CR classification
+.sp
+In \fIcomplementary\-redundant\fP classification (CR), ensemble classifiers are not able to make predictions for all
+available classes. They may complement each other or share some classes. In such cases, a \fIcoverage\fP needs to be
+specified in order to use the framework properly. The coverage describes for each ensemble classifier, which classes
+it is able to make predictions for. In pusion, it can be defined by a simple 2D list, e.g., \fB[[0,1], [0,2,3]]\fP, where
+the first classifier is covering the classes \fI0,1\fP while the second one covers \fI0,2,3\fP\&.
+The following code example shows how to generate and combine such complementary\-redundant classification outputs.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+import pusion as p
+import sklearn
+
+# Create an ensemble of 3 neural networks with different hyperparameters
+classifiers = [
+    sklearn.neural_network.MLPClassifier(max_iter=5000, hidden_layer_sizes=(100,)),
+    sklearn.neural_network.MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 50)),
+    sklearn.neural_network.MLPClassifier(max_iter=5000, hidden_layer_sizes=(100, 50, 25)),
+]
+
+# Create a random complementary\-redundant classification coverage with 60% overlap.
+coverage = p.generate_classification_coverage(n_classifiers=3, n_classes=5, overlap=.6, normal_class=True)
+
+# Generate samples for the complementary\-redundant ensemble
+y_ensemble_valid, y_valid, y_ensemble_test, y_test = p.generate_multilabel_cr_ensemble_classification_outputs(
+    classifiers=classifiers,
+    n_classes=5,
+    n_samples=2000,
+    coverage=coverage)
+
+# Initialize the general framework interface
+dp = p.DecisionProcessor(p.Configuration(method=p.Method.AUTO))
+
+# Since we are dealing with a CR output, we need to propagate the coverage to the \(gaDecisionProcessor\(ga.
+dp.set_coverage(coverage)
+
+# Train the AutoCombiner with the validation dataset
+dp.train(y_ensemble_valid, y_valid)
+
+# Fuse the ensemble classification outputs (test dataset)
+y_comb = dp.combine(y_ensemble_test)
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+The framework provides also a specific evaluation methodology for complementary\-redundant results.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+# Define classification performance metrics used for the evaluation
+eval_metrics = [
+    p.PerformanceMetric.ACCURACY,
+    p.PerformanceMetric.MICRO_F1_SCORE,
+    p.PerformanceMetric.MICRO_PRECISION
+]
+
+# Evaluate ensemble classifiers
+eval_classifiers = p.Evaluation(*eval_metrics)
+eval_classifiers.set_instances("Ensemble")
+eval_classifiers.evaluate_cr_decision_outputs(y_test, y_ensemble_test, coverage)
+print(eval_classifiers.get_report())
+
+# Evaluate the fusion
+eval_combiner = p.Evaluation(*eval_metrics)
+eval_combiner.set_instances(dp.get_combiner())
+eval_combiner.evaluate_cr_decision_outputs(y_test, y_comb)
+
+dp.set_evaluation(eval_combiner)
+print(dp.report())
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Output:
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+                                     accuracy  micro_f1  micro_precision
+Ensemble                                0.804     0.804            0.804
+================================= AutoCombiner \- Report ==================================
+                   Problem: MULTI_LABEL
+           Assignment type: CRISP
+             Coverage type: COMPLEMENTARY_REDUNDANT
+   Combiner type selection: UtilityBasedCombiner, TrainableCombiner
+      Compatible combiners: CRCosineSimilarity, CRMicroMajorityVoteCombiner, CRSimpleAverageCombiner, CRDecisionTemplatesCombiner, CRKNNCombiner, CRNeuralNetworkCombiner
+          Optimal combiner: CRDecisionTemplatesCombiner
+Classification performance:
+                                     accuracy  micro_f1  micro_precision
+AutoCombiner                            0.813     0.813            0.813
+==========================================================================================
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+\fBWARNING:\fP
+.INDENT 0.0
+.INDENT 3.5
+Combiner output is always redundant, which means that all classes are covered for each sample.
+To make a reasonable comparison between the combiner and the ensemble use \fBevaluate_cr_*\fP methods for both.
+.UNINDENT
+.UNINDENT
+.SH LICENSE
+.sp
+MIT License
+.sp
+Copyright (c) 2022 Admir Obralija, Yannick Wilhelm.
+Institute for Parallel and Distributed Systems, University of Stuttgart.
+.sp
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+.sp
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+.sp
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+.SH ABOUT
+.sp
+This framework was developed in the context of a research project and several student works at the Institute of Parallel and Distributed Systems of the University of Stuttgart.
+.INDENT 0.0
+.IP \(bu 2
+modindex
+.IP \(bu 2
+search
+.UNINDENT
+.SH AUTHOR
+Admir Obralija, Yannick Wilhelm
+.SH COPYRIGHT
+2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany
+.\" Generated by docutils manpage writer.
+.
