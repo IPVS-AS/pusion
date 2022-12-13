@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pusion.util.transformer module &mdash; pusion  documentation</title>
+  <title>pusion.util.transformer module &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -123,7 +123,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -372,6 +372,40 @@ to the assignment matrix of shape <cite>(n_samples, n_classes)</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.transformer.class_assignment_tensor_to_label_tensor">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></span><span class="sig-name descname"><span class="pre">class_assignment_tensor_to_label_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_assignment_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.class_assignment_tensor_to_label_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform multiclass class assignments into a label tensor. A tensor of shape
+<cite>(n_classifiers, n_samples, n_classes)</cite> is converted into a tensor of shape <cite>(n_classifiers, n_samples)</cite> holding the
+class identifier (label) in each element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_assignment_tensor</strong> – <cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples, n_classes)</cite>.
+Class assignment tensor (decision tensor).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_classifiers, n_samples)</cite>. Label tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.util.transformer.class_assignment_matrix_to_label_vector">
+<span class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></span><span class="sig-name descname"><span class="pre">class_assignment_matrix_to_label_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_assignment_matrix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.class_assignment_matrix_to_label_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform multiclass class assignments into a label vector. A matrix of shape
+<cite>(n_samples, n_classes)</cite> is converted into a vector of shape <cite>(n_samples,)</cite> holding the class identifier (label)
+in each element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>class_assignment_matrix</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Class assignment matrix
+(decision matrix).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. Label vector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pusion.util.transformer.multilabel_to_multiclass_assignments">
 <span class="sig-prename descclassname"><span class="pre">pusion.util.transformer.</span></span><span class="sig-name descname"><span class="pre">multilabel_to_multiclass_assignments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.util.transformer.multilabel_to_multiclass_assignments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform the multilabel decision tensor to the equivalent multiclass decision tensor using the power set method.
@@ -478,7 +512,7 @@ Matrix of decision outputs with intercepted normal class.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

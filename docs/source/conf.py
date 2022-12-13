@@ -15,14 +15,14 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
-
+sys.path.insert(0, os.path.abspath('../../src'))
 
 # -- Project information -----------------------------------------------------
 
 project = u'pusion - Decision Fusion Framework'
 copyright = u'2022, Admir Obralija, Yannick Wilhelm. ' \
             u'Institute for Parallel and Distributed Systems, University of Stuttgart, Germany'
-author = u'Yannick Wilhelm'
+author = u'Admir Obralija, Yannick Wilhelm'
 
 # The short X.Y version
 version = u'0.2.0'
@@ -144,7 +144,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'pusion.tex', u'pusion Documentation',
-     u'Admir Obralija', 'manual'),
+     author, 'manual'),
 ]
 
 
@@ -154,7 +154,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'pusion', u'pusion Documentation',
-     [author], 1)
+     author, 1)
 ]
 
 

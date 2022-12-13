@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pusion.control.decision_processor module &mdash; pusion  documentation</title>
+  <title>pusion.control.decision_processor module &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -122,7 +122,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -240,7 +240,7 @@ Accordingly, the other data of size <cite>1-validation_size</cite> is used to tr
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pusion.control.decision_processor.DecisionProcessor.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_ensemble_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_valid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_ensemble_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_valid</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the combiner model determined by the configuration.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -257,6 +257,8 @@ due to the coverage.</p>
 <li><p><strong>y_valid</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
 Matrix of either crisp or continuous class assignments which are considered true for each sample during
 the training procedure.</p></li>
+<li><p><strong>**kwargs</strong> – The <cite>**kwargs</cite> parameter may be used to use additional test data for the AutoFusion selection
+procedure.</p></li>
 </ul>
 </dd>
 </dl>
@@ -298,7 +300,7 @@ The list is aligned with the list of preselected fusion methods (retrievable by 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pusion.control.decision_processor.DecisionProcessor.get_optimal_combiner">
-<span class="sig-name descname"><span class="pre">get_optimal_combiner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.get_optimal_combiner" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_optimal_combiner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.get_optimal_combiner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the combiner with the best classification performance obtained by the framework, i.e. the
 <cite>AutoCombiner</cite> or the <cite>GenericCombiner</cite>.
 In case of combining with the <cite>GenericCombiner</cite>, an <cite>Evaluation</cite> needs to be set by <code class="docutils literal notranslate"><span class="pre">set_evaluation</span></code>.</p>
@@ -329,7 +331,7 @@ configuration.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pusion.control.decision_processor.DecisionProcessor.report">
-<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.report" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.control.decision_processor.DecisionProcessor.report" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>The textual evaluation report.</p>
@@ -402,7 +404,7 @@ performed with.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

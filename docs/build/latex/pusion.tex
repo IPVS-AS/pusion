@@ -60,9 +60,9 @@
 
 
 \title{pusion Documentation}
-\date{Jul 24, 2021}
+\date{Dec 13, 2022}
 \release{}
-\author{Admir Obralija}
+\author{Admir Obralija, Yannick Wilhelm}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{}
 \makeindex
@@ -108,7 +108,7 @@ The latter one is followed by the presented framework and illustrated in \hyperr
 \centering
 \capstart
 
-\noindent\sphinxincludegraphics{{framework_context}.svg}
+\noindent\sphinxincludegraphics{{framework_context}.pdf}
 \caption{Architectural embedding of the decision fusion framework}\label{\detokenize{overview:id1}}\label{\detokenize{overview:fig-context}}\end{figure}
 
 \sphinxAtStartPar
@@ -307,7 +307,7 @@ Evaluation methods for different classification and coverage types (see class {\
 \label{\detokenize{install:general-requirements}}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
-Python \textgreater{}= 3.7
+Python \textgreater{}= 3.6
 
 \end{itemize}
 
@@ -338,32 +338,41 @@ pandas \textgreater{}= 1.2.3
 \sphinxAtStartPar
 matplotlib \textgreater{}= 3.4.1
 
-\item {} 
-\sphinxAtStartPar
-pickle5 \textgreater{}= 0.0.11
-
 \end{itemize}
 
 
 \section{Preparation}
 \label{\detokenize{install:preparation}}
 \sphinxAtStartPar
-In order to generate a python wheel package for \sphinxtitleref{pusion}, the package \sphinxtitleref{setuptools} needs to be installed in your Python
-3 environment before.
+To generate the python distribution archives of \sphinxtitleref{pusion}, update the PyPA’s build to the latest version. Under \sphinxtitleref{Windows} run in your python environment the following command:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-pip3 install setuptools
+py \PYGZhy{}m pip install \PYGZhy{}\PYGZhy{}upgrade build
 \end{sphinxVerbatim}
 
 \sphinxAtStartPar
-After cloning \sphinxtitleref{pusion} to your local disc, enter the project and generate the package using with the following command.
+If you are using \sphinxtitleref{MacOS} or \sphinxtitleref{Unix}, run in your python environment:
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-python3 setup.py bdist\PYGZus{}wheel
+python3 \PYGZhy{}m pip install \PYGZhy{}\PYGZhy{}upgrade build
 \end{sphinxVerbatim}
 
 \sphinxAtStartPar
-Once generated, the wheel will be moved to the \sphinxcode{\sphinxupquote{dist/}} directory within project’s root.
+After cloning \sphinxtitleref{pusion} from GitHub to your local computer, enter the \sphinxtitleref{pusion} directory where the file \sphinxtitleref{pyproject.toml} is located. Under this directory run the following \sphinxtitleref{build} command. For \sphinxtitleref{Windows} users:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+py \PYGZhy{}m build
+\end{sphinxVerbatim}
+
+\sphinxAtStartPar
+For \sphinxtitleref{MacOS} or \sphinxtitleref{Unix} user:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+python3 \PYGZhy{}m build
+\end{sphinxVerbatim}
+
+\sphinxAtStartPar
+Once successfully executed, two files are generated in the \sphinxtitleref{dist} subfolder within the project’s root folder. The \sphinxtitleref{tar.gz} file is the source distribution and the \sphinxtitleref{whl} file is the built distribution.
 
 
 \section{Installation}
@@ -399,7 +408,7 @@ results obtained by the methods with the best performance without further user i
 \index{train() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{train()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}}{}
+\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Train the AutoCombiner (AC) model. This method detects the configuration based on the \sphinxcode{\sphinxupquote{decision\_tensor}} and
 trains all trainable combiners that are applicable to this configuration.
@@ -455,6 +464,21 @@ Tensor of either crisp or continuous decision outputs by different classifiers p
 A matrix (\sphinxtitleref{numpy.array}) of crisp or continuous class assignments which represents fused decisions.
 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
 \sphinxcode{\sphinxupquote{decision\_tensor}} input tensor.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{set\_validation\_size() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{set\_validation\_size()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.set_validation_size}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_validation\_size}}}{\emph{\DUrole{n}{validation\_size}}}{}
+\sphinxAtStartPar
+Set the validation size, based on which the training data is split and the best combiner is selected.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{validation\_size}} \textendash{} A \sphinxtitleref{float} between \sphinxtitleref{0} and \sphinxtitleref{1.0}. Ratio of the validation data set.
 
 \end{description}\end{quote}
 
@@ -587,6 +611,18 @@ Each inner tuple key value indexes the list of preselected fusion methods
 
 \end{fulllineitems}
 
+\index{get\_selected\_combiner() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{get\_selected\_combiner()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_selected\_combiner}}}{}{}~\begin{quote}\begin{description}
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+The method selected by the \sphinxtitleref{AutoCombiner}.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{obtain() (pusion.auto.auto\_combiner.AutoCombiner class method)@\spxentry{obtain()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner class method}}
 
 \begin{fulllineitems}
@@ -648,21 +684,6 @@ Confusion matrices for each of \sphinxtitleref{n} classifiers.
 \sphinxAtStartPar
 Set whether the training and the combining of selected combiners should be executed sequentially or in parallel.
 :param parallel: If \sphinxtitleref{True}, training and combining is performed in parallel respectively. Otherwise in sequence.
-
-\end{fulllineitems}
-
-\index{set\_validation\_size() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{set\_validation\_size()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
-
-\begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.set_validation_size}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{set\_validation\_size}}}{\emph{\DUrole{n}{validation\_size}}}{}
-\sphinxAtStartPar
-Set the validation size, based on which the training data is split and the best combiner is selected.
-\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
-\sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{validation\_size}} \textendash{} A \sphinxtitleref{float} between \sphinxtitleref{0} and \sphinxtitleref{1.0}. Ratio of the validation data set.
-
-\end{description}\end{quote}
 
 \end{fulllineitems}
 
@@ -734,13 +755,13 @@ the training procedure.
 
 \end{fulllineitems}
 
-\index{get\_selected\_combiner() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{get\_selected\_combiner()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
+\index{get\_eval\_metric() (pusion.auto.auto\_combiner.AutoCombiner method)@\spxentry{get\_eval\_metric()}\spxextra{pusion.auto.auto\_combiner.AutoCombiner method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_selected\_combiner}}}{}{}~\begin{quote}\begin{description}
+\phantomsection\label{\detokenize{pusion.auto.auto_combiner:pusion.auto.auto_combiner.AutoCombiner.get_eval_metric}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_eval\_metric}}}{}{}~\begin{quote}\begin{description}
 \item[{Returns}] \leavevmode
 \sphinxAtStartPar
-The method selected by the \sphinxtitleref{AutoCombiner}.
+The metric used for the selection of the best performing combiner.
 
 \end{description}\end{quote}
 
@@ -1256,7 +1277,7 @@ Accordingly, the other data of size \sphinxtitleref{1\sphinxhyphen{}validation\_
 \index{train() (pusion.control.decision\_processor.DecisionProcessor method)@\spxentry{train()}\spxextra{pusion.control.decision\_processor.DecisionProcessor method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{y\_ensemble\_valid}}, \emph{\DUrole{n}{y\_valid}}}{}
+\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{y\_ensemble\_valid}}, \emph{\DUrole{n}{y\_valid}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Train the combiner model determined by the configuration.
 
@@ -1283,6 +1304,11 @@ Tensor of either crisp or continuous decision outputs by different classifiers p
 \sphinxstyleliteralstrong{\sphinxupquote{y\_valid}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}.
 Matrix of either crisp or continuous class assignments which are considered true for each sample during
 the training procedure.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{**kwargs}} \textendash{} The \sphinxtitleref{**kwargs} parameter may be used to use additional test data for the AutoFusion selection
+procedure.
 
 \end{itemize}
 
@@ -1340,7 +1366,7 @@ The list is aligned with the list of preselected fusion methods (retrievable by 
 \index{get\_optimal\_combiner() (pusion.control.decision\_processor.DecisionProcessor method)@\spxentry{get\_optimal\_combiner()}\spxextra{pusion.control.decision\_processor.DecisionProcessor method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.get_optimal_combiner}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_optimal\_combiner}}}{}{}
+\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.get_optimal_combiner}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{get\_optimal\_combiner}}}{\emph{\DUrole{n}{eval\_metric}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
 \sphinxAtStartPar
 Retrieve the combiner with the best classification performance obtained by the framework, i.e. the
 \sphinxtitleref{AutoCombiner} or the \sphinxtitleref{GenericCombiner}.
@@ -1380,7 +1406,7 @@ Selected combiner object.
 \index{report() (pusion.control.decision\_processor.DecisionProcessor method)@\spxentry{report()}\spxextra{pusion.control.decision\_processor.DecisionProcessor method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.report}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{report}}}{}{}~\begin{quote}\begin{description}
+\phantomsection\label{\detokenize{pusion.control.decision_processor:pusion.control.decision_processor.DecisionProcessor.report}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{report}}}{\emph{\DUrole{n}{eval\_metric}\DUrole{o}{=}\DUrole{default_value}{None}}}{}~\begin{quote}\begin{description}
 \item[{Returns}] \leavevmode
 \sphinxAtStartPar
 The textual evaluation report.
@@ -1901,7 +1927,7 @@ assignments which are aligned with axis 2 in \sphinxcode{\sphinxupquote{decision
 \index{train() (pusion.core.combiner.TrainableCombiner method)@\spxentry{train()}\spxextra{pusion.core.combiner.TrainableCombiner method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.core.combiner:pusion.core.combiner.TrainableCombiner.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract }}\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}}{}
+\phantomsection\label{\detokenize{pusion.core.combiner:pusion.core.combiner.TrainableCombiner.train}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{abstract }}\sphinxbfcode{\sphinxupquote{train}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Abstract method. Train combiner’s implementation using decision outputs an appropriate true assignments.
 \begin{quote}\begin{description}
@@ -1915,6 +1941,11 @@ Tensor of decision outputs by different classifiers per sample.
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{true\_assignments}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}.
 Matrix of class assignments which are considered true for each sample during the training procedure.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{**kwargs}} \textendash{} The \sphinxtitleref{**kwargs} parameter may be used to use additional test data for the AutoFusion selection
+procedure.
 
 \end{itemize}
 
@@ -3678,7 +3709,386 @@ Each runtime list is aligned with the list of set instances.
 
 
 \subsection{pusion.evaluation.evaluation\_metrics module}
-\label{\detokenize{pusion.evaluation.evaluation_metrics:module-pusion.evaluation.evaluation_metrics}}\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion-evaluation-evaluation-metrics-module}}\label{\detokenize{pusion.evaluation.evaluation_metrics::doc}}\index{module@\spxentry{module}!pusion.evaluation.evaluation\_metrics@\spxentry{pusion.evaluation.evaluation\_metrics}}\index{pusion.evaluation.evaluation\_metrics@\spxentry{pusion.evaluation.evaluation\_metrics}!module@\spxentry{module}}\index{micro\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{micro\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+\label{\detokenize{pusion.evaluation.evaluation_metrics:module-pusion.evaluation.evaluation_metrics}}\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion-evaluation-evaluation-metrics-module}}\label{\detokenize{pusion.evaluation.evaluation_metrics::doc}}\index{module@\spxentry{module}!pusion.evaluation.evaluation\_metrics@\spxentry{pusion.evaluation.evaluation\_metrics}}\index{pusion.evaluation.evaluation\_metrics@\spxentry{pusion.evaluation.evaluation\_metrics}!module@\spxentry{module}}\index{multi\_label\_brier\_score\_micro() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_brier\_score\_micro()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_brier_score_micro}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_brier\_score\_micro}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the brier score for multi\sphinxhyphen{}label problems according to Brier 1950
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The micro brier score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_brier\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_brier\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_brier_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_brier\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Calculate the brier score for multiclass problems according to Brier 1950
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The brier score.
+
+\end{fulllineitems}
+
+\index{multiclass\_brier\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_brier\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_brier_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_brier\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Calculate the brier score for multi\sphinxhyphen{}label problems according to Brier 1950
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The brier score.
+
+\end{fulllineitems}
+
+\index{far() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{far()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.far}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{far}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{pos\_normal\_class}\DUrole{p}{:} \DUrole{n}{int} \DUrole{o}{=} \DUrole{default_value}{0}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the false alarm rate for multiclass and multi\sphinxhyphen{}label problems.
+FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:param pos\_normal\_class: the position of the ‘normal class’ in :param y\_true and :param y\_pred. Default is \sphinxtitleref{0}
+:return: The false alarm rate.
+
+\end{fulllineitems}
+
+\index{multiclass\_fdr() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_fdr()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_fdr}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_fdr}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+fault detection rate = (\# correctly classified faulty samples) / (\# all faulty samples) * 100
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The fault detection rate.
+
+\end{fulllineitems}
+
+\index{multilabel\_subset\_fdr() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multilabel\_subset\_fdr()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multilabel_subset_fdr}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multilabel\_subset\_fdr}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+fault detection rate = (\# correctly classified faulty samples) / (\# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The fault detection rate.
+
+\end{fulllineitems}
+
+\index{multilabel\_minor\_fdr() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multilabel\_minor\_fdr()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multilabel_minor_fdr}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multilabel\_minor\_fdr}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+fault detection rate = (\# correctly classified faulty samples) / (\# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The fault detection rate.
+
+\end{fulllineitems}
+
+\index{multiclass\_weighted\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_weighted\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_weighted_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_weighted\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the precision for a multiclass problem with a \sphinxtitleref{weighted} average.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_weighted\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_weighted\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_weighted_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_weighted\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the precision for a multi\sphinxhyphen{}label problem with a \sphinxtitleref{weighted} average.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multiclass\_class\_wise\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_class\_wise\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_class_wise_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_class\_wise\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ numpy.ndarray}}
+\sphinxAtStartPar
+Calculate the precision for a multiclass problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_class\_wise\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_class\_wise\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_class_wise_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_class\_wise\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ numpy.ndarray}}
+\sphinxAtStartPar
+Calculate the precision for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multiclass\_recall() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_recall()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_recall}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_recall}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the recall for a multiclass problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. Predicted labels or class assignments.
+:return: The recall score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_recall() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_recall()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_recall}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_recall}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Calculate the recall for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The recall score.
+
+\end{fulllineitems}
+
+\index{multiclass\_class\_wise\_recall() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_class\_wise\_recall()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_class_wise_recall}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_class\_wise\_recall}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ numpy.ndarray}}
+\sphinxAtStartPar
+Calculate the recall for a multiclass problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).
+
+\end{fulllineitems}
+
+\index{multi\_label\_class\_wise\_recall() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_class\_wise\_recall()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_class_wise_recall}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_class\_wise\_recall}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ numpy.ndarray}}
+\sphinxAtStartPar
+Calculate the recall for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).
+
+\end{fulllineitems}
+
+\index{multiclass\_weighted\_scikit\_auc\_roc\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_weighted\_scikit\_auc\_roc\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_weighted_scikit_auc_roc_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_weighted\_scikit\_auc\_roc\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the scikit auc roc score for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The auc roc score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_weighted\_pytorch\_auc\_roc\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_weighted\_pytorch\_auc\_roc\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_weighted_pytorch_auc_roc_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_weighted\_pytorch\_auc\_roc\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the pytorch auc roc score for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The auc roc score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_pytorch\_auc\_roc\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_pytorch\_auc\_roc\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_pytorch_auc_roc_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_pytorch\_auc\_roc\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Compute the pytorch auc roc score for a multi\sphinxhyphen{}label problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The auc roc score.
+
+\end{fulllineitems}
+
+\index{multiclass\_class\_wise\_avg\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_class\_wise\_avg\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_class_wise_avg_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_class\_wise\_avg\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Compute the class wise precision for a multiclass problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multiclass\_weighted\_avg\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_weighted\_avg\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_weighted_avg_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_weighted\_avg\_precision}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the precision for a multiclass problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multiclass\_auc\_precision\_recall\_curve() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_auc\_precision\_recall\_curve()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_auc_precision_recall_curve}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_auc\_precision\_recall\_curve}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Compute the class wise auc precision recall curve for a multiclass problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The aggregated auc precision recall curve class wise.
+
+\end{fulllineitems}
+
+\index{multiclass\_weighted\_pytorch\_auc\_roc() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_weighted\_pytorch\_auc\_roc()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_weighted_pytorch_auc_roc}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_weighted\_pytorch\_auc\_roc}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the pytorch auc roc for a multiclass problem with average \sphinxtitleref{weighted}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The auc roc score.
+
+\end{fulllineitems}
+
+\index{multiclass\_pytorch\_auc\_roc() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_pytorch\_auc\_roc()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_pytorch_auc_roc}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_pytorch\_auc\_roc}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{}
+\sphinxAtStartPar
+Compute the pytorch auc roc for a multiclass problem with average \sphinxtitleref{None}.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The auc roc score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_ranking\_avg\_precision\_score() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_ranking\_avg\_precision\_score()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_ranking_avg_precision_score}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_ranking\_avg\_precision\_score}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the label ranking based average precision score for a multi\sphinxhyphen{}label problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+
+\end{fulllineitems}
+
+\index{multi\_label\_ranking\_loss() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_ranking\_loss()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_ranking_loss}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_ranking\_loss}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the label ranking loss for a multi\sphinxhyphen{}label problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The precision score.
+:return: The loss.
+
+\end{fulllineitems}
+
+\index{multi\_label\_normalized\_discounted\_cumulative\_gain() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_normalized\_discounted\_cumulative\_gain()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_normalized_discounted_cumulative_gain}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_normalized\_discounted\_cumulative\_gain}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the normalized discounted cumulative gain for a multi\sphinxhyphen{}label problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The gain.
+
+\end{fulllineitems}
+
+\index{multiclass\_top\_1\_accuracy() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_top\_1\_accuracy()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_top_1_accuracy}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_top\_1\_accuracy}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the top\sphinxhyphen{}1 accuracy for a multiclass problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The accuracy score.
+
+\end{fulllineitems}
+
+\index{multiclass\_top\_3\_accuracy() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_top\_3\_accuracy()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_top_3_accuracy}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_top\_3\_accuracy}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the top\sphinxhyphen{}3 accuracy for a multiclass problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The accuracy score.
+
+\end{fulllineitems}
+
+\index{multiclass\_top\_5\_accuracy() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_top\_5\_accuracy()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_top_5_accuracy}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_top\_5\_accuracy}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+Compute the top\sphinxhyphen{}5 accuracy for a multiclass problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape (n\_samples, n\_classes)\textasciigrave{}. Predicted labels or class assignments.
+:return: The accuracy score.
+
+\end{fulllineitems}
+
+\index{multiclass\_log\_loss() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multiclass\_log\_loss()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multiclass_log_loss}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multiclass\_log\_loss}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+The logarithmic loss for a multiclass problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The loss.
+
+\end{fulllineitems}
+
+\index{multi\_label\_log\_loss() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{multi\_label\_log\_loss()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.multi_label_log_loss}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{multi\_label\_log\_loss}}}{\emph{\DUrole{n}{y\_true}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}, \emph{\DUrole{n}{y\_pred}\DUrole{p}{:} \DUrole{n}{numpy.ndarray}}}{{ $\rightarrow$ float}}
+\sphinxAtStartPar
+The logarithmic loss for a multi\sphinxhyphen{}label problem.
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: The loss.
+
+\end{fulllineitems}
+
+\index{micro\_precision() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{micro\_precision()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.micro_precision}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{micro\_precision}}}{\emph{\DUrole{n}{y\_true}}, \emph{\DUrole{n}{y\_pred}}}{}
@@ -3894,6 +4304,33 @@ The macro F1\sphinxhyphen{}score.
 
 \end{fulllineitems}
 
+\index{weighted\_f1() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{weighted\_f1()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.weighted_f1}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{weighted\_f1}}}{\emph{\DUrole{n}{y\_true}}, \emph{\DUrole{n}{y\_pred}}}{}
+\sphinxAtStartPar
+Calculate the macro F1\sphinxhyphen{}score, i.e. 2 * (Precision * Recall) / (Precision + Recall), weighted by the class support.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{y\_true}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{y\_pred}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or
+class assignments.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+The weighted macro F1\sphinxhyphen{}score.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{macro\_f2() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{macro\_f2()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
@@ -3948,6 +4385,32 @@ The macro Jaccard\sphinxhyphen{}score.
 
 \end{fulllineitems}
 
+\index{weighted\_jaccard() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{weighted\_jaccard()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.weighted_jaccard}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{weighted\_jaccard}}}{\emph{\DUrole{n}{y\_true}}, \emph{\DUrole{n}{y\_pred}}}{}
+\sphinxAtStartPar
+Calculate the Jaccard\sphinxhyphen{}score for each label, and find their average, weighted by support, i. e., the number of true instances of each label instance.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{y\_true}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{y\_pred}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+The macro Jaccard\sphinxhyphen{}score.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{accuracy() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{accuracy()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
@@ -3972,6 +4435,18 @@ class assignments.
 Accuracy.
 
 \end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{error\_rate() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{error\_rate()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.error_rate}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{error\_rate}}}{\emph{\DUrole{n}{y\_true}}, \emph{\DUrole{n}{y\_pred}}}{}
+\sphinxAtStartPar
+Calculate the error rate, i. e. error\_rate = 1\sphinxhyphen{}accuracy
+:param y\_true: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. True labels or class assignments.
+:param y\_pred: \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)} or \sphinxtitleref{(n\_samples, n\_classes)}. Predicted labels or class assignments.
+:return: Error Rate of typ \sphinxtitleref{float}
 
 \end{fulllineitems}
 
@@ -4421,7 +4896,7 @@ Correlation score.
 \index{pairwise\_correlation() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{pairwise\_correlation()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_correlation}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_correlation}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}}{}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_correlation}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_correlation}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Calculate the average of the pairwise absolute correlation scores over all decision outputs.
 \begin{quote}\begin{description}
@@ -4477,7 +4952,7 @@ Pairwise correlation score.
 \index{pairwise\_kappa\_statistic() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{pairwise\_kappa\_statistic()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_kappa\_statistic}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}}{}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_kappa\_statistic}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Calculate the average of pairwise Kappa scores over all decision outputs.
 Multilabel class assignments are transformed to equivalent multiclass class assignments.
@@ -4535,7 +5010,7 @@ Pairwise disagreement score.
 \index{pairwise\_double\_fault() (in module pusion.evaluation.evaluation\_metrics)@\spxentry{pairwise\_double\_fault()}\spxextra{in module pusion.evaluation.evaluation\_metrics}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_double_fault}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_double\_fault}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}}{}
+\phantomsection\label{\detokenize{pusion.evaluation.evaluation_metrics:pusion.evaluation.evaluation_metrics.pairwise_double_fault}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.evaluation.evaluation\_metrics.}}\sphinxbfcode{\sphinxupquote{pairwise\_double\_fault}}}{\emph{\DUrole{n}{decision\_tensor}}, \emph{\DUrole{n}{true\_assignments}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
 \sphinxAtStartPar
 Calculate the average of pairwise double fault scores over all decision outputs.
 Multilabel class assignments are transformed to equivalent multiclass class assignments.
@@ -5326,6 +5801,50 @@ to the assignment matrix of shape \sphinxtitleref{(n\_samples, n\_classes)}.
 
 \end{fulllineitems}
 
+\index{class\_assignment\_tensor\_to\_label\_tensor() (in module pusion.util.transformer)@\spxentry{class\_assignment\_tensor\_to\_label\_tensor()}\spxextra{in module pusion.util.transformer}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.util.transformer:pusion.util.transformer.class_assignment_tensor_to_label_tensor}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.util.transformer.}}\sphinxbfcode{\sphinxupquote{class\_assignment\_tensor\_to\_label\_tensor}}}{\emph{\DUrole{n}{class\_assignment\_tensor}}}{}
+\sphinxAtStartPar
+Transform multiclass class assignments into a label tensor. A tensor of shape
+\sphinxtitleref{(n\_classifiers, n\_samples, n\_classes)} is converted into a tensor of shape \sphinxtitleref{(n\_classifiers, n\_samples)} holding the
+class identifier (label) in each element.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{class\_assignment\_tensor}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_classifiers, n\_samples, n\_classes)}.
+Class assignment tensor (decision tensor).
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+\sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_classifiers, n\_samples)}. Label tensor.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{class\_assignment\_matrix\_to\_label\_vector() (in module pusion.util.transformer)@\spxentry{class\_assignment\_matrix\_to\_label\_vector()}\spxextra{in module pusion.util.transformer}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pusion.util.transformer:pusion.util.transformer.class_assignment_matrix_to_label_vector}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pusion.util.transformer.}}\sphinxbfcode{\sphinxupquote{class\_assignment\_matrix\_to\_label\_vector}}}{\emph{\DUrole{n}{class\_assignment\_matrix}}}{}
+\sphinxAtStartPar
+Transform multiclass class assignments into a label vector. A matrix of shape
+\sphinxtitleref{(n\_samples, n\_classes)} is converted into a vector of shape \sphinxtitleref{(n\_samples,)} holding the class identifier (label)
+in each element.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{class\_assignment\_matrix}} \textendash{} \sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples, n\_classes)}. Class assignment matrix
+(decision matrix).
+
+\item[{Returns}] \leavevmode
+\sphinxAtStartPar
+\sphinxtitleref{numpy.array} of shape \sphinxtitleref{(n\_samples,)}. Label vector.
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{multilabel\_to\_multiclass\_assignments() (in module pusion.util.transformer)@\spxentry{multilabel\_to\_multiclass\_assignments()}\spxextra{in module pusion.util.transformer}}
 
 \begin{fulllineitems}
@@ -5531,7 +6050,7 @@ final fusion is performed on the test dataset (without true labels).
 \PYG{c+c1}{\PYGZsh{} Initialize the general framework interface}
 \PYG{n}{dp} \PYG{o}{=} \PYG{n}{p}\PYG{o}{.}\PYG{n}{DecisionProcessor}\PYG{p}{(}\PYG{n}{conf}\PYG{p}{)}
 
-\PYG{c+c1}{\PYGZsh{} Train the selected BehaviourKnowledgeSpace combiner with the validation dataset}
+\PYG{c+c1}{\PYGZsh{} Train the selected Dempster Shafer combiner with the validation dataset}
 \PYG{n}{dp}\PYG{o}{.}\PYG{n}{train}\PYG{p}{(}\PYG{n}{y\PYGZus{}ensemble\PYGZus{}valid}\PYG{p}{,} \PYG{n}{y\PYGZus{}valid}\PYG{p}{)}
 
 \PYG{c+c1}{\PYGZsh{} Fuse the ensemble classification outputs (test dataset)}
@@ -5776,7 +6295,7 @@ To make a reasonable comparison between the combiner and the ensemble use \sphin
 MIT License
 
 \sphinxAtStartPar
-Copyright (c) 2021 Admir Obralija, Yannick Wilhelm.
+Copyright (c) 2022 Admir Obralija, Yannick Wilhelm.
 Institute for Parallel and Distributed Systems, University of Stuttgart.
 
 \sphinxAtStartPar
@@ -5804,9 +6323,7 @@ SOFTWARE.
 \chapter{About}
 \label{\detokenize{about:about}}\label{\detokenize{about::doc}}
 \sphinxAtStartPar
-This framework was developed in the context of a masters thesis about
-\sphinxtitleref{“Decision Fusion Framework for the Combination of Multiple Fault Diagnosis Methods”}
-at the Institute of Parallel and Distributed Systems (University of Stuttgart).
+This framework was developed in the context of a research project and several student works at the Institute of Parallel and Distributed Systems of the University of Stuttgart.
 
 
 \chapter{Indices and tables}

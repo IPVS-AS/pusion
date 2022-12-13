@@ -2,7 +2,7 @@ License
 =======
 MIT License
 
-Copyright (c) 2021 Admir Obralija, Yannick Wilhelm.
+Copyright (c) 2022 Admir Obralija, Yannick Wilhelm.
 Institute for Parallel and Distributed Systems, University of Stuttgart.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

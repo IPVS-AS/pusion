@@ -71,7 +71,7 @@ class DecisionProcessor:
                 Matrix of either crisp or continuous class assignments which are considered true for each sample during
                 the training procedure.
 
-        :param **kwargs: The `**kwargs` parameter may be used to use additional test data for the AutoFusion selection
+        :param \*\*kwargs: The `\*\*kwargs` parameter may be used to use additional test data for the AutoFusion selection
                 procedure.
         """
         if isinstance(self.combiner, TrainableCombiner):

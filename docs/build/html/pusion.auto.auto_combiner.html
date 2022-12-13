@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pusion.auto.auto_combiner &mdash; pusion  documentation</title>
+  <title>pusion.auto.auto_combiner &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -124,7 +124,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -193,7 +193,7 @@ the <cite>AutoCombiner</cite> preselects all compatible methods from <cite>pusio
 results obtained by the methods with the best performance without further user interaction.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the AutoCombiner (AC) model. This method detects the configuration based on the <code class="docutils literal notranslate"><span class="pre">decision_tensor</span></code> and
 trains all trainable combiners that are applicable to this configuration.</p>
 <dl class="field-list simple">
@@ -230,6 +230,17 @@ due to the coverage.</p>
 <dd class="field-even"><p>A matrix (<cite>numpy.array</cite>) of crisp or continuous class assignments which represents fused decisions.
 Axis 0 represents samples and axis 1 the class labels which are aligned with axis 2 in
 <code class="docutils literal notranslate"><span class="pre">decision_tensor</span></code> input tensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.set_validation_size">
+<span class="sig-name descname"><span class="pre">set_validation_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.set_validation_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the validation size, based on which the training data is split and the best combiner is selected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>validation_size</strong> – A <cite>float</cite> between <cite>0</cite> and <cite>1.0</cite>. Ratio of the validation data set.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -334,6 +345,16 @@ Each inner tuple key value indexes the list of preselected fusion methods
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner">
+<span class="sig-name descname"><span class="pre">get_selected_combiner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The method selected by the <cite>AutoCombiner</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.obtain">
 <em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">obtain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.obtain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain a combiner registered by the framework.</p>
@@ -382,17 +403,6 @@ Confusion matrices for each of <cite>n</cite> classifiers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.set_validation_size">
-<span class="sig-name descname"><span class="pre">set_validation_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.set_validation_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the validation size, based on which the training data is split and the best combiner is selected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>validation_size</strong> – A <cite>float</cite> between <cite>0</cite> and <cite>1.0</cite>. Ratio of the validation data set.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.train_par">
 <span class="sig-name descname"><span class="pre">train_par</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.train_par" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train the Generic Combiner by training individual combiners in parallel.
@@ -437,11 +447,11 @@ the training procedure.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner">
-<span class="sig-name descname"><span class="pre">get_selected_combiner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.get_selected_combiner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pusion.auto.auto_combiner.AutoCombiner.get_eval_metric">
+<span class="sig-name descname"><span class="pre">get_eval_metric</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pusion.auto.auto_combiner.AutoCombiner.get_eval_metric" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The method selected by the <cite>AutoCombiner</cite>.</p>
+<dd class="field-odd"><p>The metric used for the selection of the best performing combiner.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,7 +474,7 @@ the training procedure.</p></li>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

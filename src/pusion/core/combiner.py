@@ -176,7 +176,7 @@ class TrainableCombiner(Combiner):
                 Tensor of decision outputs by different classifiers per sample.
         :param true_assignments: `numpy.array` of shape `(n_samples, n_classes)`.
                 Matrix of class assignments which are considered true for each sample during the training procedure.
-        :param **kwargs: The `**kwargs` parameter may be used to use additional test data for the AutoFusion selection
+        :param \*\*kwargs: The `\*\*kwargs` parameter may be used to use additional test data for the AutoFusion selection
                 procedure.
         """
         pass

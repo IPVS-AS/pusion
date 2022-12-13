@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pusion.evaluation.evaluation_metrics module &mdash; pusion  documentation</title>
+  <title>pusion.evaluation.evaluation_metrics module &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -123,7 +123,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -181,6 +181,292 @@
             
   <div class="section" id="module-pusion.evaluation.evaluation_metrics">
 <span id="pusion-evaluation-evaluation-metrics-module"></span><h1>pusion.evaluation.evaluation_metrics module<a class="headerlink" href="#module-pusion.evaluation.evaluation_metrics" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_brier_score_micro">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_brier_score_micro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_brier_score_micro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the brier score for multi-label problems according to Brier 1950
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The micro brier score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_brier_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_brier_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_brier_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the brier score for multiclass problems according to Brier 1950
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The brier score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_brier_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_brier_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_brier_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the brier score for multi-label problems according to Brier 1950
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The brier score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.far">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">far</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_normal_class</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.far" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the false alarm rate for multiclass and multi-label problems.
+FAR = (number of normal class samples incorrectly classified)/(number of all normal class samples) * 100
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:param pos_normal_class: the position of the ‘normal class’ in :param y_true and :param y_pred. Default is <cite>0</cite>
+:return: The false alarm rate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_fdr">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_fdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The fault detection rate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multilabel_subset_fdr">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multilabel_subset_fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multilabel_subset_fdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The fault detection rate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multilabel_minor_fdr">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multilabel_minor_fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multilabel_minor_fdr" title="Permalink to this definition">¶</a></dt>
+<dd><p>fault detection rate = (# correctly classified faulty samples) / (# all faulty samples) * 100
+In multilabel classification, the function considers the faulty subset, i. e., if the entire set
+of predicted faulty labels for a sample strictly match with the true set of faulty labels.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The fault detection rate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_weighted_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_weighted_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_weighted_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the precision for a multiclass problem with a <cite>weighted</cite> average.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_weighted_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_weighted_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_weighted_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the precision for a multi-label problem with a <cite>weighted</cite> average.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_class_wise_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_class_wise_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_class_wise_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the precision for a multiclass problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_class_wise_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_class_wise_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_class_wise_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the precision for a multi-label problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_recall">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the recall for a multiclass problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. Predicted labels or class assignments.
+:return: The recall score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_recall">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the recall for a multi-label problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The recall score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_class_wise_recall">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_class_wise_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_class_wise_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the recall for a multiclass problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_class_wise_recall">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_class_wise_recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_class_wise_recall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the recall for a multi-label problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: Sequence of recall scores (for each class).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_weighted_scikit_auc_roc_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_weighted_scikit_auc_roc_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_weighted_scikit_auc_roc_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the scikit auc roc score for a multi-label problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The auc roc score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_weighted_pytorch_auc_roc_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_weighted_pytorch_auc_roc_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_weighted_pytorch_auc_roc_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pytorch auc roc score for a multi-label problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The auc roc score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_pytorch_auc_roc_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_pytorch_auc_roc_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_pytorch_auc_roc_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pytorch auc roc score for a multi-label problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The auc roc score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_class_wise_avg_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_class_wise_avg_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_class_wise_avg_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the class wise precision for a multiclass problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_weighted_avg_precision">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_weighted_avg_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_weighted_avg_precision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the precision for a multiclass problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_auc_precision_recall_curve">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_auc_precision_recall_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_auc_precision_recall_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the class wise auc precision recall curve for a multiclass problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The aggregated auc precision recall curve class wise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_weighted_pytorch_auc_roc">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_weighted_pytorch_auc_roc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_weighted_pytorch_auc_roc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pytorch auc roc for a multiclass problem with average <cite>weighted</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The auc roc score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_pytorch_auc_roc">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_pytorch_auc_roc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_pytorch_auc_roc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pytorch auc roc for a multiclass problem with average <cite>None</cite>.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The auc roc score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_ranking_avg_precision_score">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_ranking_avg_precision_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_ranking_avg_precision_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the label ranking based average precision score for a multi-label problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_ranking_loss">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_ranking_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_ranking_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the label ranking loss for a multi-label problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The precision score.
+:return: The loss.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_normalized_discounted_cumulative_gain">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_normalized_discounted_cumulative_gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_normalized_discounted_cumulative_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the normalized discounted cumulative gain for a multi-label problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The gain.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_top_1_accuracy">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_top_1_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_top_1_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the top-1 accuracy for a multiclass problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The accuracy score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_top_3_accuracy">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_top_3_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_top_3_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the top-3 accuracy for a multiclass problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The accuracy score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_top_5_accuracy">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_top_5_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_top_5_accuracy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the top-5 accuracy for a multiclass problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape (n_samples, n_classes)`. Predicted labels or class assignments.
+:return: The accuracy score.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multiclass_log_loss">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multiclass_log_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multiclass_log_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logarithmic loss for a multiclass problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The loss.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.multi_label_log_loss">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">multi_label_log_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.multi_label_log_loss" title="Permalink to this definition">¶</a></dt>
+<dd><p>The logarithmic loss for a multi-label problem.
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: The loss.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.micro_precision">
 <span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">micro_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.micro_precision" title="Permalink to this definition">¶</a></dt>
@@ -326,6 +612,24 @@ class assignments.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.weighted_f1">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">weighted_f1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.weighted_f1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the macro F1-score, i.e. 2 * (Precision * Recall) / (Precision + Recall), weighted by the class support.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or
+class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The weighted macro F1-score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.macro_f2">
 <span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">macro_f2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.macro_f2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the macro F2-score (beta=2).</p>
@@ -362,6 +666,23 @@ class assignments.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.weighted_jaccard">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">weighted_jaccard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.weighted_jaccard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the Jaccard-score for each label, and find their average, weighted by support, i. e., the number of true instances of each label instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.</p></li>
+<li><p><strong>y_pred</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The macro Jaccard-score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.accuracy">
 <span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.accuracy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the accuracy, i.e. (TP + TN) / (TP + FP + FN + TN).</p>
@@ -377,6 +698,15 @@ class assignments.</p></li>
 <dd class="field-even"><p>Accuracy.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.error_rate">
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">error_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.error_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the error rate, i. e. error_rate = 1-accuracy
+:param y_true: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. True labels or class assignments.
+:param y_pred: <cite>numpy.array</cite> of shape <cite>(n_samples,)</cite> or <cite>(n_samples, n_classes)</cite>. Predicted labels or class assignments.
+:return: Error Rate of typ <cite>float</cite></p>
 </dd></dl>
 
 <dl class="py function">
@@ -675,7 +1005,7 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.pairwise_correlation">
-<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_correlation" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_correlation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the average of the pairwise absolute correlation scores over all decision outputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -713,7 +1043,7 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic">
-<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_kappa_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_kappa_statistic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_kappa_statistic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the average of pairwise Kappa scores over all decision outputs.
 Multilabel class assignments are transformed to equivalent multiclass class assignments.</p>
 <dl class="field-list simple">
@@ -753,7 +1083,7 @@ Matrix of crisp class assignments which are considered as true.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pusion.evaluation.evaluation_metrics.pairwise_double_fault">
-<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_double_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_double_fault" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pusion.evaluation.evaluation_metrics.</span></span><span class="sig-name descname"><span class="pre">pairwise_double_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.evaluation.evaluation_metrics.pairwise_double_fault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the average of pairwise double fault scores over all decision outputs.
 Multilabel class assignments are transformed to equivalent multiclass class assignments.</p>
 <dl class="field-list simple">
@@ -802,7 +1132,7 @@ Tensor of crisp multiclass decision outputs by different classifiers per sample.
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

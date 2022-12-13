@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>pusion.core.combiner &mdash; pusion  documentation</title>
+  <title>pusion.core.combiner &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -135,7 +135,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -329,7 +329,7 @@ assignments which are aligned with axis 2 in <code class="docutils literal notra
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pusion.core.combiner.TrainableCombiner.train">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.combiner.TrainableCombiner.train" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decision_tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_assignments</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pusion.core.combiner.TrainableCombiner.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Abstract method. Train combiner’s implementation using decision outputs an appropriate true assignments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -338,6 +338,8 @@ assignments which are aligned with axis 2 in <code class="docutils literal notra
 Tensor of decision outputs by different classifiers per sample.</p></li>
 <li><p><strong>true_assignments</strong> – <cite>numpy.array</cite> of shape <cite>(n_samples, n_classes)</cite>.
 Matrix of class assignments which are considered true for each sample during the training procedure.</p></li>
+<li><p><strong>**kwargs</strong> – The <cite>**kwargs</cite> parameter may be used to use additional test data for the AutoFusion selection
+procedure.</p></li>
 </ul>
 </dd>
 </dl>
@@ -406,7 +408,7 @@ for each ensemble classifier.</p>
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Usage and Examples &mdash; pusion  documentation</title>
+  <title>Usage and Examples &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -119,7 +119,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -242,7 +242,7 @@ final fusion is performed on the test dataset (without true labels).</p>
 <span class="c1"># Initialize the general framework interface</span>
 <span class="n">dp</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">DecisionProcessor</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
 
-<span class="c1"># Train the selected BehaviourKnowledgeSpace combiner with the validation dataset</span>
+<span class="c1"># Train the selected Dempster Shafer combiner with the validation dataset</span>
 <span class="n">dp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">y_ensemble_valid</span><span class="p">,</span> <span class="n">y_valid</span><span class="p">)</span>
 
 <span class="c1"># Fuse the ensemble classification outputs (test dataset)</span>
@@ -468,7 +468,7 @@ To make a reasonable comparison between the combiner and the ensemble use <code 
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

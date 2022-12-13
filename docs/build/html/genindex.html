@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; pusion  documentation</title>
+  <title>Index &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -109,7 +109,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -168,6 +168,7 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -218,6 +219,10 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.util.transformer.html#pusion.util.transformer.class_assignment_matrix_to_label_vector">class_assignment_matrix_to_label_vector() (in module pusion.util.transformer)</a>
+</li>
+      <li><a href="pusion.util.transformer.html#pusion.util.transformer.class_assignment_tensor_to_label_tensor">class_assignment_tensor_to_label_tensor() (in module pusion.util.transformer)</a>
+</li>
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation.class_wise_mean_score">class_wise_mean_score() (pusion.evaluation.evaluation.Evaluation method)</a>
 </li>
       <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.cohens_kappa">cohens_kappa() (in module pusion.evaluation.evaluation_metrics)</a>
@@ -374,6 +379,8 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.error_rate">error_rate() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation.evaluate">evaluate() (pusion.evaluation.evaluation.Evaluation method)</a>
 </li>
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation.evaluate_cr_decision_outputs">evaluate_cr_decision_outputs() (pusion.evaluation.evaluation.Evaluation method)</a>
@@ -385,6 +392,14 @@
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation">Evaluation (class in pusion.evaluation.evaluation)</a>
 </li>
       <li><a href="pusion.core.combiner.html#pusion.core.combiner.EvidenceBasedCombiner">EvidenceBasedCombiner (class in pusion.core.combiner)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.far">far() (in module pusion.evaluation.evaluation_metrics)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -424,6 +439,8 @@
         <li><a href="pusion.control.decision_processor.html#pusion.control.decision_processor.DecisionProcessor.get_combiners">(pusion.control.decision_processor.DecisionProcessor method)</a>
 </li>
       </ul></li>
+      <li><a href="pusion.auto.auto_combiner.html#pusion.auto.auto_combiner.AutoCombiner.get_eval_metric">get_eval_metric() (pusion.auto.auto_combiner.AutoCombiner method)</a>
+</li>
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation.get_instance_performance_tuples">get_instance_performance_tuples() (pusion.evaluation.evaluation.Evaluation method)</a>
 </li>
       <li><a href="pusion.evaluation.evaluation.html#pusion.evaluation.evaluation.Evaluation.get_instances">get_instances() (pusion.evaluation.evaluation.Evaluation method)</a>
@@ -607,19 +624,79 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_brier_score">multi_label_brier_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_brier_score_micro">multi_label_brier_score_micro() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_class_wise_precision">multi_label_class_wise_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_class_wise_recall">multi_label_class_wise_recall() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_log_loss">multi_label_log_loss() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_normalized_discounted_cumulative_gain">multi_label_normalized_discounted_cumulative_gain() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_pytorch_auc_roc_score">multi_label_pytorch_auc_roc_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_ranking_avg_precision_score">multi_label_ranking_avg_precision_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_ranking_loss">multi_label_ranking_loss() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_recall">multi_label_recall() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_weighted_precision">multi_label_weighted_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multi_label_weighted_pytorch_auc_roc_score">multi_label_weighted_pytorch_auc_roc_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multiclass_assignments_to_labels">multiclass_assignments_to_labels() (in module pusion.util.transformer)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_auc_precision_recall_curve">multiclass_auc_precision_recall_curve() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_brier_score">multiclass_brier_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_class_wise_avg_precision">multiclass_class_wise_avg_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_class_wise_precision">multiclass_class_wise_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_class_wise_recall">multiclass_class_wise_recall() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_fdr">multiclass_fdr() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_log_loss">multiclass_log_loss() (in module pusion.evaluation.evaluation_metrics)</a>
 </li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multiclass_prediction_tensor_to_decision_tensor">multiclass_prediction_tensor_to_decision_tensor() (in module pusion.util.transformer)</a>
 </li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multiclass_predictions_to_decisions">multiclass_predictions_to_decisions() (in module pusion.util.transformer)</a>
 </li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_pytorch_auc_roc">multiclass_pytorch_auc_roc() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_recall">multiclass_recall() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multiclass_to_multilabel_assignments">multiclass_to_multilabel_assignments() (in module pusion.util.transformer)</a>
 </li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_top_1_accuracy">multiclass_top_1_accuracy() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_top_3_accuracy">multiclass_top_3_accuracy() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_top_5_accuracy">multiclass_top_5_accuracy() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_weighted_avg_precision">multiclass_weighted_avg_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_weighted_precision">multiclass_weighted_precision() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_weighted_pytorch_auc_roc">multiclass_weighted_pytorch_auc_roc() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multiclass_weighted_scikit_auc_roc_score">multiclass_weighted_scikit_auc_roc_score() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multilabel_cr_confusion_matrices_to_avg_accuracy">multilabel_cr_confusion_matrices_to_avg_accuracy() (in module pusion.util.transformer)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multilabel_minor_fdr">multilabel_minor_fdr() (in module pusion.evaluation.evaluation_metrics)</a>
 </li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multilabel_prediction_tensor_to_decision_tensor">multilabel_prediction_tensor_to_decision_tensor() (in module pusion.util.transformer)</a>
 </li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multilabel_predictions_to_decisions">multilabel_predictions_to_decisions() (in module pusion.util.transformer)</a>
+</li>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.multilabel_subset_fdr">multilabel_subset_fdr() (in module pusion.evaluation.evaluation_metrics)</a>
 </li>
       <li><a href="pusion.util.transformer.html#pusion.util.transformer.multilabel_to_multiclass_assignments">multilabel_to_multiclass_assignments() (in module pusion.util.transformer)</a>
 </li>
@@ -999,6 +1076,12 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.weighted_f1">weighted_f1() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pusion.evaluation.evaluation_metrics.html#pusion.evaluation.evaluation_metrics.weighted_jaccard">weighted_jaccard() (in module pusion.evaluation.evaluation_metrics)</a>
+</li>
       <li><a href="pusion.core.weighted_voting_combiner.html#pusion.core.weighted_voting_combiner.WeightedVotingCombiner">WeightedVotingCombiner (class in pusion.core.weighted_voting_combiner)</a>
 </li>
   </ul></td>
@@ -1015,7 +1098,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>

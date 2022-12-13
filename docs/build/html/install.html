@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Install Pusion &mdash; pusion  documentation</title>
+  <title>Install Pusion &mdash; pusion - Decision Fusion Framework  documentation</title>
   
 
   
@@ -117,7 +117,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pusion</a>
+          <a href="index.html">pusion - Decision Fusion Framework</a>
         
       </nav>
 
@@ -174,7 +174,7 @@
 <div class="section" id="general-requirements">
 <h2>General requirements<a class="headerlink" href="#general-requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>Python &gt;= 3.7</p></li>
+<li><p>Python &gt;= 3.6</p></li>
 </ul>
 </div>
 <div class="section" id="package-requirements">
@@ -186,21 +186,27 @@
 <li><p>setuptools &gt;= 54.2.0</p></li>
 <li><p>pandas &gt;= 1.2.3</p></li>
 <li><p>matplotlib &gt;= 3.4.1</p></li>
-<li><p>pickle5 &gt;= 0.0.11</p></li>
 </ul>
 </div>
 <div class="section" id="preparation">
 <h2>Preparation<a class="headerlink" href="#preparation" title="Permalink to this headline">¶</a></h2>
-<p>In order to generate a python wheel package for <cite>pusion</cite>, the package <cite>setuptools</cite> needs to be installed in your Python
-3 environment before.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip3 install setuptools
+<p>To generate the python distribution archives of <cite>pusion</cite>, update the PyPA’s build to the latest version. Under <cite>Windows</cite> run in your python environment the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>py -m pip install --upgrade build
 </pre></div>
 </div>
-<p>After cloning <cite>pusion</cite> to your local disc, enter the project and generate the package using with the following command.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 setup.py bdist_wheel
+<p>If you are using <cite>MacOS</cite> or <cite>Unix</cite>, run in your python environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m pip install --upgrade build
 </pre></div>
 </div>
-<p>Once generated, the wheel will be moved to the <code class="docutils literal notranslate"><span class="pre">dist/</span></code> directory within project’s root.</p>
+<p>After cloning <cite>pusion</cite> from GitHub to your local computer, enter the <cite>pusion</cite> directory where the file <cite>pyproject.toml</cite> is located. Under this directory run the following <cite>build</cite> command. For <cite>Windows</cite> users:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>py -m build
+</pre></div>
+</div>
+<p>For <cite>MacOS</cite> or <cite>Unix</cite> user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m build
+</pre></div>
+</div>
+<p>Once successfully executed, two files are generated in the <cite>dist</cite> subfolder within the project’s root folder. The <cite>tar.gz</cite> file is the source distribution and the <cite>whl</cite> file is the built distribution.</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -225,7 +231,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
+        &#169; Copyright 2022, Admir Obralija, Yannick Wilhelm. Institute for Parallel and Distributed Systems, University of Stuttgart, Germany.
 
     </p>
   </div>
